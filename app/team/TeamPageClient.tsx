@@ -141,7 +141,7 @@ const team: TeamMember[] = [
     name: "Abenezer Workija",
     firstName: "Ben",
     title: "Website / Design",
-    role: "technical",
+    role: "communications",
     bio: "Ben brings creativity and strategic thinking to the TEDxBeixinqiao team. With experience in design and content strategy, he ensures that the event's messaging and visual identity are cohesive and impactful.",
     fullBio: "Benjamin brings creativity and strategic thinking to the TEDxBeixinqiao team. With experience in design and content strategy, he ensures that the event's messaging and visual identity are cohesive and impactful. His innovative approach to problem-solving and ability to think outside the box have been invaluable in creating a distinctive and memorable experience for attendees. Ben works closely with cross-functional teams to bring creative ideas to life while maintaining the core values of the TEDx brand.",
     image: "/team/ben.jpg",
@@ -154,7 +154,7 @@ const team: TeamMember[] = [
     name: "Rida Ahmed",
     firstName: "Rida",
     title: "Community Engagement",
-    role: "community",
+    role: "communications",
     bio: "Rida specializes in building and nurturing community relationships. Her passion for connecting diverse groups of people helps TEDxBeixinqiao extend its reach and impact throughout the local area.",
     fullBio: "Rida specializes in building and nurturing community relationships. Her passion for connecting diverse groups of people helps TEDxBeixinqiao extend its reach and impact throughout the local area. With a background in community organizing and social impact initiatives, Rida brings valuable insights on how to engage effectively with different segments of the community. Her warm personality and natural networking abilities create genuine connections with community members, partners, and attendees alike.",
     image: "/team/rida.jpg",
@@ -210,8 +210,6 @@ const roleCategories: RoleCategory[] = [
   { id: "communications", label: "Communications" },
   { id: "operations", label: "Operations" },
   { id: "speakers", label: "Speakers" },
-  { id: "community", label: "Community" },
-  { id: "technical", label: "Technical" },
 ];
 
 function getSocialIcon(platform: string) {

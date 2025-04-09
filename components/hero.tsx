@@ -4,85 +4,144 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
+import { ArrowDown } from "lucide-react"
 
 export default function Hero() {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  // Track scroll for subtle parallax effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      setScrolled(scrollTop > 50)
+    }
+    
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
+  const scrollToNextSection = () => {
+    const nextSection = document.querySelector('#about')
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <section
       id="home"
-      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-white pt-16 dark:bg-black"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden pt-16"
     >
-      {/* Background with animated gradient */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-transparent dark:to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-600/10 via-transparent to-transparent dark:from-red-600/20" />
-        <Image
-          src="/hero-bg.jpg"
-          alt="TEDxBeixinqiao Event"
-          fill
-          className="object-cover opacity-70 dark:opacity-20"
-          priority
+      {/* Background with dynamic parallax effect */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        {/* Overlay gradient for text readability */}
+        <div 
+          className={cn(
+            "absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent z-10 transition-opacity duration-700",
+            isLoaded ? "opacity-70" : "opacity-0"
+          )}
         />
+        
+        {/* Background image with subtle parallax */}
+        <div 
+          className={cn(
+            "absolute inset-0 transition-transform duration-700 ease-out",
+            scrolled ? "scale-105" : "scale-100"
+          )}
+        >
+          <Image 
+            src="/hero-bg.jpg" 
+            alt="TEDxBeixinqiao Event"
+            fill
+            priority
+            className={cn(
+              "absolute inset-0 object-cover object-center transition-all duration-1000",
+              isLoaded ? "opacity-100 blur-0" : "opacity-0 blur-sm",
+              scrolled ? "scale-105" : "scale-100"
+            )}
+            onLoad={() => {
+              setTimeout(() => {
+                setIsLoaded(true)
+              }, 300)
+            }}
+          />
+        </div>
+        
+        {/* Red accent shapes */}
+        <div className="absolute top-1/4 right-[10%] h-64 w-64 rounded-full bg-red-600/10 blur-[100px] dark:bg-red-600/20" />
+        <div className="absolute bottom-1/4 left-[10%] h-64 w-64 rounded-full bg-red-600/10 blur-[100px] dark:bg-red-600/20" />
       </div>
 
-      {/* Animated red circle in background */}
-      <motion.div
-        className="absolute right-[10%] top-[20%] h-64 w-64 rounded-full bg-red-600/10 blur-3xl dark:bg-red-600/20"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 0.8, 0.5],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
-        }}
-      />
-
+      {/* Content container */}
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-6xl">
+          {/* Upper badge - "April 2026" */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mb-6 flex items-baseline justify-center"
+            transition={{ duration: 0.7 }}
+            className="mb-6 flex justify-center"
           >
-            <h1 className="text-5xl font-extrabold text-red-600 sm:text-6xl md:text-7xl">TEDx</h1>
-            <h1 className="text-4xl font-bold text-black dark:text-white sm:text-5xl md:text-6xl">Beixinqiao</h1>
+            <span className="inline-flex items-center rounded-full border border-white/30 bg-black/30 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
+              April 12, 2026 • Beixinqiao, Beijing
+            </span>
           </motion.div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-8 text-center text-2xl font-semibold text-black dark:text-white sm:text-3xl md:text-4xl"
-          >
-            Innovation Illustrated
-          </motion.h2>
+          {/* Main title animation */}
+          <div className="mb-6 flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="flex flex-col items-center text-center"
+            >
+              <div className="mb-4 flex items-center gap-1 text-center">
+                <h1 className="text-5xl font-extrabold text-red-600 sm:text-6xl md:text-7xl">TEDx</h1>
+                <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl">Beixinqiao</h1>
+              </div>
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: "80%" }}
+                transition={{ delay: 0.8, duration: 1 }}
+                className="mx-auto mb-4 h-[3px] bg-gradient-to-r from-red-600/0 via-red-600 to-red-600/0"
+              />
+              <h2 className="text-2xl font-medium text-white sm:text-3xl md:text-4xl">
+                Innovation <span className="text-red-500">Illustrated</span>
+              </h2>
+            </motion.div>
+          </div>
 
+          {/* Description text */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mb-8 mx-auto max-w-3xl text-center text-lg text-gray-800 dark:text-gray-300"
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mb-10 mx-auto max-w-3xl text-center text-lg font-light text-white md:text-xl"
           >
-            Join us for TEDxBeixinqiao 2026, taking place on April 12. Experience thought-provoking talks from industry leaders, 
-            innovative thinkers, and creative minds coming together to share ideas worth spreading. Be part of our growing community
-            dedicated to innovation, inspiration, and positive change.
+            Join us for a captivating journey where visionary ideas come to life through powerful talks and 
+            meaningful connections. Experience thought-provoking ideas from industry pioneers, 
+            creative thinkers, and changemakers coming together to share ideas worth spreading.
           </motion.p>
 
+          {/* CTA buttons with hover effects */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="flex flex-col items-center justify-center gap-6 sm:flex-row"
           >
             <Button
               asChild
               size="lg"
-              className="group relative overflow-hidden bg-red-600 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600"
+              className="group relative overflow-hidden bg-red-600 px-8 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600"
             >
               <Link href="#video-showcase">
-                <span className="relative z-10">Watch Talks</span>
+                <span className="relative z-10 font-medium">Watch Talks</span>
                 <span className="absolute inset-0 -translate-x-full bg-red-700 transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
               </Link>
             </Button>
@@ -90,46 +149,48 @@ export default function Hero() {
               asChild
               variant="outline"
               size="lg"
-              className="group relative overflow-hidden border-red-600 text-red-600 hover:text-white dark:border-red-500 dark:text-red-500"
+              className="group relative overflow-hidden border-2 border-white px-8 text-white hover:text-white hover:border-white dark:border-white dark:text-white"
             >
               <Link href="/speakers">
-                <span className="relative z-10">Meet Speakers</span>
-                <span className="absolute inset-0 -translate-x-full bg-red-600 transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
+                <span className="relative z-10 font-medium">Meet Speakers</span>
+                <span className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
               </Link>
             </Button>
           </motion.div>
 
+          {/* Tagline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 1.0 }}
             className="mt-16 flex flex-col items-center"
           >
-            <p className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
-              April 12, 2026 • Beixinqiao subdistrict, Dongcheng, Beijing
+            <p className="text-xl font-light italic text-white">
+              <span className="font-medium text-red-500">Innovation</span> Starts with <span className="font-medium text-red-500">You</span>
             </p>
-            <p className="text-xl font-semibold text-red-600 dark:text-red-500">Innovation Starts with You</p>
           </motion.div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-0 right-0 mx-auto flex justify-center"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+      <motion.button
+        onClick={scrollToNextSection}
+        className="absolute bottom-10 left-0 right-0 mx-auto flex cursor-pointer flex-col items-center"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: 1,
+          y: [0, 10, 0] 
+        }}
+        transition={{ 
+          opacity: { delay: 1.5, duration: 1 },
+          y: { delay: 1.5, duration: 2, repeat: Infinity, repeatType: 'loop' } 
+        }}
       >
-        <div className="flex flex-col items-center">
-          <p className="mb-2 text-sm font-semibold text-gray-800 dark:text-gray-400">Scroll Down</p>
-          <div className="h-10 w-6 rounded-full border-2 border-gray-700 dark:border-gray-400">
-            <motion.div
-              className="mx-auto mt-1 h-2 w-2 rounded-full bg-gray-700 dark:bg-gray-400"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-            />
-          </div>
+        <span className="mb-2 text-sm font-medium text-white/80">Explore More</span>
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/30 backdrop-blur-sm">
+          <ArrowDown className="h-5 w-5 text-white" />
         </div>
-      </motion.div>
+      </motion.button>
     </section>
   )
 }
