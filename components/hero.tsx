@@ -88,7 +88,7 @@ export default function Hero() {
             className="mb-6 flex justify-center"
           >
             <span className="inline-flex items-center rounded-full border border-white/30 bg-black/30 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-              April 12, 2026 • Beixinqiao, Beijing
+              To Be Determined, 2026 • Beixinqiao, Beijing
             </span>
           </motion.div>
 

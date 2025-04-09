@@ -255,7 +255,7 @@ export default function AboutSection() {
               <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
                 <Calendar className="h-5 w-5" />
                 <span className="text-sm font-medium">
-                  Next event happening on April 12, 2026
+                  Next event coming soon, 2026
                 </span>
               </div>
               
