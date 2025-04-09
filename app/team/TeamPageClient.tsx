@@ -4,213 +4,12 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger, DialogClose } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Facebook, Twitter, Linkedin, Instagram, Globe, Mail, ChevronRight, X, ArrowLeft, ArrowRight } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Instagram, Globe, Mail, X, ArrowLeft, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-// Define the team member type
-interface Social {
-  platform: string;
-  url: string;
-}
-
-interface TeamMember {
-  name: string;
-  firstName: string;
-  title: string;
-  role: string;
-  quote?: string;
-  bio: string;
-  fullBio: string;
-  image: string;
-  socials: Social[];
-}
-
-// Define our team member data structure with comprehensive information
-const team: TeamMember[] = [
-  {
-    name: "Sophie Wu",
-    firstName: "Sophie",
-    title: "Lead Curator",
-    role: "leadership",
-    quote: "If I could have a superpower, It'd be to fix the broken and heal the wounded; What would yours be?",
-    bio: "With over a decade of experience as an operations professional and entrepreneur, Sophie has showcased remarkable leadership across various industries. As a TEDx Licensee and Lead Curator, she is deeply dedicated to merging corporate excellence with social impact within the technology sector. Sophie's passion lies in the creation and nurturing of thriving communities that foster positive innovation.",
-    fullBio: "With over a decade of experience as an operations professional and entrepreneur, Sophie has showcased remarkable leadership across various industries. As a TEDx Licensee and Lead Curator, she is deeply dedicated to merging corporate excellence with social impact within the technology sector. Sophie's passion lies in the creation and nurturing of thriving communities that foster positive innovation. She staunchly believes in the importance of persistent practices for ensuring sustainability and is unwavering in her commitment to leading by example. Beyond her professional endeavors, Sophie's insatiable curiosity fuels her love for travel, photography, and exploring diverse cultures. Her mission is not just limited to the corporate world; she aspires to tell the stories of underserved communities and make measurable strides towards creating a better world for all.",
-    image: "/team/sophie.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "website", url: "https://example.com/" }
-    ],
-  },
-  {
-    name: "Keith Collea",
-    firstName: "Keith",
-    title: "Head of Operations",
-    role: "leadership",
-    quote: "While in China I fell in love with the culture, the people and the food, HaHa",
-    bio: "Over the years, Keith has produced hundreds of live shows for theater, television, and films. His notable work includes a film released by Lionsgate featuring an Academy Award-winning actor. Keith brings his extensive Hollywood experience to China's emerging film industry.",
-    fullBio: "Over the years, Keith has produced hundreds of live shows for theater, numerous television productions, and several films, some of which he also wrote. One of his notable films was released by Lionsgate and featured an Academy Award-winning actor in a leading role. As a producer, Keith has designed, budgeted, supervised, and delivered films that have generated millions in revenue. He has imparted his knowledge by teaching production at UCLA and Shanghai University. Prior to his work in China, Keith contributed to over 20 Hollywood blockbusters, assisting some of Hollywood's greatest directors. His involvement in China's emerging film industry began over 14 years ago, working on several major box office successes. While in China, Keith fell in love with the culture, the people, and the food, humorously noting, \"I know that sounds funny, but it's true; I love it here.\"",
-    image: "/team/keith.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Mihriban Tursun",
-    firstName: "Mihriban",
-    title: "Head of Communications",
-    role: "leadership",
-    bio: "Mihriban is a seasoned communications professional with extensive experience in public relations and media outreach. Her expertise lies in crafting compelling narratives that resonate with diverse audiences. Passionate about cross-cultural communication.",
-    fullBio: "Mihriban is a seasoned communications professional with extensive experience in public relations and media outreach. Her expertise lies in crafting compelling narratives that resonate with diverse audiences. Passionate about cross-cultural communication, Mihriban has worked on numerous international projects, facilitating dialogue and understanding between different communities. In her role as Head of Communications at TEDxBeixinqiao, she is dedicated to amplifying the event's message and ensuring effective engagement with the public.",
-    image: "/team/mihriban.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Xiaodan Xi",
-    firstName: "Xiaodan",
-    title: "Head of Sponsorship",
-    role: "operations",
-    bio: "Xiaodan brings a wealth of experience in corporate partnerships and sponsorship acquisition. Her strategic approach has successfully secured funding and support for various large-scale events, building mutually beneficial relationships between organizations.",
-    fullBio: "Xiaodan brings a wealth of experience in corporate partnerships and sponsorship acquisition. Her strategic approach has successfully secured funding and support for various large-scale events. She believes in building mutually beneficial relationships between organizations, ensuring that sponsors receive value while supporting meaningful initiatives. At TEDxBeixinqiao, Xiaodan is committed to fostering partnerships that align with the event's vision and contribute to its success.",
-    image: "/team/xiaodan.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Jacob Lish",
-    firstName: "Jacob",
-    title: "Communications / English Content",
-    role: "communications",
-    bio: "Jacob is a skilled content creator specializing in English-language communications. His background in journalism and editing ensures clarity and impact in all written materials. He has a keen eye for detail and a passion for storytelling.",
-    fullBio: "Jacob is a skilled content creator specializing in English-language communications. His background in journalism and editing ensures clarity and impact in all written materials. He has a keen eye for detail and a passion for storytelling, which he utilizes to engage audiences effectively. Jacob's role at TEDxBeixinqiao involves crafting and overseeing English content to ensure it aligns with the event's objectives and resonates with attendees.",
-    image: "/team/jacob.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Frank Liang",
-    firstName: "Frank",
-    title: "Speakers / Coordination",
-    role: "speakers",
-    bio: "Frank has extensive experience in event planning and speaker coordination. His organizational skills and attention to detail ensure that events run smoothly and speakers are well-prepared, facilitating memorable presentations.",
-    fullBio: "Frank has extensive experience in event planning and speaker coordination. His organizational skills and attention to detail ensure that events run smoothly and speakers are well-prepared. He has worked with a diverse range of speakers, facilitating their participation and ensuring their messages are effectively delivered. At TEDxBeixinqiao, Frank is dedicated to curating a lineup of speakers who embody the event's theme and inspire the audience.",
-    image: "/team/frank.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Badreldin Mostafa",
-    firstName: "Badr",
-    title: "Communications Support / Video",
-    role: "communications",
-    bio: "Badreldin is a talented videographer and multimedia specialist with a passion for visual storytelling. His work captures the essence of events and conveys powerful messages through film, producing engaging content that highlights key moments.",
-    fullBio: "Badreldin is a talented videographer and multimedia specialist with a passion for visual storytelling. His work captures the essence of events and conveys powerful messages through film. He has produced a variety of video content, from promotional materials to documentary-style pieces, showcasing his versatility and creativity. In his role at TEDxBeixinqiao, Badreldin focuses on creating engaging video content that highlights the event's key moments and messages.",
-    image: "/team/badr.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" }
-    ],
-  },
-  {
-    name: "Songbin Huang",
-    firstName: "Songbin",
-    title: "Sponsorship / Support",
-    role: "operations",
-    bio: "Songbin has a background in business development and client relations, with a focus on securing sponsorships and partnerships. His strategic mindset enables him to identify and cultivate opportunities that benefit all parties involved.",
-    fullBio: "Songbin has a background in business development and client relations, with a focus on securing sponsorships and partnerships. His strategic mindset enables him to identify and cultivate opportunities that benefit all parties involved. He is adept at negotiating and structuring deals that align with organizational goals and values. At TEDxBeixinqiao, Songbin plays a crucial role in supporting sponsorship efforts and ensuring partners are engaged and satisfied.",
-    image: "/team/songbin.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Abenezer Workija",
-    firstName: "Ben",
-    title: "Website / Design",
-    role: "communications",
-    bio: "Ben brings creativity and strategic thinking to the TEDxBeixinqiao team. With experience in design and content strategy, he ensures that the event's messaging and visual identity are cohesive and impactful.",
-    fullBio: "Benjamin brings creativity and strategic thinking to the TEDxBeixinqiao team. With experience in design and content strategy, he ensures that the event's messaging and visual identity are cohesive and impactful. His innovative approach to problem-solving and ability to think outside the box have been invaluable in creating a distinctive and memorable experience for attendees. Ben works closely with cross-functional teams to bring creative ideas to life while maintaining the core values of the TEDx brand.",
-    image: "/team/ben.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "website", url: "https://example.com/" }
-    ],
-  },
-  {
-    name: "Rida Ahmed",
-    firstName: "Rida",
-    title: "Community Engagement",
-    role: "communications",
-    bio: "Rida specializes in building and nurturing community relationships. Her passion for connecting diverse groups of people helps TEDxBeixinqiao extend its reach and impact throughout the local area.",
-    fullBio: "Rida specializes in building and nurturing community relationships. Her passion for connecting diverse groups of people helps TEDxBeixinqiao extend its reach and impact throughout the local area. With a background in community organizing and social impact initiatives, Rida brings valuable insights on how to engage effectively with different segments of the community. Her warm personality and natural networking abilities create genuine connections with community members, partners, and attendees alike.",
-    image: "/team/rida.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" }
-    ],
-  },
-  {
-    name: "Ruili Wang",
-    firstName: "Ruili",
-    title: "Chinese Content Specialist",
-    role: "communications",
-    bio: "Ruili manages all Chinese language content for TEDxBeixinqiao. Her deep understanding of local culture and language nuances ensures all communications are culturally appropriate and effectively convey the intended messages.",
-    fullBio: "Ruili manages all Chinese language content for TEDxBeixinqiao. Her deep understanding of local culture and language nuances ensures all communications are culturally appropriate and effectively convey the intended messages. With extensive experience in translation and localization, Ruili bridges the gap between global ideas and local context. She works diligently to maintain consistency across all platforms while adapting content to resonate with Chinese audiences. Her attention to detail and cultural sensitivity are essential to the success of the event's outreach efforts.",
-    image: "/team/ruili.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "website", url: "https://example.com/" }
-    ],
-  },
-  {
-    name: "Sebastian Sunday",
-    firstName: "Sebastian",
-    title: "Head of Speakers",
-    role: "leadership",
-    quote: "As you get older, 3 things happen. The first is your memory goes. And I can't remember the other two.",
-    bio: "Sebastian is a German philosopher, who was educated in Oxford and is living in Beijing, where he works as an assistant professor at Peking University.",
-    fullBio: "Sebastian is a German philosopher, who was educated in Oxford and is living in Beijing, where he works as an assistant professor at Peking University. He is a Fellow of the Chinese Institute of Foreign Philosophy and a former Berggruen China Fellow. He works broadly in philosophy, on both practical and theoretical issues, ranging from aesthetics and the theory of knowledge to logic and the philosophy of mind, with a focus on foundational cognitive science and artificial intelligence. Recent popular pieces include 'AI's First Philosopher' (https://aeon.co/essays/why-we-should-remember-alan-turing-as-a-philosopher), 'Can Machines Be Conscious?' (https://philosophynow.org/issues/155/Can_Machines_Be_Conscious), and 'Nietzsche and the Machines' (https://archive.philosophersmag.com/nietzsche-and-the-machines/).",
-    image: "/team/sebastian.jpg",
-    socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "website", url: "https://example.com/" }
-    ],
-  },
-];
-
-// Sort team by leadership first, then alphabetically
-const sortedTeam = [...team].sort((a, b) => {
-  if (a.role === "leadership" && b.role !== "leadership") return -1;
-  if (a.role !== "leadership" && b.role === "leadership") return 1;
-  return a.name.localeCompare(b.name);
-});
-
-interface RoleCategory {
-  id: string;
-  label: string;
-}
-
-const roleCategories: RoleCategory[] = [
-  { id: "all", label: "All Team" },
-  { id: "leadership", label: "Leadership" },
-  { id: "communications", label: "Communications" },
-  { id: "operations", label: "Operations" },
-  { id: "speakers", label: "Speakers" },
-];
+import { TeamMember, roleCategories, getSortedTeam, getTeamByRole } from "@/data/team-members"
 
 function getSocialIcon(platform: string) {
   switch(platform) {
@@ -234,8 +33,8 @@ export default function TeamPageClient() {
   
   // Filter team members based on active filter
   const filteredTeam = activeFilter === "all" 
-    ? sortedTeam 
-    : sortedTeam.filter(member => member.role === activeFilter);
+    ? getSortedTeam()
+    : getTeamByRole(activeFilter);
 
   // Handle scroll shadows for tab navigation
   const handleScroll = () => {
@@ -452,9 +251,10 @@ export default function TeamPageClient() {
                         member.role === "leadership" ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" :
                         member.role === "communications" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" :
                         member.role === "operations" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" :
-                        member.role === "speakers" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" :
+                        member.role === "speakers" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" :
                         member.role === "creative" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" :
-                        member.role === "community" ? "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300" :
+                        member.role === "funding" ? "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300" :
+                        member.role === "technical" ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300" :
                         "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
                       )}>
                         {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
@@ -489,98 +289,203 @@ export default function TeamPageClient() {
                   if (!open) setDialogOpen(false);
                 }}>
                   <DialogTrigger className="hidden"></DialogTrigger>
-                  {/* ...existing dialog content... */}
                 </Dialog>
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
         
-        {/* Fancy team member modal dialog */}
+        {/* Award-winning team member modal dialog */}
         {selectedMember && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogContent className="sm:max-w-[800px]">
-              <DialogHeader>
-                <DialogTitle className="text-2xl">{selectedMember.name}</DialogTitle>
-                <DialogClose className="absolute right-4 top-4">
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-                </DialogClose>
-              </DialogHeader>
-              
-              <div className="mt-4 grid gap-6 md:grid-cols-2">
-                {/* Left column: image and socials */}
-                <div className="flex flex-col gap-4">
-                  <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg">
+            <DialogContent className="max-w-5xl p-0 overflow-hidden border-none bg-transparent shadow-none">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                className="relative flex flex-col overflow-hidden rounded-3xl bg-white/80 backdrop-blur-lg dark:bg-gray-900/90 md:flex-row md:min-h-[650px]"
+              >
+                {/* Left column: cinematic image section with animated gradient */}
+                <div className="relative w-full overflow-hidden md:w-2/5 lg:w-1/2">
+                  {/* Main image */}
+                  <div className="relative h-96 w-full md:h-full">
                     <Image 
                       src={selectedMember.image} 
                       alt={selectedMember.name}
                       fill
-                      className="object-cover"
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
-                    {/* Subtle gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-60"></div>
-                  </div>
-                  
-                  {/* Social icons bar */}
-                  <div className="flex justify-center gap-3">
-                    {selectedMember.socials?.map((social, idx) => (
-                      <motion.a
-                        key={idx}
-                        href={social.url}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-red-100 hover:text-red-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400"
-                        whileHover={{ scale: 1.1, y: -3 }}
-                        whileTap={{ scale: 0.95 }}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {getSocialIcon(social.platform)}
-                      </motion.a>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Right column: role, title, quote, bio */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col gap-1">
-                    <div className={cn(
-                      "rounded-full px-2.5 py-0.5 text-xs font-medium w-fit",
-                      selectedMember.role === "leadership" ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" :
-                      selectedMember.role === "communications" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" :
-                      selectedMember.role === "operations" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" :
-                      selectedMember.role === "speakers" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" :
-                      selectedMember.role === "creative" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" :
-                      selectedMember.role === "community" ? "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300" :
-                      "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
-                    )}>
-                      {selectedMember.role.charAt(0).toUpperCase() + selectedMember.role.slice(1)}
+                    
+                    {/* Animated gradient overlay */}
+                    <motion.div 
+                      initial={{ backgroundPosition: "0% 0%" }}
+                      animate={{ 
+                        backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+                      }}
+                      transition={{ 
+                        repeat: Infinity,
+                        duration: 15,
+                        ease: "linear"
+                      }}
+                      className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent bg-[length:200%_200%]" 
+                    />
+                    
+                    {/* Role badge with elegant styling */}
+                    <div className="absolute top-6 left-6 z-10">
+                      <div className={cn(
+                        "rounded-full px-3 py-1 text-xs font-medium backdrop-blur-sm",
+                        selectedMember.role === "leadership" ? "bg-red-500/20 text-red-50 border border-red-500/30" :
+                        selectedMember.role === "communications" ? "bg-blue-500/20 text-blue-50 border border-blue-500/30" :
+                        selectedMember.role === "operations" ? "bg-amber-500/20 text-amber-50 border border-amber-500/30" :
+                        selectedMember.role === "speakers" ? "bg-emerald-500/20 text-emerald-50 border border-emerald-500/30" :
+                        selectedMember.role === "creative" ? "bg-purple-500/20 text-purple-50 border border-purple-500/30" :
+                        selectedMember.role === "funding" ? "bg-teal-500/20 text-teal-50 border border-teal-500/30" :
+                        selectedMember.role === "technical" ? "bg-indigo-500/20 text-indigo-50 border border-indigo-500/30" :
+                        "bg-gray-500/20 text-gray-50 border border-gray-500/30"
+                      )}>
+                        {selectedMember.role.charAt(0).toUpperCase() + selectedMember.role.slice(1)}
+                      </div>
                     </div>
-                    <h3 className="text-xl font-semibold">{selectedMember.title}</h3>
                   </div>
                   
-                  {/* Animated quote with gradient background */}
-                  {selectedMember.quote && (
+                  {/* Elegant name overlay positioned at the bottom of the image */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 p-6 pt-12">
+                    <div className="flex flex-col items-start space-y-1">
+                      <motion.h2 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="max-w-xs text-3xl font-bold tracking-tight text-white md:text-4xl"
+                      >
+                        {selectedMember.name}
+                      </motion.h2>
+                      <motion.p 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-lg font-medium text-white/80"
+                      >
+                        {selectedMember.title}
+                      </motion.p>
+                    </div>
+                  </div>
+                  
+                  {/* Decorative elements */}
+                  <motion.div 
+                    className="absolute -top-12 -right-12 h-40 w-40 rounded-full bg-red-500/20 blur-3xl" 
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.2, 0.3, 0.2],
+                    }}
+                    transition={{ 
+                      repeat: Infinity, 
+                      duration: 8, 
+                      ease: "easeInOut" 
+                    }}
+                  />
+                  <motion.div 
+                    className="absolute -bottom-8 left-1/3 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl" 
+                    animate={{ 
+                      scale: [1, 1.3, 1],
+                      opacity: [0.15, 0.25, 0.15],
+                    }}
+                    transition={{ 
+                      repeat: Infinity, 
+                      duration: 10, 
+                      ease: "easeInOut",
+                      delay: 1
+                    }}
+                  />
+                </div>
+
+                {/* Right column: content with premium scrollable area */}
+                <div className="relative flex-1 p-6 md:p-8 lg:p-10">
+                  {/* Single elegant close button */}
+                  <DialogClose className="absolute right-6 top-6 rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800/50 dark:hover:text-gray-50">
+                    <X className="h-5 w-5" />
+                    <span className="sr-only">Close</span>
+                  </DialogClose>
+                  
+                  {/* Premium styled content area with custom scrollbar */}
+                  <div className="custom-scrollbar max-h-[400px] overflow-y-auto pr-6 md:max-h-[540px]">
+                    {/* Quote section with elegant styling */}
+                    {selectedMember.quote && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="mb-8"
+                      >
+                        <div className="relative rounded-xl bg-gradient-to-br from-gray-50/80 to-gray-100/50 p-6 dark:from-gray-800/50 dark:to-gray-700/30">
+                          <svg className="absolute left-4 top-4 h-8 w-8 text-red-300/30 dark:text-red-500/20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.0999 8.26001C9.02992 8.95001 8.21992 9.76001 7.66992 10.69C7.15992 11.62 6.89992 12.48 6.89992 13.26C7.00992 13.23 7.13992 13.21 7.28992 13.19C7.43992 13.17 7.59992 13.16 7.75992 13.16C8.63992 13.16 9.34992 13.44 9.88992 14C10.4299 14.56 10.6999 15.25 10.6999 16.06C10.6999 16.9 10.4199 17.61 9.85992 18.19C9.29992 18.75 8.56992 19.03 7.66992 19.03C6.68992 19.03 5.85992 18.65 5.17992 17.89C4.49992 17.13 4.15992 16.05 4.15992 14.64C4.15992 12.68 4.70992 10.94 5.80992 9.42001C6.90992 7.90001 8.42992 6.76001 10.3699 6.00001L10.0999 8.26001ZM19.0699 8.26001C17.9999 8.95001 17.1899 9.76001 16.6399 10.69C16.1299 11.62 15.8699 12.48 15.8699 13.26C15.9799 13.23 16.1099 13.21 16.2599 13.19C16.4099 13.17 16.5699 13.16 16.7299 13.16C17.6099 13.16 18.3199 13.44 18.8599 14C19.3999 14.56 19.6699 15.25 19.6699 16.06C19.6699 16.9 19.3899 17.61 18.8299 18.19C18.2699 18.75 17.5399 19.03 16.6399 19.03C15.6599 19.03 14.8299 18.65 14.1499 17.89C13.4699 17.13 13.1299 16.05 13.1299 14.64C13.1299 12.68 13.6799 10.94 14.7799 9.42001C15.8799 7.90001 17.3999 6.76001 19.3399 6.00001L19.0699 8.26001Z" fill="currentColor"/>
+                          </svg>
+                          <blockquote className="pl-4 text-lg italic text-gray-700 dark:text-gray-300">
+                            {selectedMember.quote}
+                          </blockquote>
+                        </div>
+                      </motion.div>
+                    )}
+                    
+                    {/* Bio with premium typography */}
                     <motion.div 
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="rounded-lg bg-gradient-to-r from-gray-50 to-white p-4 italic text-gray-800 shadow-sm dark:from-gray-800 dark:to-gray-900 dark:text-gray-200"
+                      transition={{ delay: 0.4 }}
+                      className="mb-8"
                     >
-                      "{selectedMember.quote}"
+                      <p className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">About {selectedMember.firstName}</p>
+                      <div className="prose prose-lg max-w-none dark:prose-invert">
+                        <p className="first-letter:float-left first-letter:mr-3 first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:text-red-600 dark:first-letter:text-red-500">
+                          {selectedMember.fullBio}
+                        </p>
+                      </div>
                     </motion.div>
-                  )}
-                  
-                  {/* Detailed biography */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="prose prose-sm dark:prose-invert"
-                  >
-                    <p className="text-gray-700 dark:text-gray-300">{selectedMember.fullBio}</p>
-                  </motion.div>
+                    
+                    {/* Social media links with premium styling */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="mt-10 border-t border-gray-200/50 pt-6 dark:border-gray-700/50"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          Connect with {selectedMember.firstName}
+                        </h3>
+                        <div className="flex gap-3">
+                          {selectedMember.socials?.map((social, idx) => (
+                            <motion.a
+                              key={idx}
+                              href={social.url}
+                              className={cn(
+                                "group flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300",
+                                social.platform === "linkedin" ? "border-[#0A66C2]/30 text-[#0A66C2] hover:bg-[#0A66C2] hover:border-[#0A66C2] dark:border-[#0A66C2]/50" :
+                                social.platform === "twitter" ? "border-[#1DA1F2]/30 text-[#1DA1F2] hover:bg-[#1DA1F2] hover:border-[#1DA1F2] dark:border-[#1DA1F2]/50" :
+                                social.platform === "instagram" ? "border-[#E4405F]/30 text-[#E4405F] hover:bg-[#E4405F] hover:border-[#E4405F] dark:border-[#E4405F]/50" :
+                                social.platform === "facebook" ? "border-[#1877F2]/30 text-[#1877F2] hover:bg-[#1877F2] hover:border-[#1877F2] dark:border-[#1877F2]/50" :
+                                social.platform === "website" ? "border-gray-400/30 text-gray-500 hover:bg-gray-500 hover:border-gray-500 dark:border-gray-400/50" :
+                                "border-gray-400/30 text-gray-500 hover:bg-gray-500 hover:border-gray-500 dark:border-gray-400/50"
+                              )}
+                              whileHover={{ y: -4, scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {getSocialIcon(social.platform)}
+                              <span className="absolute -bottom-7 opacity-0 text-xs font-medium transition-all group-hover:opacity-100 group-hover:-bottom-9">
+                                {social.platform.charAt(0).toUpperCase() + social.platform.slice(1)}
+                              </span>
+                            </motion.a>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </DialogContent>
           </Dialog>
         )}
