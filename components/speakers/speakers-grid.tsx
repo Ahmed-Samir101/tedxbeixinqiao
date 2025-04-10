@@ -7,104 +7,25 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button"
 import { Facebook, Twitter, Linkedin, Instagram, Play, ExternalLink, X } from "lucide-react"
 import { motion, useInView } from "framer-motion"
+import { speakers, type Speaker, type Social } from "@/data/speakers"
 
-const speakers = [
-  {
-    name: "Cheryl Yang",
-    title: "Blockchain Expert",
-    talkTitle: "The Future of Data Privacy",
-    description: "The Transformative Impact of Blockchain Technology in the Next Decade",
-    talkSummary: "In this thought-provoking talk, Cheryl Yang explores how blockchain technology is fundamentally changing our approach to data privacy. She discusses the implications for individuals, businesses, and governments as we move toward a more decentralized digital ecosystem.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "hQjlM-8C4Pg", 
-    imageSrc: "/speakers/cheryl.jpg",
-  },
-  {
-    name: "Joseph C. Stewart",
-    title: "International School Art Teacher",
-    talkTitle: "How to Become Reptile-Skinned",
-    description: "Challenges and Opportunities for Parents of Children with Developmental Disorders",
-    talkSummary: "Joseph Stewart shares personal insights and professional expertise on developing resilience in the face of challenges. Drawing from his experiences as an educator, he offers practical strategies for fostering emotional strength in ourselves and our children.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "w6JkSzQ5-JY",
-    imageSrc: "/speakers/joseph.jpg",
-  },
-  {
-    name: "Merna Al Nasser",
-    title: "CGTN Editor/Moderator",
-    talkTitle: "We are all Storytellers",
-    description: "Transforming Media Narratives For Global Understandings",
-    talkSummary: "Merna Al Nasser delves into the power of storytelling as a universal human trait and its critical role in shaping our perception of reality. Drawing from her extensive experience in international media, she demonstrates how thoughtful narrative construction can bridge cultural divides and foster global understanding.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "LCgkBMsSoIo",
-    imageSrc: "/speakers/merna.jpg",
-  },
-  {
-    name: "Niamh Cunningham",
-    title: "Visual Artist",
-    talkTitle: "Rekindling our Bond with Nature",
-    description: "Nourishing Growth and Understanding through Tree Stories",
-    talkSummary: "In this visually stunning presentation, Niamh Cunningham explores how our disconnection from nature impacts our wellbeing and creativity. Through her artwork and research on trees, she offers a compelling vision for rekindling our relationship with the natural world and finding inspiration in its patterns and processes.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "G-0K5bNYvHs",
-    imageSrc: "/speakers/niamh.jpg",
-  },
-  {
-    name: "Saverio Quaia",
-    title: "Interior Designer",
-    talkTitle: "What the Office of Tomorrow Will Look Like",
-    description: "Workplace Transformation and Future Trends in the Post-Epidemic Era",
-    talkSummary: "Interior design visionary Saverio Quaia presents his research-backed predictions for workplace evolution in the post-pandemic world. His talk combines insights from psychology, architecture, and organizational behavior to envision spaces that enhance productivity, wellbeing, and connection in our changing work culture.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "5qap5aO4i9A",
-    imageSrc: "/speakers/saverio.jpg",
-  },
-  {
-    name: "Stephanie Sam",
-    title: "International Communications Specialist",
-    talkTitle: "Rethinking the Way We Communicate",
-    description: "Rethinking the Way We Communicate in the Age of Globalization",
-    talkSummary: "Stephanie Sam challenges conventional communication paradigms in this engaging talk about cross-cultural dialogue. Drawing from her experiences across continents, she proposes innovative frameworks for meaningful exchange in our interconnected world, emphasizing empathy and context as essential elements of effective communication.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "8S0FDjFBj8o",
-    imageSrc: "/speakers/stephanie.jpg",
-  },
-  {
-    name: "Xiaoyue Pu",
-    title: "Artist",
-    talkTitle: "Female Utopia in Ancient China",
-    description: "The Combing Woman and the Auntie's House in Feudal China",
-    talkSummary: "Xiaoyue Pu unveils forgotten histories of female solidarity and resistance in feudal China. Through meticulous historical research and artistic interpretation, she illuminates how women created spaces of autonomy and support within highly restrictive social systems, offering lessons relevant to contemporary discussions of gender and community.",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "vJG698U2Mvo",
-    imageSrc: "/speakers/xiaoyue.jpg",
-  },
-]
+// Removed duplicate speakers array as it's now imported from data/speakers.ts
 
 export default function SpeakersGrid() {
   const gridRef = useRef(null)
   const isInView = useInView(gridRef, { once: true, amount: 0.1 })
 
-  interface Speaker {
-    name: string
-    title: string
-    talkTitle: string
-    description: string
-    talkSummary: string
-    socials: string[]
-    videoId: string
-    imageSrc: string
-  }
+  // Removed redundant Speaker interface as it's imported from data/speakers.ts
 
-  const renderSocialIcon = (social: string) => {
-    switch (social) {
-      case "Facebook-f":
+  const renderSocialIcon = (platform: string) => {
+    switch (platform) {
+      case "facebook":
         return <Facebook className="h-4 w-4" />;
-      case "Twitter":
+      case "twitter":
         return <Twitter className="h-4 w-4" />;
-      case "Linkedin-in":
+      case "linkedin":
         return <Linkedin className="h-4 w-4" />;
-      case "Instagram":
+      case "instagram":
         return <Instagram className="h-4 w-4" />;
       default:
         return null;
@@ -182,7 +103,7 @@ export default function SpeakersGrid() {
                         size="icon"
                         className="h-8 w-8 rounded-full bg-white/10 backdrop-blur-md transition-transform duration-300 hover:scale-110 hover:bg-white/20"
                       >
-                        {renderSocialIcon(social)}
+                        {renderSocialIcon(social.platform)}
                       </Button>
                     ))}
                   </div>
@@ -190,8 +111,8 @@ export default function SpeakersGrid() {
               </Card>
             </DialogTrigger>
 
-            {/* Enhanced Speaker Modal with Video */}
-            <DialogContent className="max-w-[90vw] overflow-hidden border-0 p-0 sm:max-w-[900px] bg-transparent">
+            {/* Enhanced Speaker Modal with Video - Width increased */}
+            <DialogContent className="max-w-[95vw] overflow-hidden border-0 p-0 sm:max-w-[1000px] md:max-w-[1200px] bg-transparent">
               <div className="bg-white/95 backdrop-blur-xl dark:bg-black/95 rounded-xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
                 {/* Background decorative elements */}
                 <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
@@ -201,10 +122,6 @@ export default function SpeakersGrid() {
                   <DialogHeader className="mb-6">
                     <div className="flex items-center justify-between">
                       <DialogTitle className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{speaker.talkTitle}</DialogTitle>
-                      <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <span className="sr-only">Close</span>
-                        <X className="h-4 w-4" />
-                      </Button>
                     </div>
                   </DialogHeader>
 
@@ -212,14 +129,17 @@ export default function SpeakersGrid() {
                     {/* Video Section - Takes 4/7 of the width on medium+ screens */}
                     <div className="md:col-span-4 w-full h-full">
                       <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-lg border border-gray-200 dark:border-gray-800">
+                        {/* Fixed YouTube embed by ensuring it has proper dimensions and removed relative URL formatting */}
                         <iframe
                           width="100%"
                           height="100%"
-                          src={`https://www.youtube.com/embed/${speaker.videoId}?rel=0`}
+                          src={`https://www.youtube.com/embed/${speaker.videoId}`}
                           title={`${speaker.name} - ${speaker.talkTitle}`}
+                          frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                           className="h-full w-full"
+                          style={{ aspectRatio: '16/9' }}
                         ></iframe>
                       </div>
                     </div>
@@ -263,7 +183,9 @@ export default function SpeakersGrid() {
                                 size="icon"
                                 className="h-9 w-9 rounded-full transition-all duration-300 bg-white dark:bg-gray-800 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-500 border border-gray-200 dark:border-gray-700"
                               >
-                                {renderSocialIcon(social)}
+                                <a href={social.url} target="_blank" rel="noopener noreferrer">
+                                  {renderSocialIcon(social.platform)}
+                                </a>
                               </Button>
                             ))}
                           </div>

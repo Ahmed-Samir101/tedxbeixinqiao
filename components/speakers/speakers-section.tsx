@@ -1,92 +1,32 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState } from "react"
 import Image from "next/image"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Facebook, Twitter, Linkedin, Instagram, Play, ArrowRight, ChevronRight, X } from "lucide-react"
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Facebook, Twitter, Linkedin, Instagram, Play, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { speakers, type Speaker } from "@/data/speakers"
 
-const speakers = [
-  {
-    name: "Cheryl Yang",
-    title: "Blockchain Expert",
-    talkTitle: "The Future of Data Privacy",
-    description: "The Transformative Impact of Blockchain Technology in the Next Decade",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"] as Array<"Facebook-f" | "Twitter" | "Linkedin-in" | "Instagram">,
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-  {
-    name: "Joseph C. Stewart",
-    title: "International School Art Teacher",
-    talkTitle: "How to Become Reptile-Skinned",
-    description: "Challenges and Opportunities for Parents of Children with Developmental Disorders",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-  {
-    name: "Merna Al Nasser",
-    title: "CGTN Editor/Moderator",
-    talkTitle: "We are all Storytellers",
-    description: "Transforming Media Narratives For Global Understandings",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-  {
-    name: "Niamh Cunningham",
-    title: "Visual Artist",
-    talkTitle: "Rekindling our Bond with Nature",
-    description: "Nourishing Growth and Understanding through Tree Stories",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-  {
-    name: "Saverio Quaia",
-    title: "Interior Designer",
-    talkTitle: "What the Office of Tomorrow Will Look Like",
-    description: "Workplace Transformation and Future Trends in the Post-Epidemic Era",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-  {
-    name: "Stephanie Sam",
-    title: "International Communications Specialist",
-    talkTitle: "Rethinking the Way We Communicate",
-    description: "Rethinking the Way We Communicate in the Age of Globalization",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-  {
-    name: "Xiaoyue Pu",
-    title: "Artist",
-    talkTitle: "Female Utopia in Ancient China",
-    description: "The Combing Woman and the Auntie's House in Feudal China",
-    socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
-  },
-]
+// Social icon mapping helper function
+const getSocialIcon = (platform: string) => {
+  switch(platform) {
+    case "facebook": return <Facebook className="h-4 w-4" />;
+    case "twitter": return <Twitter className="h-4 w-4" />;
+    case "linkedin": return <Linkedin className="h-4 w-4" />;
+    case "instagram": return <Instagram className="h-4 w-4" />;
+    default: return null;
+  }
+};
 
 export default function SpeakersSection() {
-  const [selectedSpeaker, setSelectedSpeaker] = useState<null | typeof speakers[number]>(null)
+  const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null)
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true, amount: 0.1 })
-  
-  interface SocialIconProps {
-    social: string;
-  }
-  const getSocialIcon = (social: "Facebook-f" | "Twitter" | "Linkedin-in" | "Instagram"): React.ReactNode => {
-    const icons: Record<"Facebook-f" | "Twitter" | "Linkedin-in" | "Instagram", React.ReactNode> = {
-      "Facebook-f": <Facebook className="h-4 w-4" />,
-      "Twitter": <Twitter className="h-4 w-4" />,
-      "Linkedin-in": <Linkedin className="h-4 w-4" />,
-      "Instagram": <Instagram className="h-4 w-4" />,
-    };
-    return icons[social];
-  };
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -107,24 +47,11 @@ export default function SpeakersSection() {
     },
   }
   
-  return (
-    <section id="speakers" className="relative w-full overflow-hidden bg-white py-24 dark:bg-black">
-      {/* Background elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0,rgba(255,255,255,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0,rgba(255,255,255,0)_100%)]"></div>
-        <svg 
-          className="absolute left-0 top-0 h-full w-full stroke-red-100/20 dark:stroke-red-900/5" 
-          width="100%" 
-          height="100%" 
-          viewBox="0 0 100 100" 
-          preserveAspectRatio="none" 
-          stroke="currentColor"
-        >
-          <line x1="0" y1="0" x2="100" y2="100" vectorEffect="non-scaling-stroke" />
-          <line x1="100" y1="0" x2="0" y2="100" vectorEffect="non-scaling-stroke" />
-        </svg>
-      </div>
+  // Only display first 4 speakers in the homepage section
+  const displayedSpeakers = speakers.slice(0, 4);
 
+  return (
+    <section id="speakers" className="w-full py-24">
       <div 
         ref={containerRef}
         className="container mx-auto px-4"
@@ -152,11 +79,11 @@ export default function SpeakersSection() {
 
           <motion.div 
             variants={containerVariants}
-            className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="grid gap-8 sm:grid-cols-2 md:grid-cols-4"
           >
-            {speakers.map((speaker, index) => (
+            {displayedSpeakers.map((speaker, index) => (
               <motion.div 
-                key={index}
+                key={speaker.name}
                 variants={itemVariants}
                 onHoverStart={() => setHoveredCard(index)}
                 onHoverEnd={() => setHoveredCard(null)}
@@ -167,7 +94,7 @@ export default function SpeakersSection() {
                 )}>
                   <div className="relative aspect-[3/4] w-full overflow-hidden">
                     <Image
-                      src={`/placeholder.svg?height=600&width=450&text=${encodeURIComponent(speaker.name)}`}
+                      src={speaker.imageSrc || `/placeholder.svg?text=${encodeURIComponent(speaker.name)}`}
                       alt={speaker.name}
                       fill
                       className={cn(
@@ -187,15 +114,18 @@ export default function SpeakersSection() {
                           {speaker.name}
                         </h3>
                         <div className="mb-4 flex gap-2">
-                          {speaker.socials.map((social, idx) => (
-                            <motion.button 
+                          {speaker.socials.slice(0, 4).map((social, idx) => (
+                            <motion.a
                               key={idx} 
+                              href={social.url}
                               className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/40"
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.95 }}
+                              target="_blank"
+                              rel="noopener noreferrer"
                             >
-                              {getSocialIcon(social as "Facebook-f" | "Twitter" | "Linkedin-in" | "Instagram")}
-                            </motion.button>
+                              {getSocialIcon(social.platform)}
+                            </motion.a>
                           ))}
                         </div>
                         <Dialog>
@@ -209,53 +139,61 @@ export default function SpeakersSection() {
                               Watch Talk
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-[90vw] sm:max-w-[800px]">
-                            <DialogHeader>
-                              <DialogTitle className="text-lg md:text-2xl">{speaker.talkTitle}</DialogTitle>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="absolute right-4 top-4"
-                                onClick={() => {
-                                  const focusGuard = document.querySelector('[data-radix-focus-guard]');
-                                  if (focusGuard?.nextSibling instanceof HTMLElement) {
-                                    focusGuard.nextSibling.click();
-                                  }
-                                }}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </DialogHeader>
-                            <div className="aspect-video w-full overflow-hidden rounded-lg">
-                              <iframe
-                                width="100%"
-                                height="100%"
-                                src={`https://www.youtube.com/embed/${speaker.videoId}?autoplay=1`}
-                                title={`${speaker.name} - ${speaker.talkTitle}`}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="h-full w-full"
-                              ></iframe>
-                            </div>
-                            <div className="mt-4">
-                              <div className="flex items-center gap-4">
-                                <div className="h-12 w-12 overflow-hidden rounded-full">
-                                  <Image
-                                    src={`/placeholder.svg?height=100&width=100&text=${encodeURIComponent(
-                                      speaker.name.charAt(0)
-                                    )}`}
-                                    alt={speaker.name}
-                                    width={48}
-                                    height={48}
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
-                                <div>
-                                  <h3 className="text-lg font-semibold">{speaker.name}</h3>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400">{speaker.title}</p>
-                                </div>
+                          <DialogContent className="max-w-[90vw] sm:max-w-[800px] p-0 border-none bg-transparent">
+                            <div className="relative flex flex-col rounded-2xl bg-white/95 dark:bg-gray-900/95 shadow-2xl backdrop-blur-xl overflow-hidden border border-gray-100 dark:border-gray-800">
+                              {/* Accessibility requirement - visually hidden title */}
+                              <DialogTitle className="sr-only">
+                                {speaker.talkTitle}
+                              </DialogTitle>
+                              
+                              <div className="aspect-video w-full overflow-hidden">
+                                <iframe
+                                  width="100%"
+                                  height="100%"
+                                  src={`https://www.youtube.com/embed/${speaker.videoId}?autoplay=1&rel=0`}
+                                  title={`${speaker.name} - ${speaker.talkTitle}`}
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  style={{ aspectRatio: '16/9' }}
+                                  className="h-full w-full"
+                                ></iframe>
                               </div>
-                              <p className="mt-4">{speaker.description}</p>
+                              
+                              <div className="p-6">
+                                <div className="flex items-center gap-4 mb-4">
+                                  <div className="h-12 w-12 overflow-hidden rounded-full">
+                                    <Image
+                                      src={speaker.imageSrc || `/placeholder.svg?text=${encodeURIComponent(speaker.name.charAt(0))}`}
+                                      alt={speaker.name}
+                                      width={48}
+                                      height={48}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  </div>
+                                  <div>
+                                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{speaker.talkTitle}</h3>
+                                    <div className="flex items-center gap-1.5 text-sm">
+                                      <span className="font-medium text-red-600 dark:text-red-400">{speaker.name}</span>
+                                      <span className="text-gray-500 dark:text-gray-400">• {speaker.title}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div className="mb-4 flex flex-wrap gap-3 text-xs">
+                                  <div className="flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-gray-700 dark:text-gray-200">
+                                    {speaker.date}
+                                  </div>
+                                  <div className="flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-gray-700 dark:text-gray-200">
+                                    {speaker.duration}
+                                  </div>
+                                  <div className="rounded-full bg-red-100 dark:bg-red-900/40 px-3 py-1 text-red-700 dark:text-red-300">
+                                    {speaker.category}
+                                  </div>
+                                </div>
+                                
+                                <p className="text-gray-700 dark:text-gray-300">{speaker.talkSummary}</p>
+                              </div>
                             </div>
                           </DialogContent>
                         </Dialog>
@@ -268,6 +206,12 @@ export default function SpeakersSection() {
                     <p className="mb-4 text-base font-medium text-red-600 dark:text-red-500 line-clamp-1">
                       {speaker.talkTitle}
                     </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{speaker.duration}</span>
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        {speaker.category}
+                      </span>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>

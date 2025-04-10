@@ -13,6 +13,9 @@ export interface Speaker {
   socials: Social[];
   videoId: string;
   imageSrc: string;
+  duration: string;
+  date: string;
+  category: string;
 }
 
 // Centralized speakers data
@@ -29,8 +32,11 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "hQjlM-8C4Pg", 
+    videoId: "jImojqkaTHo", 
     imageSrc: "/speakers/cheryl.jpg",
+    duration: "7:53",
+    date: "April 20, 2024",
+    category: "Technology"
   },
   {
     name: "Joseph C. Stewart",
@@ -44,8 +50,11 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "w6JkSzQ5-JY",
+    videoId: "DSu2O5twi5A",
     imageSrc: "/speakers/joseph.jpg",
+    duration: "15:42",
+    date: "April 20, 2024",
+    category: "Education"
   },
   {
     name: "Merna Al Nasser",
@@ -59,8 +68,11 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "LCgkBMsSoIo",
+    videoId: "acSQUrNqNAo",
     imageSrc: "/speakers/merna.jpg",
+    duration: "14:19",
+    date: "April 20, 2024",
+    category: "Storytelling"
   },
   {
     name: "Niamh Cunningham",
@@ -74,13 +86,16 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "G-0K5bNYvHs",
+    videoId: "pHwQZ35obSM",
     imageSrc: "/speakers/niamh.jpg",
+    duration: "10:11",
+    date: "April 20, 2024",
+    category: "Nature"
   },
   {
     name: "Saverio Quaia",
     title: "Interior Designer",
-    talkTitle: "What the Office of Tomorrow Will Look Like",
+    talkTitle: "What the Office of Tomorrow Looks Like",
     description: "Workplace Transformation and Future Trends in the Post-Epidemic Era",
     talkSummary: "Interior design visionary Saverio Quaia presents his research-backed predictions for workplace evolution in the post-pandemic world. His talk combines insights from psychology, architecture, and organizational behavior to envision spaces that enhance productivity, wellbeing, and connection in our changing work culture.",
     socials: [
@@ -89,8 +104,11 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "5qap5aO4i9A",
+    videoId: "CPlLRSXy7Hw",
     imageSrc: "/speakers/saverio.jpg",
+    duration: "12:13",
+    date: "April 20, 2024",
+    category: "Design"
   },
   {
     name: "Stephanie Sam",
@@ -104,8 +122,11 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "8S0FDjFBj8o",
+    videoId: "RjoRzRzsfmA",
     imageSrc: "/speakers/stephanie.jpg",
+    duration: "15:42",
+    date: "April 20, 2024",
+    category: "Ideas"
   },
   {
     name: "Xiaoyue Pu",
@@ -119,8 +140,11 @@ export const speakers: Speaker[] = [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
-    videoId: "vJG698U2Mvo",
+    videoId: "JO6z8juEXxY",
     imageSrc: "/speakers/xiaoyue.jpg",
+    duration: "9:34",
+    date: "April 20, 2024",
+    category: "Art"
   },
 ];
 

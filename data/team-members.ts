@@ -28,7 +28,7 @@ export const roleCategories: RoleCategory[] = [
   { id: "communications", label: "Communications" },
   { id: "funding", label: "Funding" },
   { id: "speakers", label: "Speakers" },
-  { id: "production", label: "Production" },
+  { id: "operations", label: "Operations" },
 ];
 
 // Centralized team data with updated positions based on the provided information
@@ -37,7 +37,7 @@ export const teamMembers: TeamMember[] = [
     name: "Max",
     firstName: "Max",
     title: "Production Manager",
-    role: "production",
+    role: "operations",
     quote: "If it looks effortless on stage, that means we did our job.",
     bio: "Max ensures every technical aspect of the TEDxBeixinqiao event runs smoothly — from lights and sound to stage transitions — crafting an unforgettable experience.",
     fullBio: "Max is a seasoned event producer with a background in live theater and television production. Originally from Australia and now based in Beijing, she has worked on everything from underground art shows to large-scale festivals. With over a decade of experience coordinating lighting, audio, and stage design, Max brings both creative vision and logistical precision to TEDxBeixinqiao. Her passion lies in turning ambitious concepts into reality, and making sure every cue hits right on time.",

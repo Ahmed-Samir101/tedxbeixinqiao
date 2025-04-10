@@ -4,6 +4,8 @@ import AboutSection from "@/components/home/about-section"
 import EventHighlights from "@/components/home/event-highlights"
 import ContactSection from "@/components/contact-section"
 import type { Metadata } from "next"
+import TeanSection from "@/components/team/team-section"
+import SpeakersSection from "@/components/speakers/speakers-section"
 
 export const metadata: Metadata = {
   title: "TEDxBeixinqiao - Innovation Illustrated",
@@ -18,6 +20,8 @@ export default function Home() {
       <AboutSection />
       <VideoShowcase />
       <EventHighlights />
+      <TeanSection />
+      <SpeakersSection />
       <ContactSection />
     </div>
   )

@@ -15,8 +15,8 @@ export default function TeamSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
   
-  // Get featured team members (leadership + a few others)
-  const featuredTeam = getSortedTeam().slice(0, 8)
+  // Get only 4 featured team members
+  const featuredTeam = getSortedTeam().slice(0, 4)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -34,7 +34,7 @@ export default function TeamSection() {
   }
 
   return (
-    <section id="team" className="w-full bg-gray-50 py-24 dark:bg-gray-950">
+    <section id="team" className="w-full py-24">
       <motion.div
         ref={ref}
         variants={containerVariants}
@@ -55,7 +55,7 @@ export default function TeamSection() {
             </p>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="mb-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <motion.div variants={itemVariants} className="mb-10 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
             {featuredTeam.map((member) => (
               <Link href={`/team#${member.role}`} key={member.name} passHref>
                 <div
