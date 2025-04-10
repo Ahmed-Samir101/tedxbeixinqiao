@@ -14,8 +14,9 @@ const speakers = [
     title: "Blockchain Expert",
     talkTitle: "The Future of Data Privacy",
     description: "The Transformative Impact of Blockchain Technology in the Next Decade",
+    talkSummary: "In this thought-provoking talk, Cheryl Yang explores how blockchain technology is fundamentally changing our approach to data privacy. She discusses the implications for individuals, businesses, and governments as we move toward a more decentralized digital ecosystem.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "hQjlM-8C4Pg", 
     imageSrc: "/speakers/cheryl.jpg",
   },
   {
@@ -23,8 +24,9 @@ const speakers = [
     title: "International School Art Teacher",
     talkTitle: "How to Become Reptile-Skinned",
     description: "Challenges and Opportunities for Parents of Children with Developmental Disorders",
+    talkSummary: "Joseph Stewart shares personal insights and professional expertise on developing resilience in the face of challenges. Drawing from his experiences as an educator, he offers practical strategies for fostering emotional strength in ourselves and our children.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "w6JkSzQ5-JY",
     imageSrc: "/speakers/joseph.jpg",
   },
   {
@@ -32,8 +34,9 @@ const speakers = [
     title: "CGTN Editor/Moderator",
     talkTitle: "We are all Storytellers",
     description: "Transforming Media Narratives For Global Understandings",
+    talkSummary: "Merna Al Nasser delves into the power of storytelling as a universal human trait and its critical role in shaping our perception of reality. Drawing from her extensive experience in international media, she demonstrates how thoughtful narrative construction can bridge cultural divides and foster global understanding.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "LCgkBMsSoIo",
     imageSrc: "/speakers/merna.jpg",
   },
   {
@@ -41,8 +44,9 @@ const speakers = [
     title: "Visual Artist",
     talkTitle: "Rekindling our Bond with Nature",
     description: "Nourishing Growth and Understanding through Tree Stories",
+    talkSummary: "In this visually stunning presentation, Niamh Cunningham explores how our disconnection from nature impacts our wellbeing and creativity. Through her artwork and research on trees, she offers a compelling vision for rekindling our relationship with the natural world and finding inspiration in its patterns and processes.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "G-0K5bNYvHs",
     imageSrc: "/speakers/niamh.jpg",
   },
   {
@@ -50,8 +54,9 @@ const speakers = [
     title: "Interior Designer",
     talkTitle: "What the Office of Tomorrow Will Look Like",
     description: "Workplace Transformation and Future Trends in the Post-Epidemic Era",
+    talkSummary: "Interior design visionary Saverio Quaia presents his research-backed predictions for workplace evolution in the post-pandemic world. His talk combines insights from psychology, architecture, and organizational behavior to envision spaces that enhance productivity, wellbeing, and connection in our changing work culture.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "5qap5aO4i9A",
     imageSrc: "/speakers/saverio.jpg",
   },
   {
@@ -59,8 +64,9 @@ const speakers = [
     title: "International Communications Specialist",
     talkTitle: "Rethinking the Way We Communicate",
     description: "Rethinking the Way We Communicate in the Age of Globalization",
+    talkSummary: "Stephanie Sam challenges conventional communication paradigms in this engaging talk about cross-cultural dialogue. Drawing from her experiences across continents, she proposes innovative frameworks for meaningful exchange in our interconnected world, emphasizing empathy and context as essential elements of effective communication.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "8S0FDjFBj8o",
     imageSrc: "/speakers/stephanie.jpg",
   },
   {
@@ -68,8 +74,9 @@ const speakers = [
     title: "Artist",
     talkTitle: "Female Utopia in Ancient China",
     description: "The Combing Woman and the Auntie's House in Feudal China",
+    talkSummary: "Xiaoyue Pu unveils forgotten histories of female solidarity and resistance in feudal China. Through meticulous historical research and artistic interpretation, she illuminates how women created spaces of autonomy and support within highly restrictive social systems, offering lessons relevant to contemporary discussions of gender and community.",
     socials: ["Facebook-f", "Twitter", "Linkedin-in", "Instagram"],
-    videoId: "dQw4w9WgXcQ", // Placeholder YouTube ID
+    videoId: "vJG698U2Mvo",
     imageSrc: "/speakers/xiaoyue.jpg",
   },
 ]
@@ -78,18 +85,29 @@ export default function SpeakersGrid() {
   const gridRef = useRef(null)
   const isInView = useInView(gridRef, { once: true, amount: 0.1 })
 
-  const getSocialIcon = (social) => {
+  interface Speaker {
+    name: string
+    title: string
+    talkTitle: string
+    description: string
+    talkSummary: string
+    socials: string[]
+    videoId: string
+    imageSrc: string
+  }
+
+  const getSocialIcon = (social: string): string | null => {
     switch (social) {
       case "Facebook-f":
-        return <Facebook className="h-4 w-4" />
+        return "Facebook";
       case "Twitter":
-        return <Twitter className="h-4 w-4" />
+        return "Twitter";
       case "Linkedin-in":
-        return <Linkedin className="h-4 w-4" />
+        return "LinkedIn";
       case "Instagram":
-        return <Instagram className="h-4 w-4" />
+        return "Instagram";
       default:
-        return null
+        return null;
     }
   }
 
@@ -197,6 +215,7 @@ export default function SpeakersGrid() {
                   <h3 className="mb-1 text-xl font-semibold">{speaker.name}</h3>
                   <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">{speaker.title}</p>
                   <p className="mb-6">{speaker.description}</p>
+                  <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">{speaker.talkSummary}</p>
 
                   {/* Social Media in Modal */}
                   <div className="mb-6 flex gap-2">

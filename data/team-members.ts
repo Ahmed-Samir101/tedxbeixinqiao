@@ -28,10 +28,25 @@ export const roleCategories: RoleCategory[] = [
   { id: "communications", label: "Communications" },
   { id: "funding", label: "Funding" },
   { id: "speakers", label: "Speakers" },
+  { id: "production", label: "Production" },
 ];
 
 // Centralized team data with updated positions based on the provided information
 export const teamMembers: TeamMember[] = [
+  {
+    name: "Max",
+    firstName: "Max",
+    title: "Production Manager",
+    role: "production",
+    quote: "If it looks effortless on stage, that means we did our job.",
+    bio: "Max ensures every technical aspect of the TEDxBeixinqiao event runs smoothly — from lights and sound to stage transitions — crafting an unforgettable experience.",
+    fullBio: "Max is a seasoned event producer with a background in live theater and television production. Originally from Australia and now based in Beijing, she has worked on everything from underground art shows to large-scale festivals. With over a decade of experience coordinating lighting, audio, and stage design, Max brings both creative vision and logistical precision to TEDxBeixinqiao. Her passion lies in turning ambitious concepts into reality, and making sure every cue hits right on time.",
+    image: "/team/max.jpg",
+    socials: [
+      { platform: "linkedin", url: "https://linkedin.com/in/maxkeith" },
+      { platform: "website", url: "https://maxkeithstudio.com" }
+    ],
+  },
   {
     name: "Yossy",
     firstName: "Yossy",
@@ -46,12 +61,12 @@ export const teamMembers: TeamMember[] = [
     ],
   },
   {
-    name: "Flora",
-    firstName: "Flora",
+    name: "Floria",
+    firstName: "Floria",
     title: "Director of Operations & Flow",
     role: "operations",
-    bio: "Flora oversees all operational aspects of TEDxBeixinqiao events, ensuring seamless execution from planning to delivery with meticulous attention to detail and process efficiency.",
-    fullBio: "Flora oversees all operational aspects of TEDxBeixinqiao events, ensuring seamless execution from planning to delivery. With her exceptional organizational skills and strategic mindset, she creates frameworks that allow ideas to flourish while maintaining practical feasibility. Flora's meticulous attention to detail and process efficiency transforms creative visions into well-executed experiences. She leads the operations team with a clear focus on excellence, ensuring that every TEDxBeixinqiao event flows smoothly for speakers, attendees, and volunteers alike. Her background in event management and operations provides the perfect foundation for creating memorable TEDx experiences.",
+    bio: "Floria oversees all operational aspects of TEDxBeixinqiao events, ensuring seamless execution from planning to delivery with meticulous attention to detail and process efficiency.",
+    fullBio: "Floria oversees all operational aspects of TEDxBeixinqiao events, ensuring seamless execution from planning to delivery. With her exceptional organizational skills and strategic mindset, she creates frameworks that allow ideas to flourish while maintaining practical feasibility. Floria's meticulous attention to detail and process efficiency transforms creative visions into well-executed experiences. She leads the operations team with a clear focus on excellence, ensuring that every TEDxBeixinqiao event flows smoothly for speakers, attendees, and volunteers alike. Her background in event management and operations provides the perfect foundation for creating memorable TEDx experiences.",
     image: "/team/flora&elena.jpg",
     socials: [
       { platform: "linkedin", url: "https://linkedin.com/" },
