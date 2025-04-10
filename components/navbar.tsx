@@ -17,7 +17,6 @@ export default function Navbar() {
   const pathname = usePathname()
 
   const navigation = [
-    { name: "Home", path: "/" },
     { name: "Speakers", path: "/speakers" },
     { name: "Team", path: "/team" },
     { name: "Contact", path: "/contact" },
@@ -48,9 +47,8 @@ export default function Navbar() {
       }}
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-500",
-        scrolled 
-          ? "bg-white/80 shadow-lg backdrop-blur-md dark:bg-gray-950/80" 
-          : "bg-transparent",
+        "bg-white/30 backdrop-blur-lg dark:bg-black/30",
+        scrolled && "shadow-lg"
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-6">
@@ -98,7 +96,7 @@ export default function Navbar() {
                   "group relative px-2 py-1.5 text-sm font-medium transition-colors",
                   isActive 
                     ? "text-red-600 dark:text-red-500" 
-                    : "text-gray-700 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-500"
+                    : "text-gray-800 hover:text-red-600 dark:text-gray-100 dark:hover:text-red-500"
                 )}
               >
                 <span className="relative z-10">{item.name}</span>

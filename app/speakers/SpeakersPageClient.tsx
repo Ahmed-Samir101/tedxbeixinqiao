@@ -1,6 +1,6 @@
 "use client"
 
-import SpeakersGrid from "@/components/speakers-grid"
+import SpeakersGrid from "@/components/speakers/speakers-grid"
 import { motion } from "framer-motion"
 
 export default function SpeakersPageClient() {

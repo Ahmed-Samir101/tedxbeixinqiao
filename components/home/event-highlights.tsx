@@ -68,16 +68,16 @@ export default function EventHighlights() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-gray-50 py-24 dark:bg-gray-950">
+    <section className="relative w-full overflow-hidden bg-white text-gray-900 dark:bg-black dark:text-white py-24 transition-colors duration-300">
       {/* Background elements */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0,rgba(255,255,255,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0,rgba(255,255,255,0)_100%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_0,rgba(0,0,0,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0,rgba(255,255,255,0)_100%)]"></div>
         
         <motion.div 
-          className="absolute left-1/4 top-0 h-64 w-64 rounded-full bg-red-600/5 blur-3xl"
+          className="absolute left-1/4 top-0 h-64 w-64 rounded-full bg-red-600/5 dark:bg-red-600/10 blur-3xl"
           animate={{
             x: [0, 20, 0],
-            opacity: [0.4, 0.6, 0.4]
+            opacity: [0.2, 0.3, 0.2]
           }}
           transition={{
             duration: 15,
@@ -86,10 +86,10 @@ export default function EventHighlights() {
           }}
         />
         <motion.div 
-          className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl"
+          className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-red-600/5 dark:bg-red-600/10 blur-3xl"
           animate={{
             y: [0, -20, 0],
-            opacity: [0.3, 0.5, 0.3]
+            opacity: [0.15, 0.25, 0.15]
           }}
           transition={{
             duration: 18,

@@ -1,7 +1,7 @@
-import Hero from "@/components/hero"
-import VideoShowcase from "@/components/video-showcase"
-import AboutSection from "@/components/about-section"
-import EventHighlights from "@/components/event-highlights"
+import Hero from "@/components/home/hero"
+import VideoShowcase from "@/components/home/video-showcase"
+import AboutSection from "@/components/home/about-section"
+import EventHighlights from "@/components/home/event-highlights"
 import ContactSection from "@/components/contact-section"
 import type { Metadata } from "next"
 

@@ -39,11 +39,11 @@ export default function Hero() {
     >
       {/* Background with dynamic parallax effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Overlay gradient for text readability */}
+        {/* Enhanced overlay gradient for better text readability */}
         <div 
           className={cn(
-            "absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent z-10 transition-opacity duration-700",
-            isLoaded ? "opacity-70" : "opacity-0"
+            "absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/40 z-10 transition-opacity duration-700",
+            isLoaded ? "opacity-80" : "opacity-0"
           )}
         />
         
@@ -101,8 +101,8 @@ export default function Hero() {
               className="flex flex-col items-center text-center"
             >
               <div className="mb-4 flex items-center gap-1 text-center">
-                <h1 className="text-5xl font-extrabold text-red-600 sm:text-6xl md:text-7xl">TEDx</h1>
-                <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl">Beixinqiao</h1>
+                <h1 className="text-5xl font-extrabold text-red-600 sm:text-6xl md:text-7xl text-shadow-lg">TEDx</h1>
+                <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl text-shadow-lg">Beixinqiao</h1>
               </div>
               <motion.div 
                 initial={{ width: 0 }}
@@ -110,18 +110,18 @@ export default function Hero() {
                 transition={{ delay: 0.8, duration: 1 }}
                 className="mx-auto mb-4 h-[3px] bg-gradient-to-r from-red-600/0 via-red-600 to-red-600/0"
               />
-              <h2 className="text-2xl font-medium text-white sm:text-3xl md:text-4xl">
+              <h2 className="text-2xl font-medium text-white sm:text-3xl md:text-4xl text-shadow-sm">
                 Innovation <span className="text-red-500">Illustrated</span>
               </h2>
             </motion.div>
           </div>
 
-          {/* Description text */}
+          {/* Description text with enhanced visibility */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mb-10 mx-auto max-w-3xl text-center text-lg font-light text-white md:text-xl"
+            className="mb-10 mx-auto max-w-3xl text-center text-lg font-medium text-white md:text-xl [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
           >
             Join us for a captivating journey where visionary ideas come to life through powerful talks and 
             meaningful connections. Experience thought-provoking ideas from industry pioneers, 
@@ -138,7 +138,7 @@ export default function Hero() {
             <Button
               asChild
               size="lg"
-              className="group relative overflow-hidden bg-red-600 px-8 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600"
+              className="group relative overflow-hidden bg-red-600 px-8 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600 shadow-lg"
             >
               <Link href="#video-showcase">
                 <span className="relative z-10 font-medium">Watch Talks</span>
@@ -149,7 +149,7 @@ export default function Hero() {
               asChild
               variant="outline"
               size="lg"
-              className="group relative overflow-hidden border-2 border-white px-8 text-white hover:text-white hover:border-white dark:border-white dark:text-white"
+              className="group relative overflow-hidden border-2 border-white px-8 text-white hover:text-white hover:border-white dark:border-white dark:text-white shadow-lg bg-black/20 backdrop-blur-sm"
             >
               <Link href="/speakers">
                 <span className="relative z-10 font-medium">Meet Speakers</span>
@@ -165,8 +165,8 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 1.0 }}
             className="mt-16 flex flex-col items-center"
           >
-            <p className="text-xl font-light italic text-white">
-              <span className="font-medium text-red-500">Innovation</span> Starts with <span className="font-medium text-red-500">You</span>
+            <p className="text-xl font-medium italic text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">
+              <span className="font-bold text-red-500">Innovation</span> Starts with <span className="font-bold text-red-500">You</span>
             </p>
           </motion.div>
         </div>
@@ -186,7 +186,7 @@ export default function Hero() {
           y: { delay: 1.5, duration: 2, repeat: Infinity, repeatType: 'loop' } 
         }}
       >
-        <span className="mb-2 text-sm font-medium text-white/80">Explore More</span>
+        <span className="mb-2 text-sm font-medium text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">Explore More</span>
         <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/30 backdrop-blur-sm">
           <ArrowDown className="h-5 w-5 text-white" />
         </div>

@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Facebook, Twitter, Linkedin, Instagram, Play, ExternalLink } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Instagram, Play, ExternalLink, X } from "lucide-react"
 import { motion, useInView } from "framer-motion"
 
 const speakers = [
@@ -96,16 +96,16 @@ export default function SpeakersGrid() {
     imageSrc: string
   }
 
-  const getSocialIcon = (social: string): string | null => {
+  const renderSocialIcon = (social: string) => {
     switch (social) {
       case "Facebook-f":
-        return "Facebook";
+        return <Facebook className="h-4 w-4" />;
       case "Twitter":
-        return "Twitter";
+        return <Twitter className="h-4 w-4" />;
       case "Linkedin-in":
-        return "LinkedIn";
+        return <Linkedin className="h-4 w-4" />;
       case "Instagram":
-        return "Instagram";
+        return <Instagram className="h-4 w-4" />;
       default:
         return null;
     }
@@ -182,7 +182,7 @@ export default function SpeakersGrid() {
                         size="icon"
                         className="h-8 w-8 rounded-full bg-white/10 backdrop-blur-md transition-transform duration-300 hover:scale-110 hover:bg-white/20"
                       >
-                        {getSocialIcon(social)}
+                        {renderSocialIcon(social)}
                       </Button>
                     ))}
                   </div>
@@ -190,74 +190,87 @@ export default function SpeakersGrid() {
               </Card>
             </DialogTrigger>
 
-            {/* Speaker Modal with Video */}
-            <DialogContent className="sm:max-w-[800px]">
-              <DialogHeader>
-                <DialogTitle className="text-2xl">{speaker.talkTitle}</DialogTitle>
-              </DialogHeader>
-
-              <div className="grid gap-6 md:grid-cols-2">
-                {/* Speaker Image in Modal */}
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
-                  <Image
-                    src={
-                      speaker.imageSrc ||
-                      `/placeholder.svg?height=600&width=450&text=${encodeURIComponent(speaker.name)}`
-                    }
-                    alt={speaker.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                {/* Speaker Info in Modal */}
-                <div className="flex flex-col">
-                  <h3 className="mb-1 text-xl font-semibold">{speaker.name}</h3>
-                  <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">{speaker.title}</p>
-                  <p className="mb-6">{speaker.description}</p>
-                  <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">{speaker.talkSummary}</p>
-
-                  {/* Social Media in Modal */}
-                  <div className="mb-6 flex gap-2">
-                    {speaker.socials.map((social, idx) => (
-                      <Button
-                        key={idx}
-                        variant="outline"
-                        size="icon"
-                        className="h-9 w-9 rounded-full transition-all duration-300 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-500"
-                      >
-                        {getSocialIcon(social)}
+            {/* Enhanced Speaker Modal with Video */}
+            <DialogContent className="max-w-[90vw] overflow-hidden border-0 p-0 sm:max-w-[900px] bg-transparent">
+              <div className="bg-white/95 backdrop-blur-xl dark:bg-black/95 rounded-xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
+                {/* Background decorative elements */}
+                <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
+                <div className="absolute -right-20 -bottom-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
+                
+                <div className="relative z-10 p-6 md:p-8">
+                  <DialogHeader className="mb-6">
+                    <div className="flex items-center justify-between">
+                      <DialogTitle className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{speaker.talkTitle}</DialogTitle>
+                      <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <span className="sr-only">Close</span>
+                        <X className="h-4 w-4" />
                       </Button>
-                    ))}
+                    </div>
+                  </DialogHeader>
+
+                  <div className="grid gap-8 md:grid-cols-7">
+                    {/* Video Section - Takes 4/7 of the width on medium+ screens */}
+                    <div className="md:col-span-4 w-full h-full">
+                      <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-lg border border-gray-200 dark:border-gray-800">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${speaker.videoId}?rel=0`}
+                          title={`${speaker.name} - ${speaker.talkTitle}`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="h-full w-full"
+                        ></iframe>
+                      </div>
+                    </div>
+
+                    {/* Speaker Info - Takes 3/7 of the width on medium+ screens */}
+                    <div className="md:col-span-3 flex flex-col">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-red-500 shadow-lg">
+                          <Image
+                            src={speaker.imageSrc || `/placeholder.svg?height=100&width=100&text=${encodeURIComponent(speaker.name.charAt(0))}`}
+                            alt={speaker.name}
+                            width={64}
+                            height={64}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white">{speaker.name}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{speaker.title}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 dark:bg-gray-900/70 rounded-xl p-4 mb-6">
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">About the Talk</h4>
+                        <p className="text-gray-700 dark:text-gray-300">{speaker.description}</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Talk Summary</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{speaker.talkSummary}</p>
+                        </div>
+
+                        <div>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Connect</h4>
+                          <div className="flex gap-3">
+                            {speaker.socials.map((social, idx) => (
+                              <Button
+                                key={idx}
+                                variant="outline"
+                                size="icon"
+                                className="h-9 w-9 rounded-full transition-all duration-300 bg-white dark:bg-gray-800 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-500 border border-gray-200 dark:border-gray-700"
+                              >
+                                {renderSocialIcon(social)}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Watch Video Button */}
-                  <Button
-                    className="group mt-auto flex items-center gap-2 bg-red-600 hover:bg-red-700"
-                    onClick={() => {
-                      document.getElementById(`video-${speaker.videoId}`)?.scrollIntoView({ behavior: "smooth" })
-                    }}
-                  >
-                    <Play className="h-4 w-4" />
-                    <span>Watch Talk</span>
-                    <ExternalLink className="ml-auto h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Video Section */}
-              <div id={`video-${speaker.videoId}`} className="mt-6">
-                <h4 className="mb-3 text-lg font-medium">Talk Video</h4>
-                <div className="aspect-video w-full overflow-hidden rounded-lg">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={`https://www.youtube.com/embed/${speaker.videoId}`}
-                    title={`${speaker.name} - ${speaker.talkTitle}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="rounded-md"
-                  ></iframe>
                 </div>
               </div>
             </DialogContent>

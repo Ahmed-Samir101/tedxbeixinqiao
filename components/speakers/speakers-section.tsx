@@ -142,11 +142,11 @@ export default function SpeakersSection() {
             <span className="mb-3 inline-block rounded-full bg-red-100 px-4 py-1.5 text-sm font-medium text-red-600 dark:bg-red-900/30 dark:text-red-400">
               Ideas Worth Sharing
             </span>
-            <h2 className="mb-6 bg-gradient-to-r from-black to-gray-700 bg-clip-text text-4xl font-bold leading-tight text-transparent dark:from-white dark:to-gray-400 md:text-5xl">
+            <h2 className="mb-6 text-4xl font-bold leading-tight text-gray-900 dark:text-white md:text-5xl">
               Visionary <span className="text-red-600 dark:text-red-500">Speakers</span>
             </h2>
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-700 dark:text-gray-300">
-              Meet the innovative minds bringing groundbreaking ideas to the TEDxBeixinqiao stage. Each speaker brings a unique perspective that challenges conventional thinking.
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+              Our diverse speakers share ideas that spark conversations and change perspectives. Each talk brings a unique insight to the TEDxBeixinqiao stage.
             </p>
           </motion.div>
 

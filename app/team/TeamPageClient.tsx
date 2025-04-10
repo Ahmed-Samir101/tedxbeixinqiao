@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Facebook, Twitter, Linkedin, Instagram, Globe, Mail, X, ArrowLeft, ArrowRight } from "lucide-react"
@@ -74,7 +74,7 @@ export default function TeamPageClient() {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-red-600/5 blur-3xl"></div>
         <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-red-600/5 blur-3xl"></div>
-        <div className="absolute left-1/3 top-1/4 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl"></div>
+        <div className="absolute left-1/3 top-1/4 h-64 w-64 rounded-full bg-black/5 blur-3xl dark:bg-white/5"></div>
       </div>
       
       {/* Main content */}
@@ -402,6 +402,11 @@ export default function TeamPageClient() {
 
                 {/* Right column: content with premium scrollable area */}
                 <div className="relative flex-1 p-6 md:p-8 lg:p-10">
+                  {/* Accessibility requirement - DialogTitle (visually hidden) */}
+                  <DialogTitle className="sr-only">
+                    {selectedMember.name} - {selectedMember.title}
+                  </DialogTitle>
+                  
                   {/* Single elegant close button */}
                   <DialogClose className="absolute right-6 top-6 rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800/50 dark:hover:text-gray-50">
                     <X className="h-5 w-5" />

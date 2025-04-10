@@ -117,12 +117,12 @@ export default function VideoShowcase() {
   return (
     <section 
       id="video-showcase" 
-      className="relative w-full overflow-hidden bg-white py-24 dark:bg-gray-950"
+      className="relative w-full overflow-hidden bg-white text-gray-900 dark:bg-black dark:text-white py-24 transition-colors duration-300"
     >
       {/* Background gradients */}
-      <div className="absolute inset-0 overflow-hidden opacity-30 dark:opacity-20">
+      <div className="absolute inset-0 overflow-hidden opacity-10 dark:opacity-20">
         <div className="absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-red-600/20 blur-[100px]"></div>
-        <div className="absolute -bottom-40 right-0 h-[25rem] w-[25rem] rounded-full bg-red-600/30 blur-[100px]"></div>
+        <div className="absolute -bottom-40 right-0 h-[25rem] w-[25rem] rounded-full bg-red-600/20 blur-[100px]"></div>
       </div>
       
       <motion.div
