@@ -67,7 +67,7 @@ export const teamMembers: TeamMember[] = [
     role: "operations",
     bio: "Floria oversees all operational aspects of TEDxBeixinqiao events, ensuring seamless execution from planning to delivery with meticulous attention to detail and process efficiency.",
     fullBio: "Floria oversees all operational aspects of TEDxBeixinqiao events, ensuring seamless execution from planning to delivery. With her exceptional organizational skills and strategic mindset, she creates frameworks that allow ideas to flourish while maintaining practical feasibility. Floria's meticulous attention to detail and process efficiency transforms creative visions into well-executed experiences. She leads the operations team with a clear focus on excellence, ensuring that every TEDxBeixinqiao event flows smoothly for speakers, attendees, and volunteers alike. Her background in event management and operations provides the perfect foundation for creating memorable TEDx experiences.",
-    image: "/team/flora&elena.jpg",
+    image: "/team/floria.jpg",
     socials: [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" }
