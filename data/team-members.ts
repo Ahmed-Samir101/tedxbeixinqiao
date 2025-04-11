@@ -80,7 +80,7 @@ export const teamMembers: TeamMember[] = [
     role: "communications",
     bio: "Elena leads TEDxBeixinqiao's communications strategy, crafting compelling narratives that represent our vision and connect with diverse audiences across multiple platforms.",
     fullBio: "Elena leads TEDxBeixinqiao's communications strategy, crafting compelling narratives that represent our vision and connect with diverse audiences. Her expertise in strategic communications ensures that TEDx ideas reach beyond the event itself, creating lasting impact through thoughtful messaging and storytelling. Elena oversees all external communications, from press relations to social media presence, maintaining a consistent voice that embodies the essence of TEDxBeixinqiao. Her background in journalism and content strategy brings valuable perspective to how we share ideas worth spreading with the world.",
-    image: "/team/flora&elena.jpg",
+    image: "/team/elena.jpg",
     socials: [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "twitter", url: "https://twitter.com/" }
