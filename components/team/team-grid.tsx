@@ -33,7 +33,7 @@ export default function TeamGrid() {
       {teamMembers.map((member, index) => (
         <motion.div key={index} variants={item}>
           <Dialog>
-            <Card className="group overflow-hidden transition-all duration-300 hover:shadow-md hover:shadow-red-600/10 dark:bg-gray-900 dark:hover:shadow-red-600/20">
+            <Card className="group overflow-hidden transition-all duration-300 hover:shadow-md hover:shadow-red-600/10 bg-white/90 backdrop-blur-sm dark:bg-gray-900/70 dark:backdrop-blur-md dark:hover:shadow-red-600/20 border-0">
               <div className="relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
                 <Image
                   src={`/team/${member.name.split(' ')[0].toLowerCase()}.jpg`}

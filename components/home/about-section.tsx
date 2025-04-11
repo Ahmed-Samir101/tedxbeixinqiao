@@ -135,56 +135,57 @@ export default function AboutSection() {
               <AnimatePresence>
                 {isVideoPlaying ? (
                   <motion.div 
-                    initial={{ opacity: 0 }} 
-                    animate={{ opacity: 1 }} 
-                    exit={{ opacity: 0 }}
-                    className="relative h-full w-full"
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  exit={{ opacity: 0 }}
+                  className="relative h-full w-full"
                   >
-                    <iframe 
-                      src="https://www.youtube.com/embed/pHwQZ35obSM?autoplay=1" 
-                      className="absolute inset-0 h-full w-full"
-                      allowFullScreen
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    />
+                  <video 
+                    src="https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/1.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby8xLm1wNCIsImlhdCI6MTc0NDMzOTMzNSwiZXhwIjoxODA3NDExMzM1fQ.WOLNS9DfJvBpNi_3Q0RFOtYWfWl7IHnV_k_6ANSMHvs"
+                    className="absolute inset-0 h-full w-full"
+                    controls
+                    loop
+                    autoPlay
+                  />
                   </motion.div>
                 ) : (
                   <motion.div className="relative h-full w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <Image
-                      src="/0.jpg"
-                      alt="TEDxBeixinqiao Event"
-                      fill
-                      className="object-cover transition-transform duration-700 ease-out"
-                      style={{ transform: `scale(${isHoveringImage ? 1.05 : 1})` }}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
-                      variants={imageOverlayVariants}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 flex flex-col items-center justify-center"
-                      animate={{ scale: isHoveringImage ? 1.05 : 1 }}
-                      transition={{ duration: 0.3 }}
+                  <Image
+                    src="/0.jpg"
+                    alt="TEDxBeixinqiao Event"
+                    fill
+                    className="object-cover transition-transform duration-700 ease-out"
+                    style={{ transform: `scale(${isHoveringImage ? 1.05 : 1})` }}
+                  />
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
+                    variants={imageOverlayVariants}
+                  />
+                  <motion.div 
+                    className="absolute inset-0 flex flex-col items-center justify-center"
+                    animate={{ scale: isHoveringImage ? 1.05 : 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Button 
+                    onClick={() => setIsVideoPlaying(true)}
+                    className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600/90 text-white hover:bg-red-700/90 hover:scale-105 transition-transform"
                     >
-                      <Button 
-                        onClick={() => setIsVideoPlaying(true)}
-                        className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600/90 text-white hover:bg-red-700/90 hover:scale-105 transition-transform"
-                      >
-                        <Play className="h-8 w-8" />
-                      </Button>
-                      <p className="mt-4 text-white text-lg font-medium">Watch highlights</p>
-                    </motion.div>
+                    <Play className="h-8 w-8" />
+                    </Button>
+                    <p className="mt-4 text-white text-lg font-medium">Watch highlights</p>
+                  </motion.div>
 
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="flex items-center gap-3">
-                        <motion.div 
-                          initial={{ scale: 0.8, opacity: 0.5 }} 
-                          animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 1, 0.5] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                          className="h-3 w-3 rounded-full bg-red-500"
-                        />
-                        <p className="font-medium text-white">Beijing, China</p>
-                      </div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center gap-3">
+                    <motion.div 
+                      initial={{ scale: 0.8, opacity: 0.5 }} 
+                      animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      className="h-3 w-3 rounded-full bg-red-500"
+                    />
+                    <p className="font-medium text-white">Beijing, China</p>
                     </div>
+                  </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -284,7 +285,7 @@ export default function AboutSection() {
               <h3 className="text-4xl font-bold text-red-600 dark:text-red-500">
                 <CountUp end={12} suffix="+" />
               </h3>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">Visionary Speakers</p>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">Community Events</p>
             </motion.div>
             
             <motion.div 

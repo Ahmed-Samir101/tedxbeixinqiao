@@ -7,6 +7,7 @@ export default function SpeakersPageClient() {
   return (
     <div className="relative overflow-hidden bg-white py-24 dark:bg-black">
       {/* Background decorative elements */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_0,rgba(0,0,0,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0,rgba(255,255,255,0)_100%)]"></div>
       <div className="absolute left-0 top-40 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10"></div>
       <div className="absolute bottom-20 right-0 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10"></div>
 

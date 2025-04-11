@@ -2,37 +2,34 @@
 
 import { useRef, useState } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
-import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, ExternalLink } from "lucide-react"
+import { ArrowRight, Play, Volume2, VolumeX } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const eventHighlights = [
   {
     title: "Thought-Provoking Talks",
     description: "Our speakers deliver engaging presentations that challenge assumptions, spark new ideas, and inspire action across various disciplines.",
-    image: "/1.jpg",
-    link: "#"
+    video: "https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/2.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby8yLm1wNCIsImlhdCI6MTc0NDMzOTg3OSwiZXhwIjoxODA3NDExODc5fQ.P4jbLXAQz3_3I-r1btpVnqIwFaVHdVWk6oRTkF229zg",
   },
   {
     title: "Interactive Experiences",
     description: "Between talks, attendees engage in hands-on activities, discussions, and demonstrations that bring ideas to life in creative ways.",
-    image: "/2.jpg",
-    link: "#"
+    video: "https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/3.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby8zLm1wNCIsImlhdCI6MTc0NDMzOTk1NSwiZXhwIjoxODA3NDExOTU1fQ.jqaXrNyq04RZO2XMQREPSXfq1Gtx2hiWPp6LGlojmP4",
   },
   {
     title: "Community Connection",
     description: "Our events bring together diverse attendees from various backgrounds, fostering connections that often lead to collaboration and friendship.",
-    image: "/3.jpg",
-    link: "#"
+    video: "https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/4.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby80Lm1wNCIsImlhdCI6MTc0NDMzOTk2NSwiZXhwIjoxODA3NDExOTY1fQ.5b4Nc4CB_F0WfD4vE_J17r1WxmXxMUaOGRLBGqHs2Qc",
   }
 ]
 
 export default function EventHighlights() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [activeVideo, setActiveVideo] = useState<number | null>(null)
+  const [muted, setMuted] = useState(true)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -47,6 +44,7 @@ export default function EventHighlights() {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    hover: { y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }
   }
   
   const headlineVariants = {
@@ -59,12 +57,6 @@ export default function EventHighlights() {
         ease: "easeOut" 
       } 
     },
-  }
-  
-  const highlightVariants = {
-    hidden: { scale: 0.95, opacity: 0 },
-    visible: { scale: 1, opacity: 1 },
-    hover: { y: -8, transition: { type: "spring", stiffness: 300, damping: 15 } }
   }
 
   return (
@@ -135,39 +127,32 @@ export default function EventHighlights() {
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
-                onHoverStart={() => setHoveredCard(index)}
-                onHoverEnd={() => setHoveredCard(null)}
                 className={cn(
-                  "group relative overflow-hidden rounded-xl bg-white transition-all duration-500 dark:bg-gray-900",
-                  hoveredCard === index ? "shadow-xl shadow-red-600/10 dark:shadow-red-600/20" : "shadow-md"
+                  "group relative overflow-hidden rounded-xl bg-white/90 backdrop-blur-sm transition-all duration-300 dark:bg-gray-900/70 dark:backdrop-blur-md",
+                  "shadow-md hover:shadow-xl hover:shadow-red-600/20 dark:hover:shadow-red-600/30"
                 )}
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  <Image
-                    src={highlight.image}
-                    alt={highlight.title}
-                    fill
-                    className={cn(
-                      "object-cover transition-transform duration-700",
-                      hoveredCard === index ? "scale-105" : "scale-100"
-                    )}
-                  />
-                  <div className={cn(
-                    "absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300",
-                    hoveredCard === index ? "opacity-100" : "opacity-0"
-                  )}>
-                    <div className="absolute bottom-0 left-0 p-6">
-                      <Link
-                        href={highlight.link}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-red-600"
+                  {/* Video Thumbnail */}
+                  <div className="h-full w-full bg-gray-100 dark:bg-gray-800">
+                    <video
+                      src={highlight.video}
+                      poster={highlight.video + "#t=0.1"}
+                      muted
+                      playsInline
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <button 
+                        onClick={() => setActiveVideo(index)}
+                        className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-red-600 shadow-lg transition-transform hover:scale-110 hover:bg-white"
                       >
-                        <span>Learn more</span>
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </Link>
+                        <Play className="h-8 w-8 fill-red-600" />
+                      </button>
                     </div>
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-6 bg-transparent">
                   <h3 className="mb-2 text-xl font-semibold text-black dark:text-white">
                     {highlight.title}
                   </h3>
@@ -175,27 +160,6 @@ export default function EventHighlights() {
                     {highlight.description}
                   </p>
                 </div>
-                
-                <AnimatePresence>
-                  {hoveredCard === index && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md dark:bg-gray-800"
-                    >
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ 
-                          duration: 8, 
-                          repeat: Infinity, 
-                          ease: "linear" 
-                        }}
-                        className="h-5 w-5 rounded-full border-t-2 border-red-600 opacity-75"
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
             ))}
           </motion.div>
@@ -223,6 +187,51 @@ export default function EventHighlights() {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* Modal for video playback */}
+      <AnimatePresence>
+        {activeVideo !== null && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveVideo(null)}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur"
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative mx-4 max-w-4xl overflow-hidden rounded-xl bg-black shadow-2xl"
+              >
+                <video
+                  src={eventHighlights[activeVideo].video}
+                  autoPlay
+                  playsInline
+                  controls
+                  muted={muted}
+                  className="w-full"
+                />
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                  <button
+                    onClick={() => setMuted(!muted)}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors hover:bg-white/30"
+                  >
+                    {muted ? (
+                      <VolumeX className="h-5 w-5 text-white" />
+                    ) : (
+                      <Volume2 className="h-5 w-5 text-white" />
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

@@ -128,24 +128,6 @@ export const speakers: Speaker[] = [
     date: "April 20, 2024",
     category: "Ideas"
   },
-  {
-    name: "Xiaoyue Pu",
-    title: "Artist",
-    talkTitle: "Female Utopia in Ancient China",
-    description: "The Combing Woman and the Auntie's House in Feudal China",
-    talkSummary: "Xiaoyue Pu unveils forgotten histories of female solidarity and resistance in feudal China. Through meticulous historical research and artistic interpretation, she illuminates how women created spaces of autonomy and support within highly restrictive social systems, offering lessons relevant to contemporary discussions of gender and community.",
-    socials: [
-      { platform: "facebook", url: "https://facebook.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" }
-    ],
-    videoId: "JO6z8juEXxY",
-    imageSrc: "/speakers/xiaoyue.jpg",
-    duration: "9:34",
-    date: "April 20, 2024",
-    category: "Art"
-  },
 ];
 
 // Helper functions

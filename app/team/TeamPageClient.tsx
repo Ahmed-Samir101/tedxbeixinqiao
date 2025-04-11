@@ -70,13 +70,11 @@ export default function TeamPageClient() {
   };
   
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-white to-gray-50 pb-24 pt-24 dark:from-gray-900 dark:to-gray-950">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-red-600/5 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-red-600/5 blur-3xl"></div>
-        <div className="absolute left-1/3 top-1/4 h-64 w-64 rounded-full bg-black/5 blur-3xl dark:bg-white/5"></div>
-      </div>
+    <div className="relative overflow-hidden bg-white py-24 dark:bg-black">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_0,rgba(0,0,0,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0,rgba(255,255,255,0)_100%)]"></div>
+      <div className="absolute left-0 top-40 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10"></div>
+      <div className="absolute bottom-20 right-0 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10"></div>
       
       {/* Main content */}
       <div className="container relative z-10 mx-auto max-w-7xl px-4">
