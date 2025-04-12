@@ -91,13 +91,13 @@ export const teamMembers: TeamMember[] = [
     firstName: "Keith",
     title: "Lead Curator & Vision Director",
     role: "leadership",
-    quote: "While in China I fell in love with the culture, the people and the food, HaHa",
+    quote: "since childhood Keith has wanted to save the butterflies",
     bio: "Keith brings extensive experience in production and storytelling to TEDxBeixinqiao, having produced hundreds of live shows and numerous film and television productions.",
     fullBio: "Over the years, Keith has produced hundreds of live shows for theater, numerous television productions, and several films, some of which he also wrote. One of his notable films was released by Lionsgate and featured an Academy Award-winning actor in a leading role. As a producer, Keith has designed, budgeted, supervised, and delivered films that have generated millions in revenue. He has imparted his knowledge by teaching production at UCLA and Shanghai University. Prior to his work in China, Keith contributed to over 20 Hollywood blockbusters, assisting some of Hollywood's greatest directors. His involvement in China's emerging film industry began over 14 years ago, working on several major box office successes. While in China, Keith fell in love with the culture, the people, and the food, humorously noting, \"I know that sounds funny, but it's true; I love it here.\"",
     image: "/team/keith.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" }
+      { platform: "linkedin", url: "https://linkedin.com/in/keith-collea-9a70984/" },
+      { platform: "website", url: "https://keithc-portfolio.vercel.app" }
     ],
   },
   {
@@ -109,7 +109,7 @@ export const teamMembers: TeamMember[] = [
     fullBio: "Songbin leads TEDxBeixinqiao's sponsorship strategy, developing valuable partnerships that align with our vision while providing meaningful benefits to our supporting organizations. With a background in business development and client relations, his strategic approach to partnership building goes beyond traditional sponsorship to create authentic collaborations. Songbin's ability to identify and cultivate mutually beneficial relationships ensures TEDxBeixinqiao has the resources needed to bring powerful ideas to our community. He works closely with partners to create custom activation opportunities that enhance the event experience while showcasing their support meaningfully.",
     image: "/team/songbin.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/in/songbin-huang/" },
       { platform: "twitter", url: "https://twitter.com/" }
     ],
   },
@@ -118,13 +118,12 @@ export const teamMembers: TeamMember[] = [
     firstName: "Sebastian",
     title: "Head of Speaker Development",
     role: "leadership",
-    quote: "While in China I fell in love with the culture, the people and the food, HaHa",
-    bio: "Sebastian leads the speaker development program, guiding presenters through the process of refining their ideas into compelling TEDx talks that inspire and provoke thoughtful discussion.",
-    fullBio: "Sebastian is a German philosopher, who was educated in Oxford and is living in Beijing, where he works as an assistant professor at Peking University. He is a Fellow of the Chinese Institute of Foreign Philosophy and a former Berggruen China Fellow. He works broadly in philosophy, on both practical and theoretical issues, ranging from aesthetics and the theory of knowledge to logic and the philosophy of mind, with a focus on foundational cognitive science and artificial intelligence. Recent popular pieces include 'AI's First Philosopher' (https://aeon.co/essays/why-we-should-remember-alan-turing-as-a-philosopher), 'Can Machines Be Conscious?' (https://philosophynow.org/issues/155/Can_Machines_Be_Conscious), and 'Nietzsche and the Machines' (https://archive.philosophersmag.com/nietzsche-and-the-machines/).",
+    bio: "Sebastian is a German philosopher, who was educated in Oxford and is living in Beijing, where he has worked at Peking University since autumn 2019.",
+    fullBio: "Sebastian is a German philosopher, who was educated in Oxford and is living in Beijing, where he has worked at Peking University since autumn 2019. He is a Fellow of the Institute of Foreign Philosophy at Peking University and a former Berggruen China Fellow. He works broadly in philosophy, on both practical and theoretical issues.",
     image: "/team/sebastian.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "website", url: "https://example.com/" }
+      { platform: "linkedin", url: "https://linkedin.com/in/xiaosai/" },
+      { platform: "website", url: " https://www.yhposolihp.com/" }
     ],
   },
   {
@@ -188,7 +187,7 @@ export const teamMembers: TeamMember[] = [
     fullBio: "Xiaodan coordinates the implementation of sponsorship agreements, ensuring that partner activations are executed flawlessly while maintaining the integrity of the TEDxBeixinqiao experience. Working closely with the Strategic Sponsorships Lead, she manages the practical aspects of partner integration, from branding placement to on-site activations. Xiaodan's attention to detail and organizational skills ensure that sponsor expectations are met or exceeded while enhancing rather than distracting from the event itself. Her background in event coordination and client relations provides valuable perspective in balancing commercial considerations with TEDx principles.",
     image: "/team/xiaodan.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/in/xiaodan-xi-5498b2a6/" },
       { platform: "twitter", url: "https://twitter.com/" }
     ],
   },
@@ -214,7 +213,7 @@ export const teamMembers: TeamMember[] = [
     fullBio: "Badreldin creates compelling visual content that captures the essence of TEDxBeixinqiao, developing videos that extend our reach and impact beyond the live event experience. His talent for visual storytelling transforms complex ideas into accessible, engaging content that resonates with diverse audiences. Working within the Communications team, Badreldin produces everything from promotional teasers to comprehensive event documentation, ensuring that each video reflects our brand identity and values. His creative approach to videography helps bring speakers' ideas to life, creating visual narratives that enhance understanding and emotional connection.",
     image: "/team/badr.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/in/badreldin-mostafa-71a6645/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
   },
@@ -228,7 +227,7 @@ export const teamMembers: TeamMember[] = [
     fullBio: "With over a decade of experience as an operations professional and entrepreneur, Sophie has showcased remarkable leadership across various industries. As a TEDx Licensee and Lead Curator, she is deeply dedicated to merging corporate excellence with social impact within the technology sector. Sophie's passion lies in the creation and nurturing of thriving communities that foster positive innovation. She staunchly believes in the importance of persistent practices for ensuring sustainability and is unwavering in her commitment to leading by example. Beyond her professional endeavors, Sophie's insatiable curiosity fuels her love for travel, photography, and exploring diverse cultures. Her mission is not just limited to the corporate world; she aspires to tell the stories of underserved communities and make measurable strides towards creating a better world for all.",
     image: "/team/sophie.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/in/sophiefanwu/" },
       { platform: "instagram", url: "https://instagram.com/" }
     ],
   },
