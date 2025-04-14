@@ -9,10 +9,12 @@ import { Menu, X, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useMobile } from "@/hooks/use-mobile"
 import { motion, AnimatePresence } from "framer-motion"
+import { SpeakerApplicationModal } from "@/components/speaker-application-modal"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const isMobile = useMobile()
   const pathname = usePathname()
 
@@ -21,6 +23,11 @@ export default function Navbar() {
     { name: "Team", path: "/team" },
     { name: "Contact", path: "/contact" },
   ]
+
+  // Handle mounting to avoid hydration issues
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,12 +61,19 @@ export default function Navbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-6">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
           <motion.div 
-            className="relative flex items-center"
-            whileHover={{ scale: 1.05 }}
+            className={cn(
+              "relative flex items-center",
+              mounted && isMobile && "scale-[0.85]"
+            )}
+            whileHover={{ scale: mounted && isMobile ? 1 : 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <motion.span
-              className="text-2xl font-extrabold text-red-600 dark:text-red-500"
+              className={cn(
+                "font-extrabold text-red-600 dark:text-red-500",
+                // Only apply mobile-specific styles after mounting
+                mounted ? (isMobile ? "text-lg" : "text-2xl") : "text-2xl"
+              )}
               whileHover={{ 
                 textShadow: "0 0 8px rgba(239, 68, 68, 0.5)"
               }}
@@ -68,7 +82,11 @@ export default function Navbar() {
               TEDx
             </motion.span>
             <motion.span
-              className="text-2xl font-bold text-black dark:text-white"
+              className={cn(
+                "font-bold text-black dark:text-white",
+                // Only apply mobile-specific styles after mounting
+                mounted ? (isMobile ? "text-lg" : "text-2xl") : "text-2xl"
+              )}
             >
               Beixinqiao
             </motion.span>
@@ -130,28 +148,7 @@ export default function Navbar() {
             )
           })}
           
-          <Button 
-            asChild 
-            variant="default" 
-            className="group relative overflow-hidden bg-red-600 transition-all duration-300 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
-          >
-            <Link href="/contact" className="flex items-center gap-1">
-              <motion.span
-                initial={{ width: "100%", height: "100%", x: "-101%" }}
-                whileHover={{ x: "101%" }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="absolute inset-0 bg-red-500/40"
-              />
-              <span className="z-10">Get Ticket</span>
-              <motion.div
-                className="z-10"
-                whileHover={{ x: 3 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </motion.div>
-            </Link>
-          </Button>
+          <SpeakerApplicationModal />
           
           <div className="overflow-hidden rounded-md">
             <ModeToggle />
@@ -159,23 +156,14 @@ export default function Navbar() {
         </nav>
 
         {/* Mobile Navigation Toggle */}
-        <div className="flex items-center gap-4 md:hidden">
-          <Button 
-            asChild 
-            variant="default" 
-            size="sm" 
-            className="group relative overflow-hidden bg-red-600 text-white transition-all duration-300 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
-          >
-            <Link href="/contact" className="flex items-center">
-              <motion.span
-                initial={{ width: "100%", height: "100%", x: "-101%" }}
-                whileHover={{ x: "101%" }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="absolute inset-0 bg-red-500/40"
-              />
-              <span className="z-10">Get Ticket</span>
-            </Link>
-          </Button>
+        <div className="flex items-center gap-3 md:hidden">
+          {/* Only show the mobile version after client-side hydration */}
+          {mounted && (
+            <SpeakerApplicationModal 
+              variant="mobile" 
+              className="text-xs px-2.5 h-8" 
+            />
+          )}
           
           <div className="overflow-hidden rounded-md">
             <ModeToggle />
@@ -186,7 +174,7 @@ export default function Navbar() {
             size="icon" 
             onClick={() => setIsOpen(!isOpen)} 
             aria-label="Toggle Menu"
-            className="flex h-9 w-9 items-center justify-center rounded-md"
+            className="flex h-8 w-8 items-center justify-center rounded-md ml-1"
           >
             <AnimatePresence mode="wait">
               {isOpen ? (
@@ -197,7 +185,7 @@ export default function Navbar() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -207,7 +195,7 @@ export default function Navbar() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu className="h-5 w-5" />
+                  <Menu className="h-4 w-4" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -252,7 +240,7 @@ export default function Navbar() {
                     <Link
                       href={item.path}
                       className={cn(
-                        "flex items-center justify-between px-6 py-4 text-base font-medium transition-colors",
+                        "flex items-center justify-between px-6 py-3.5 text-base font-medium transition-colors",
                         isActive 
                           ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-500" 
                           : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-900/50"
