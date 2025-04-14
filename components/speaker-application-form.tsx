@@ -160,7 +160,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 <FormItem>
                   <FormLabel>Available for auditions, rehearsals, show in Beijing? <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input placeholder="Yes/No and details" {...field} />
+                    <Input placeholder="(for example, Yes - available all of May)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,7 +202,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 <FormItem>
                   <FormLabel>Given TED or TEDx talk before? <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input placeholder="Yes/No and details" {...field} />
+                    <Input placeholder="(for example, Yes - TEDxShanghai 2023)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -294,7 +294,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 <FormItem>
                   <FormLabel>Optional URL (personal website, video of speech, etc.)</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://..." {...field} />
+                    <Input placeholder="(for example, https://yourwebsite.com or https://youtube.com/yourvideo)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -341,7 +341,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
               <FormItem>
                 <FormLabel>Contact (phone, email) <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
-                  <Input placeholder="Nominee's contact information" {...field} />
+                  <Input placeholder="(for example, +86 123 456 7890 or name@email.com)" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -355,7 +355,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
               <FormItem>
                 <FormLabel>Given TED or TEDx talk before? <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
-                  <Input placeholder="Yes/No and details" {...field} />
+                  <Input placeholder="(for example, No, or Yes at TEDxBeijing 2022)" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -369,7 +369,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
               <FormItem>
                 <FormLabel>Remarks <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
-                  <Input placeholder="Why would they make a good speaker?" {...field} />
+                  <Input placeholder="(for example, Expert in AI ethics with unique perspectives)" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -383,7 +383,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
               <FormItem>
                 <FormLabel>URL (personal website, video of speech, etc.) <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." {...field} />
+                  <Input placeholder="(for example, https://linkedin.com/in/nominee or video URL)" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
