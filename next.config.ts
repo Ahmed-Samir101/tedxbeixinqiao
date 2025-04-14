@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
+    // Added serverActions configuration inside experimental
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 }
 

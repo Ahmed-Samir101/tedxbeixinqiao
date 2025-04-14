@@ -11,9 +11,9 @@ const resend = new Resend(process.env.RESEND_API_KEY as string);
 /**
  * Send a speaker application email notification
  */
-export async function sendSpeakerApplicationEmail(applicationData: any) {
+export async function sendSpeakerApplicationEmail(applicationData: any, pdfFile: File | null = null) {
   try {
-    const response = await resend.emails.send({
+    const emailOptions: any = {
       from: 'forms@tedxbeixinqiao.com',
       to: 'frank.liang@tedxbeixinqiao.com',
       subject: `Speaker Application: ${applicationData.fullName}`,
@@ -34,9 +34,24 @@ export async function sendSpeakerApplicationEmail(applicationData: any) {
         <h3>Presentation Idea</h3>
         <p>${applicationData.ideaPresentation}</p>
         ${applicationData.websiteUrl ? `<p><strong>Website URL:</strong> <a href="${applicationData.websiteUrl}">${applicationData.websiteUrl}</a></p>` : ''}
-        <p><em>PDF attachment information is not included in this email.</em></p>
+        ${pdfFile ? '<p><strong>PDF Attachment:</strong> Please see the attached PDF document.</p>' : '<p><em>No PDF attachment was provided.</em></p>'}
       `,
-    });
+    };
+
+    // Add attachment if available
+    if (pdfFile) {
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      
+      emailOptions.attachments = [
+        {
+          filename: pdfFile.name,
+          content: buffer,
+        },
+      ];
+    }
+    
+    const response = await resend.emails.send(emailOptions);
     
     return { success: true, data: response };
   } catch (error) {

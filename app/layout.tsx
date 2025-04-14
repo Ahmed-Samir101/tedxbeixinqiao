@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Navbar from "@/components/navbar"
 import { Analytics } from "@vercel/analytics/react"
 import Footer from "@/components/footer"
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 import type { Metadata } from "next"
 
@@ -29,6 +30,7 @@ export default function RootLayout({
             <Navbar />
             <main className="flex-1">{children}<Analytics/></main>
             <Footer />
+            <Toaster />
           </div>
         </ThemeProvider>
       </body>

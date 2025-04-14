@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
 import { sendSpeakerApplicationEmail, sendSpeakerNominationEmail } from "@/lib/email/resend-service"
 
@@ -38,8 +38,15 @@ const speakerApplicationSchema = z.object({
   gender: z.string().min(1, { message: "Please provide gender information." })
     .max(30, { message: "Response cannot exceed 30 words." }),
   remarks: z.string().max(30, { message: "Remarks cannot exceed 30 words." }).optional(),
-  ideaPresentation: z.string().min(10, { message: "Please describe your idea in at least 10 words." })
-    .max(50, { message: "Description cannot exceed 50 words." }),
+  ideaPresentation: z.string()
+    .min(10, { message: "Please describe your idea in at least 10 words." })
+    .refine(
+      (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+        return wordCount <= 50;
+      },
+      { message: "Description cannot exceed 50 words." }
+    ),
   // Note: File upload would be handled separately in a real implementation
   websiteUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.string().length(0)),
 })
@@ -100,6 +107,17 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] || null;
+    
+    // Check file size if a file is selected (2MB limit)
+    if (file && file.size > 2 * 1024 * 1024) {
+      toast.error("File too large", {
+        description: "The PDF file must be smaller than 2MB"
+      });
+      event.target.value = ''; // Reset the input
+      setFileSelected(null);
+      return;
+    }
+    
     setFileSelected(file);
   }
 
@@ -107,17 +125,29 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
     try {
       setIsSubmitting(true);
 
+      // Create form data to include the file
+      const formData = new FormData();
+      
+      // Add all form values
+      Object.entries(values).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+      
+      // Add the file if selected
+      if (fileSelected) {
+        formData.append('pdfAttachment', fileSelected);
+      }
+
       // Send email notification with form data
-      const result = await sendSpeakerApplicationEmail(values);
+      const result = await sendSpeakerApplicationEmail(values, fileSelected);
       
       if (!result.success) {
         throw new Error("Failed to send application email");
       }
       
-      // Show success toast
-      toast({
-        title: "Application Submitted",
-        description: "Thank you for your speaker application. We'll review it and get back to you soon.",
+      // Show success toast using Sonner
+      toast.success("Application Submitted", {
+        description: "Thank you for your speaker application. We'll review it and get back to you soon."
       });
 
       // Reset the form
@@ -125,10 +155,8 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       setFileSelected(null);
     } catch (error) {
       console.error("Error submitting application:", error);
-      toast({
-        title: "Submission Error",
-        description: "There was an error submitting your application. Please try again later.",
-        variant: "destructive",
+      toast.error("Submission Error", {
+        description: "There was an error submitting your application. Please try again later."
       });
     } finally {
       setIsSubmitting(false);
@@ -146,20 +174,17 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
         throw new Error("Failed to send nomination email");
       }
       
-      // Show success toast
-      toast({
-        title: "Nomination Submitted",
-        description: "Thank you for your speaker nomination. We'll review it and consider reaching out to them.",
+      // Show success toast using Sonner
+      toast.success("Nomination Submitted", {
+        description: "Thank you for your speaker nomination. We'll review it and consider reaching out to them."
       });
 
       // Reset the form
       nominationForm.reset();
     } catch (error) {
       console.error("Error submitting nomination:", error);
-      toast({
-        title: "Submission Error",
-        description: "There was an error submitting your nomination. Please try again later.",
-        variant: "destructive",
+      toast.error("Submission Error", {
+        description: "There was an error submitting your nomination. Please try again later."
       });
     } finally {
       setIsSubmitting(false);
@@ -293,19 +318,30 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
             <FormField
               control={applicationForm.control}
               name="ideaPresentation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>In 50 words, what is the idea you would like to present on stage, and why should we want you to do that on ours? <span className="text-red-500">*</span></FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Describe your idea and why it matters..." 
-                      className="min-h-[100px]" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                // Calculate word count
+                const wordCount = field.value.trim().split(/\s+/).filter(Boolean).length;
+                const isOverLimit = wordCount > 50;
+                
+                return (
+                  <FormItem>
+                    <FormLabel>In 50 words, what is the idea you would like to present on stage, and why should we want you to do that on ours? <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Describe your idea and why it matters..." 
+                        className={`min-h-[100px] ${isOverLimit ? 'border-red-500' : ''}`}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <div className="flex justify-end">
+                      <p className={`text-xs ${isOverLimit ? 'text-red-500 font-medium' : 'text-muted-foreground'}`}>
+                        {wordCount}/50 words
+                      </p>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             
             <div className="space-y-2">
