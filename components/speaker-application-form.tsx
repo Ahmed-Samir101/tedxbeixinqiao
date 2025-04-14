@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { toast } from "@/hooks/use-toast"
 import { Label } from "@/components/ui/label"
+import { sendSpeakerApplicationEmail, sendSpeakerNominationEmail } from "@/lib/email/resend-service"
 
 // Speaker Application schema with validation
 const speakerApplicationSchema = z.object({
@@ -66,6 +67,7 @@ interface SpeakerFormProps {
 
 export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
   const [fileSelected, setFileSelected] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Speaker Application Form
   const applicationForm = useForm<SpeakerApplicationValues>({
@@ -101,34 +103,67 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
     setFileSelected(file);
   }
 
-  function onSubmitApplication(values: SpeakerApplicationValues) {
-    // Handle form submission - this would typically send data to an API
-    console.log(values);
-    console.log("File:", fileSelected);
-    
-    // Show success toast
-    toast({
-      title: "Application Submitted",
-      description: "Thank you for your speaker application. We'll review it and get back to you soon.",
-    });
+  async function onSubmitApplication(values: SpeakerApplicationValues) {
+    try {
+      setIsSubmitting(true);
 
-    // Reset the form
-    applicationForm.reset();
-    setFileSelected(null);
+      // Send email notification with form data
+      const result = await sendSpeakerApplicationEmail(values);
+      
+      if (!result.success) {
+        throw new Error("Failed to send application email");
+      }
+      
+      // Show success toast
+      toast({
+        title: "Application Submitted",
+        description: "Thank you for your speaker application. We'll review it and get back to you soon.",
+      });
+
+      // Reset the form
+      applicationForm.reset();
+      setFileSelected(null);
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      toast({
+        title: "Submission Error",
+        description: "There was an error submitting your application. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
-  function onSubmitNomination(values: NominateSpeakerValues) {
-    // Handle form submission - this would typically send data to an API
-    console.log(values);
-    
-    // Show success toast
-    toast({
-      title: "Nomination Submitted",
-      description: "Thank you for your speaker nomination. We'll review it and consider reaching out to them.",
-    });
+  async function onSubmitNomination(values: NominateSpeakerValues) {
+    try {
+      setIsSubmitting(true);
 
-    // Reset the form
-    nominationForm.reset();
+      // Send email notification with form data
+      const result = await sendSpeakerNominationEmail(values);
+      
+      if (!result.success) {
+        throw new Error("Failed to send nomination email");
+      }
+      
+      // Show success toast
+      toast({
+        title: "Nomination Submitted",
+        description: "Thank you for your speaker nomination. We'll review it and consider reaching out to them.",
+      });
+
+      // Reset the form
+      nominationForm.reset();
+    } catch (error) {
+      console.error("Error submitting nomination:", error);
+      toast({
+        title: "Submission Error",
+        description: "There was an error submitting your nomination. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // Speaker Application Form
@@ -306,7 +341,13 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
             <p className="text-sm text-gray-500 flex-grow">
               * The selection committee will invite some candidates for audition. Others may not hear back.
             </p>
-            <Button type="submit" className="bg-red-600 hover:bg-red-700 whitespace-nowrap">Submit Application</Button>
+            <Button 
+              type="submit" 
+              className="bg-red-600 hover:bg-red-700 whitespace-nowrap"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit Application"}
+            </Button>
           </div>
         </form>
       </Form>
@@ -395,7 +436,13 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
           <p className="text-sm text-gray-500 flex-grow">
             * The selection committee will invite some candidates for audition. Others may not hear back.
           </p>
-          <Button type="submit" className="bg-red-600 hover:bg-red-700 whitespace-nowrap">Submit Nomination</Button>
+          <Button 
+            type="submit" 
+            className="bg-red-600 hover:bg-red-700 whitespace-nowrap"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Nomination"}
+          </Button>
         </div>
       </form>
     </Form>
