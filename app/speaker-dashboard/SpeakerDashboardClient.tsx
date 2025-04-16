@@ -88,7 +88,7 @@ interface SpeakerDashboardClientProps {
 export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboardClientProps) {
   const [activeTab, setActiveTab] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
+  const [statusFilter, setStatusFilter] = useState<string[]>(["all"])
   const [typeFilter, setTypeFilter] = useState("all")
   const [entries, setEntries] = useState<SpeakerEntry[]>(initialEntries)
   const [selectedEntry, setSelectedEntry] = useState<SpeakerEntry | null>(null)
@@ -104,6 +104,7 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
   const [bulkActionOpen, setBulkActionOpen] = useState(false)
   const [selectedEntries, setSelectedEntries] = useState<string[]>([])
   const [isUpdating, setIsUpdating] = useState(false)
+  const [newBulkStatus, setNewBulkStatus] = useState("")
   
   // Entry form states
   const [entryFormOpen, setEntryFormOpen] = useState(false)
@@ -162,8 +163,8 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
       // Filter by type
       if (typeFilter !== "all" && entry.type !== typeFilter) return false
       
-      // Filter by status
-      if (statusFilter !== "all" && entry.status !== statusFilter) return false
+      // Filter by status - only filter if we have specific statuses selected (not "all")
+      if (!statusFilter.includes("all") && !statusFilter.includes(entry.status)) return false
       
       // Filter by search query
       if (searchQuery && !entry.fullName.toLowerCase().includes(searchQuery.toLowerCase()) && 
@@ -803,20 +804,73 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                 
                 <div className="p-2">
                   <p className="text-sm font-medium mb-1">Status</p>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Filter by status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Statuses</SelectItem>
-                      <SelectItem value="under_review">Under Review</SelectItem>
-                      <SelectItem value="shortlisted">Shortlisted</SelectItem>
-                      <SelectItem value="invited">Invited</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
-                      <SelectItem value="contacted">Contacted</SelectItem>
-                      <SelectItem value="flagged">Flagged</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {/* Add an "All" option */}
+                    <Badge
+                      key="all"
+                      variant={statusFilter.includes("all") ? "default" : "outline"}
+                      className={`cursor-pointer ${
+                        statusFilter.includes("all")
+                          ? "bg-primary/90 hover:bg-primary/70"
+                          : "hover:bg-primary/10"
+                      }`}
+                      onClick={() => {
+                        // If "all" is clicked, only select "all"
+                        setStatusFilter(["all"]);
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                        All Statuses
+                      </div>
+                    </Badge>
+                    
+                    {statusOptions.map(option => (
+                      <Badge
+                        key={option.value}
+                        variant={statusFilter.includes(option.value) ? "default" : "outline"}
+                        className={`cursor-pointer ${
+                          statusFilter.includes(option.value)
+                            ? "bg-primary/90 hover:bg-primary/70"
+                            : "hover:bg-primary/10"
+                        }`}
+                        onClick={() => {
+                          if (statusFilter.includes(option.value)) {
+                            // Remove this status if it's already selected
+                            const newFilters = statusFilter.filter(s => s !== option.value);
+                            // If removing the last specific status, revert to "all"
+                            setStatusFilter(newFilters.length === 0 ? ["all"] : newFilters);
+                          } else {
+                            // Add this status and remove "all" if it's present
+                            const newFilters = [...statusFilter.filter(s => s !== "all"), option.value];
+                            setStatusFilter(newFilters);
+                          }
+                        }}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <div className={`w-2 h-2 rounded-full ${
+                            option.value === "under_review" ? "bg-yellow-400" :
+                            option.value === "shortlisted" ? "bg-blue-400" :
+                            option.value === "invited" ? "bg-green-500" :
+                            option.value === "rejected" ? "bg-red-500" :
+                            option.value === "contacted" ? "bg-purple-400" :
+                            option.value === "flagged" ? "bg-orange-400" : "bg-gray-400"
+                          }`}></div>
+                          {option.label}
+                        </div>
+                      </Badge>
+                    ))}
+                    
+                    {statusFilter.length > 0 && !(statusFilter.length === 1 && statusFilter[0] === "all") && (
+                      <Badge
+                        variant="outline"
+                        className="cursor-pointer hover:bg-destructive/10 border-dashed"
+                        onClick={() => setStatusFilter(["all"])}
+                      >
+                        Clear
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="p-2">
@@ -839,7 +893,7 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                     variant="outline" 
                     className="w-full"
                     onClick={() => {
-                      setStatusFilter("all")
+                      setStatusFilter(["all"])
                       setTypeFilter("all")
                       setSearchQuery("")
                     }}
@@ -1198,28 +1252,29 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                         onValueChange={(value) => updateStatus(selectedEntry.id, value)}
                         disabled={isUpdating}
                       >
-                        <SelectTrigger className="w-full mt-1">
+                        <SelectTrigger className="w-full mt-1 h-10">
                           <SelectValue>
                             <StatusBadge status={selectedEntry.status} />
                           </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {statusOptions.map(option => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
+                            <SelectItem key={option.value} value={option.value} className="cursor-pointer">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-2 h-2 rounded-full ${
+                                  option.value === "under_review" ? "bg-yellow-400" :
+                                  option.value === "shortlisted" ? "bg-blue-400" :
+                                  option.value === "invited" ? "bg-green-500" :
+                                  option.value === "rejected" ? "bg-red-500" :
+                                  option.value === "contacted" ? "bg-purple-400" :
+                                  option.value === "flagged" ? "bg-orange-400" : "bg-gray-400"
+                                }`}></div>
+                                <span>{option.label}</span>
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-muted-foreground">Flagged</p>
-                      <Checkbox 
-                        checked={selectedEntry.flagged}
-                        onCheckedChange={() => toggleFlag(selectedEntry.id)}
-                        disabled={isUpdating}
-                      />
                     </div>
                     
                     <div>
@@ -1249,7 +1304,7 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                         placeholder="Add your notes about this speaker..."
                         disabled={isUpdating}
                       />
-                      <div className="flex justify-end mt-2">
+                      <div className="flex justify-end gap-2 mt-2">
                         <Button
                           size="sm"
                           onClick={() => {
@@ -1258,6 +1313,20 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                           disabled={isUpdating}
                         >
                           Save Notes
+                        </Button>
+                        <Button 
+                          size="sm"
+                          variant="default" 
+                          className="bg-green-600 hover:bg-green-700"
+                          onClick={() => {
+                            // Close details view
+                            setDetailsOpen(false);
+                            // Open edit form
+                            openEditForm(selectedEntry);
+                          }}
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Entry
                         </Button>
                       </div>
                     </div>
@@ -1271,17 +1340,6 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                   onClick={() => setDetailsOpen(false)}
                 >
                   Close
-                </Button>
-                <Button 
-                  onClick={() => {
-                    // Close details view
-                    setDetailsOpen(false);
-                    // Open edit form
-                    openEditForm(selectedEntry);
-                  }}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Entry
                 </Button>
               </DialogFooter>
             </>
@@ -1302,68 +1360,9 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="bulk-status">New Status</Label>
-              <Select onValueChange={async (value) => {
-                setIsUpdating(true);
-                try {
-                  // Get the current visible data based on active tab
-                  let dataToUse = filteredEntries;
-                  
-                  if (activeTab === "applications") {
-                    dataToUse = filteredEntries.filter(e => e.type === "application");
-                  } else if (activeTab === "nominations") {
-                    dataToUse = filteredEntries.filter(e => e.type === "nomination");
-                  }
-                  
-                  // Convert row indices to actual entry objects
-                  const selectedEntryIds = Object.keys(rowSelection)
-                    .map(index => {
-                      const idx = parseInt(index);
-                      return idx >= 0 && idx < dataToUse.length ? dataToUse[idx].id : null;
-                    })
-                    .filter(Boolean) as string[];
-                  
-                  // For each selected entry
-                  for (const id of selectedEntryIds) {
-                    const entry = entries.find(e => e.id === id);
-                    if (!entry) continue;
-                    
-                    // Update in database
-                    const result = entry.type === "application"
-                      ? await updateApplicationStatus(id, value)
-                      : await updateNominationStatus(id, value);
-                      
-                    if (!result.success) {
-                      throw new Error(`Failed to update status for entry ${id}`);
-                    }
-                    
-                    // Add to activity log
-                    addActivity(id, value);
-                  }
-                  
-                  // Update all entries in state
-                  setEntries(entries.map(entry => {
-                    if (selectedEntryIds.includes(entry.id)) {
-                      return { ...entry, status: value };
-                    }
-                    return entry;
-                  }));
-                  
-                  toast.success("Bulk update complete", {
-                    description: `Updated ${selectedEntryIds.length} entries to ${value.replace('_', ' ')}`
-                  });
-                } catch (error) {
-                  console.error('Error in bulk update:', error);
-                  toast.error("Bulk update failed", {
-                    description: "There was an error updating some entries. Please try again."
-                  });
-                } finally {
-                  // Close dialog and clear selection
-                  setBulkActionOpen(false);
-                  setRowSelection({});
-                  setIsUpdating(false);
-                }
-              }}
-              disabled={isUpdating}
+              <Select 
+                onValueChange={(value) => setNewBulkStatus(value)}
+                disabled={isUpdating}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a status" />
@@ -1392,16 +1391,6 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
           <DialogFooter className="gap-2 sm:gap-0">
             <Button
               type="button"
-              variant="outline"
-              onClick={() => {
-                setBulkActionOpen(false);
-              }}
-              disabled={isUpdating}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
               variant="destructive"
               onClick={() => {
                 setRowSelection({});
@@ -1410,6 +1399,82 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
               disabled={isUpdating}
             >
               Clear Selection
+            </Button>
+            <Button
+              type="button"
+              variant="default"
+              onClick={async () => {
+                if (!newBulkStatus) {
+                  toast.error("Please select a status", {
+                    description: "You must select a status before confirming."
+                  });
+                  return;
+                }
+                
+                setIsUpdating(true);
+                try {
+                  // Get the current visible data based on active tab
+                  let dataToUse = filteredEntries;
+                  
+                  if (activeTab === "applications") {
+                    dataToUse = filteredEntries.filter(e => e.type === "application");
+                  } else if (activeTab === "nominations") {
+                    dataToUse = filteredEntries.filter(e => e.type === "nomination");
+                  }
+                  
+                  // Convert row indices to actual entry objects
+                  const selectedEntryIds = Object.keys(rowSelection)
+                    .map(index => {
+                      const idx = parseInt(index);
+                      return idx >= 0 && idx < dataToUse.length ? dataToUse[idx].id : null;
+                    })
+                    .filter(Boolean) as string[];
+                  
+                  // For each selected entry
+                  for (const id of selectedEntryIds) {
+                    const entry = entries.find(e => e.id === id);
+                    if (!entry) continue;
+                    
+                    // Update in database
+                    const result = entry.type === "application"
+                      ? await updateApplicationStatus(id, newBulkStatus)
+                      : await updateNominationStatus(id, newBulkStatus);
+                      
+                    if (!result.success) {
+                      throw new Error(`Failed to update status for entry ${id}`);
+                    }
+                    
+                    // Add to activity log
+                    addActivity(id, newBulkStatus);
+                  }
+                  
+                  // Update all entries in state
+                  setEntries(entries.map(entry => {
+                    if (selectedEntryIds.includes(entry.id)) {
+                      return { ...entry, status: newBulkStatus };
+                    }
+                    return entry;
+                  }));
+                  
+                  toast.success("Bulk update complete", {
+                    description: `Updated ${selectedEntryIds.length} entries to ${newBulkStatus.replace('_', ' ')}`
+                  });
+                } catch (error) {
+                  console.error('Error in bulk update:', error);
+                  toast.error("Bulk update failed", {
+                    description: "There was an error updating some entries. Please try again."
+                  });
+                } finally {
+                  // Close dialog and clear selection
+                  setBulkActionOpen(false);
+                  setRowSelection({});
+                  setNewBulkStatus("");
+                  setIsUpdating(false);
+                }
+              }}
+              disabled={isUpdating}
+            >
+              {isUpdating ? "Updating..." : "Confirm Update"}
             </Button>
           </DialogFooter>
         </DialogContent>

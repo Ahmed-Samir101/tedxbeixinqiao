@@ -8,13 +8,18 @@ import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 import type { Metadata } from "next"
 
-const inter = Inter({ subsets: ["latin"] })
+// Load font with display: swap to avoid font loading warnings
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true
+})
 
 export const metadata: Metadata = {
   title: "TEDxBeixinqiao - Innovation Illustrated",
   description:
     "TEDxBeixinqiao is an independently organized TED event that took place in Beijing on April 2024, bringing people together to share ideas worth spreading.",
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -28,7 +33,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
             <Navbar />
-            <main className="flex-1">{children}<Analytics/></main>
+            <main className="flex-1">
+              {children}
+              <Analytics />
+            </main>
             <Footer />
             <Toaster />
           </div>
@@ -37,5 +45,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-import './globals.css'

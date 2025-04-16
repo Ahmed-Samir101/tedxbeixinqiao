@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { signIn } from "@/lib/auth-client";
+import { signIn, signOut, useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function SignIn() {
@@ -14,6 +14,21 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const session = useSession();
+  
+  // If user is redirected to sign-in but still has a session, force logout
+  useEffect(() => {
+    const cleanupSession = async () => {
+      // Check if we have an active session
+      if (session.data?.user) {
+        await signOut();
+        // Force a page reload to clear any remaining state
+        window.location.reload();
+      }
+    };
+    
+    cleanupSession();
+  }, [session.data]);
   
   return (
     <Card className="w-full max-w-md">
