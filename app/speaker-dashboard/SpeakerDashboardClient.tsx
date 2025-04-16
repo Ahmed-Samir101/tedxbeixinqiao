@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { 
   BarChart2, 
   Search, 
@@ -15,7 +15,9 @@ import {
   Flag,
   PhoneCall,
   X,
-  LogOut
+  LogOut,
+  PlusCircle,
+  Edit
 } from "lucide-react"
 import { ColumnFiltersState, Row, SortingState, VisibilityState } from "@tanstack/react-table"
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts"
@@ -50,11 +52,26 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 
-import { SpeakerEntry, allEntries, ApplicationEntry, NominationEntry, statusOptions } from "@/components/dashboard/types"
+import { SpeakerEntry, ApplicationEntry, NominationEntry, statusOptions } from "@/components/dashboard/types"
 import { DataTable } from "@/components/dashboard/data-table"
 import { StatusBadge } from "@/components/dashboard/status-badge"
 import { Rating } from "@/components/dashboard/rating"
 import { columns } from "@/components/dashboard/columns"
+import { 
+  updateApplicationStatus, 
+  updateNominationStatus, 
+  updateApplicationRating, 
+  updateNominationRating, 
+  updateApplicationNotes, 
+  updateNominationNotes, 
+  toggleApplicationFlag, 
+  toggleNominationFlag,
+  createDashboardApplication,
+  createDashboardNomination,
+  updateApplicationDetails,
+  updateNominationDetails,
+} from "@/lib/speakers-db-service"
+import { toast } from "sonner"
 
 // Add interface for the SpeakerDashboardClient props
 interface SpeakerDashboardClientProps {
@@ -65,14 +82,15 @@ interface SpeakerDashboardClientProps {
     image?: string | null;
     [key: string]: any;
   };
+  initialEntries: SpeakerEntry[];
 }
 
-export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
+export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboardClientProps) {
   const [activeTab, setActiveTab] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [typeFilter, setTypeFilter] = useState("all")
-  const [entries, setEntries] = useState<SpeakerEntry[]>(allEntries)
+  const [entries, setEntries] = useState<SpeakerEntry[]>(initialEntries)
   const [selectedEntry, setSelectedEntry] = useState<SpeakerEntry | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [activities, setActivities] = useState<Array<{
@@ -85,6 +103,28 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
   }>>([])
   const [bulkActionOpen, setBulkActionOpen] = useState(false)
   const [selectedEntries, setSelectedEntries] = useState<string[]>([])
+  const [isUpdating, setIsUpdating] = useState(false)
+  
+  // Entry form states
+  const [entryFormOpen, setEntryFormOpen] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [entryType, setEntryType] = useState<"application" | "nomination">("application")
+  const [formData, setFormData] = useState({
+    // Common fields
+    fullName: "",
+    topic: "",
+    priorTedTalk: "",
+    status: "under_review",
+    // Application specific
+    mobilePhone: "",
+    wechatId: "",
+    gender: "Male",
+    job: "",
+    // Nomination specific
+    contact: "",
+    nominatedBy: "",
+  })
+  
   const router = useRouter()
   
   // TanStack Table states
@@ -93,11 +133,28 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
   
-  // Stats - Using useState with stable initial values to prevent hydration mismatch
-  const [applicationsSinceLastWeek] = useState(3)
-  const [nominationsSinceLastWeek] = useState(1)
-  const [percentageShortlisted] = useState(15)
-  const [totalSlots] = useState(10)
+  // Stats - Using recent entries data to calculate changes
+  const oneWeekAgo = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    return date;
+  }, []);
+  
+  const applicationsSinceLastWeek = useMemo(() => {
+    return entries.filter(e => 
+      e.type === "application" && 
+      new Date(e.submissionDate) > oneWeekAgo
+    ).length;
+  }, [entries, oneWeekAgo]);
+  
+  const nominationsSinceLastWeek = useMemo(() => {
+    return entries.filter(e => 
+      e.type === "nomination" && 
+      new Date(e.submissionDate) > oneWeekAgo
+    ).length;
+  }, [entries, oneWeekAgo]);
+  
+  const totalSlots = 10;
   
   // Filter entries based on current filters and search query
   const filteredEntries = useMemo(() => {
@@ -123,11 +180,56 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
   const totalNominations = entries.filter(e => e.type === "nomination").length
   const totalShortlisted = entries.filter(e => e.status === "shortlisted").length
   const totalInvited = entries.filter(e => e.status === "invited").length
+  const percentageShortlisted = totalApplications + totalNominations > 0 
+    ? Math.round((totalShortlisted / (totalApplications + totalNominations)) * 100) 
+    : 0;
   
   // Handle opening the modal for an entry
   const openDetails = (row: Row<SpeakerEntry>) => {
-    setSelectedEntry(row.original)
-    setDetailsOpen(true)
+    setSelectedEntry(row.original);
+    setDetailsOpen(true);
+    
+    // Reset edit mode
+    setEditMode(false);
+  }
+  
+  // Open the edit entry form for an existing entry
+  const openEditForm = (entry: SpeakerEntry) => {
+    setSelectedEntry(entry);
+    
+    // Initialize form data with entry values
+    if (entry.type === "application") {
+      const appEntry = entry as ApplicationEntry;
+      setFormData({
+        fullName: appEntry.fullName,
+        topic: appEntry.topic,
+        priorTedTalk: appEntry.priorTedTalk || "",
+        status: appEntry.status,
+        mobilePhone: appEntry.mobilePhone,
+        wechatId: appEntry.wechatId,
+        gender: appEntry.gender,
+        job: appEntry.job,
+        contact: "",
+        nominatedBy: "",
+      });
+    } else {
+      const nomEntry = entry as NominationEntry;
+      setFormData({
+        fullName: nomEntry.fullName,
+        topic: nomEntry.topic,
+        priorTedTalk: nomEntry.priorTedTalk || "",
+        status: nomEntry.status,
+        mobilePhone: "",
+        wechatId: "",
+        gender: "Male",
+        job: "",
+        contact: nomEntry.contact,
+        nominatedBy: nomEntry.nominatedBy,
+      });
+    }
+    
+    setEditMode(true);
+    setEntryFormOpen(true);
   }
   
   // Add activity when status changes
@@ -173,29 +275,145 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
   }
   
   // Update status of an entry
-  const updateStatus = (entryId: string, newStatus: string) => {
+  const updateStatus = async (entryId: string, newStatus: string) => {
     const entry = entries.find(e => e.id === entryId);
-    if (entry && entry.status !== newStatus) {
-      addActivity(entryId, newStatus);
-    }
+    if (!entry || entry.status === newStatus) return;
     
-    setEntries(entries.map(entry => 
-      entry.id === entryId ? { ...entry, status: newStatus } : entry
-    ));
+    setIsUpdating(true);
+    
+    try {
+      // Update the database based on entry type
+      const result = entry.type === "application"
+        ? await updateApplicationStatus(entryId, newStatus)
+        : await updateNominationStatus(entryId, newStatus);
+        
+      if (!result.success) {
+        throw new Error(`Failed to update status for ${entry.fullName}`);
+      }
+      
+      // Update the UI state after successful database update
+      addActivity(entryId, newStatus);
+      setEntries(entries.map(entry => 
+        entry.id === entryId ? { ...entry, status: newStatus } : entry
+      ));
+      
+      toast.success("Status updated", {
+        description: `${entry.fullName}'s status was updated to ${newStatus.replace('_', ' ')}`
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error("Update failed", {
+        description: "There was an error updating the status. Please try again."
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   }
   
   // Update rating of an entry
-  const updateRating = (entryId: string, newRating: number) => {
-    setEntries(entries.map(entry => 
-      entry.id === entryId ? { ...entry, rating: newRating } : entry
-    ))
+  const updateRating = async (entryId: string, newRating: number) => {
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry || entry.rating === newRating) return;
+    
+    setIsUpdating(true);
+    
+    try {
+      // Update the database based on entry type
+      const result = entry.type === "application"
+        ? await updateApplicationRating(entryId, newRating)
+        : await updateNominationRating(entryId, newRating);
+        
+      if (!result.success) {
+        throw new Error(`Failed to update rating for ${entry.fullName}`);
+      }
+      
+      // Update the UI state after successful database update
+      setEntries(entries.map(entry => 
+        entry.id === entryId ? { ...entry, rating: newRating } : entry
+      ));
+      
+      toast.success("Rating updated", {
+        description: `${entry.fullName}'s rating was updated to ${newRating}`
+      });
+    } catch (error) {
+      console.error('Error updating rating:', error);
+      toast.error("Update failed", {
+        description: "There was an error updating the rating. Please try again."
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   }
   
   // Update notes for an entry
-  const updateNotes = (entryId: string, newNotes: string) => {
-    setEntries(entries.map(entry => 
-      entry.id === entryId ? { ...entry, notes: newNotes } : entry
-    ))
+  const updateNotes = async (entryId: string, newNotes: string) => {
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry || entry.notes === newNotes) return;
+    
+    setIsUpdating(true);
+    
+    try {
+      // Update the database based on entry type
+      const result = entry.type === "application"
+        ? await updateApplicationNotes(entryId, newNotes)
+        : await updateNominationNotes(entryId, newNotes);
+        
+      if (!result.success) {
+        throw new Error(`Failed to update notes for ${entry.fullName}`);
+      }
+      
+      // Update the UI state after successful database update
+      setEntries(entries.map(entry => 
+        entry.id === entryId ? { ...entry, notes: newNotes } : entry
+      ));
+      
+      toast.success("Notes updated", {
+        description: `Notes for ${entry.fullName} were saved successfully`
+      });
+    } catch (error) {
+      console.error('Error updating notes:', error);
+      toast.error("Update failed", {
+        description: "There was an error updating the notes. Please try again."
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  }
+  
+  // Toggle flag status for an entry
+  const toggleFlag = async (entryId: string) => {
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry) return;
+    
+    setIsUpdating(true);
+    
+    try {
+      // Update the database based on entry type
+      const result = entry.type === "application"
+        ? await toggleApplicationFlag(entryId)
+        : await toggleNominationFlag(entryId);
+        
+      if (!result.success) {
+        throw new Error(`Failed to toggle flag for ${entry.fullName}`);
+      }
+      
+      // Update the UI state after successful database update
+      setEntries(entries.map(entry => 
+        entry.id === entryId ? { ...entry, flagged: !entry.flagged } : entry
+      ));
+      
+      const action = result.flagged ? "flagged" : "unflagged";
+      toast.success(`Entry ${action}`, {
+        description: `${entry.fullName} was ${action} successfully`
+      });
+    } catch (error) {
+      console.error('Error toggling flag:', error);
+      toast.error("Update failed", {
+        description: "There was an error updating the flag status. Please try again."
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   }
   
   // Generate activity data based on current entries
@@ -278,7 +496,112 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
     });
   }, [entries]);
 
+  // Export data to CSV
+  const downloadCSV = (data: SpeakerEntry[], filename: string) => {
+    // Define header based on entry type
+    const applicationHeaders = [
+      'ID', 'Full Name', 'Topic', 'Gender', 'Job', 'Mobile Phone', 'WeChat ID', 
+      'Prior TED Talk', 'Status', 'Flagged', 'Rating', 'Notes', 'Submission Date'
+    ];
+    
+    const nominationHeaders = [
+      'ID', 'Full Name', 'Topic', 'Nominated By', 'Contact', 
+      'Prior TED Talk', 'Status', 'Flagged', 'Rating', 'Notes', 'Submission Date'
+    ];
+  
+    // Start with the BOM to handle Unicode characters in Excel
+    let csvContent = '\uFEFF';
+    
+    // Separate by entry type and export appropriate data
+    if (activeTab === "all" || activeTab === "applications") {
+      // Applications export
+      const applicationsData = data.filter(entry => entry.type === "application");
+      
+      if (applicationsData.length > 0) {
+        csvContent += applicationHeaders.join(',') + '\n';
+        
+        applicationsData.forEach(entry => {
+          const appEntry = entry as ApplicationEntry;
+          const row = [
+            `"${appEntry.id}"`,
+            `"${appEntry.fullName.replace(/"/g, '""')}"`,
+            `"${appEntry.topic.replace(/"/g, '""')}"`,
+            `"${appEntry.gender}"`,
+            `"${appEntry.job.replace(/"/g, '""')}"`,
+            `"${appEntry.mobilePhone}"`,
+            `"${appEntry.wechatId}"`,
+            `"${appEntry.priorTedTalk ? appEntry.priorTedTalk.replace(/"/g, '""') : ''}"`,
+            `"${appEntry.status.replace(/_/g, ' ')}"`,
+            `"${appEntry.flagged ? 'Yes' : 'No'}"`,
+            `"${appEntry.rating}"`,
+            `"${appEntry.notes ? appEntry.notes.replace(/"/g, '""') : ''}"`,
+            `"${new Date(appEntry.submissionDate).toLocaleDateString()}"`,
+          ].join(',');
+          csvContent += row + '\n';
+        });
+        
+        // If only applications tab, download now
+        if (activeTab === "applications") {
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', `${filename}_applications.csv`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          return;
+        }
+      }
+    }
+    
+    if (activeTab === "all" || activeTab === "nominations") {
+      // Nominations export
+      const nominationsData = data.filter(entry => entry.type === "nomination");
+      
+      if (nominationsData.length > 0) {
+        // If doing both, add a separation
+        if (activeTab === "all" && csvContent.length > 1) {
+          csvContent += '\n\nNOMINATIONS\n';
+        }
+        
+        csvContent += nominationHeaders.join(',') + '\n';
+        
+        nominationsData.forEach(entry => {
+          const nomEntry = entry as NominationEntry;
+          const row = [
+            `"${nomEntry.id}"`,
+            `"${nomEntry.fullName.replace(/"/g, '""')}"`,
+            `"${nomEntry.topic.replace(/"/g, '""')}"`,
+            `"${nomEntry.nominatedBy.replace(/"/g, '""')}"`,
+            `"${nomEntry.contact.replace(/"/g, '""')}"`,
+            `"${nomEntry.priorTedTalk ? nomEntry.priorTedTalk.replace(/"/g, '""') : ''}"`,
+            `"${nomEntry.status.replace(/_/g, ' ')}"`,
+            `"${nomEntry.flagged ? 'Yes' : 'No'}"`,
+            `"${nomEntry.rating}"`,
+            `"${nomEntry.notes ? nomEntry.notes.replace(/"/g, '""') : ''}"`,
+            `"${new Date(nomEntry.submissionDate).toLocaleDateString()}"`,
+          ].join(',');
+          csvContent += row + '\n';
+        });
+      }
+    }
+    
+    // Create and download the CSV file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${filename}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Rest of the component remains the same...
+
   return (
+    // The rest of your component's JSX remains the same...
     <div className="container mx-auto py-24 max-w-7xl">
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -325,7 +648,7 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button>
+          <Button onClick={() => downloadCSV(entries, 'speaker_entries')}>
             <Download className="mr-2 h-4 w-4" />
             Export Data
           </Button>
@@ -399,6 +722,16 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
           </TabsList>
           
           <div className="flex items-center space-x-2">
+            {/* Add Create Entry Button (moved beside Columns) */}
+            <Button variant="outline" onClick={() => {
+              setSelectedEntry(null);
+              setEditMode(true);
+              setEntryFormOpen(true);
+            }}>
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Create Entry
+            </Button>
+            
             {/* Add bulk action button */}
             {Object.keys(rowSelection).length > 0 && (
               <Button 
@@ -521,12 +854,6 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
         
         <TabsContent value="all" className="space-y-4">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>All Speaker Entries</CardTitle>
-              <CardDescription>
-                Showing {filteredEntries.length} out of {entries.length} total entries
-              </CardDescription>
-            </CardHeader>
             <CardContent className="p-0">
               <DataTable
                 columns={columns}
@@ -540,17 +867,16 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                 onRowSelectionChange={setRowSelection}
               />
             </CardContent>
+            <div className="px-4 py-3 border-t">
+              <p className="text-sm text-muted-foreground">
+                Showing {filteredEntries.length} out of {entries.length} total entries
+              </p>
+            </div>
           </Card>
         </TabsContent>
         
         <TabsContent value="applications">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Speaker Applications</CardTitle>
-              <CardDescription>
-                Showing {filteredEntries.filter(e => e.type === "application").length} out of {totalApplications} total applications
-              </CardDescription>
-            </CardHeader>
             <CardContent className="p-0">
               <DataTable
                 columns={columns}
@@ -564,17 +890,16 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                 onRowSelectionChange={setRowSelection}
               />
             </CardContent>
+            <div className="px-4 py-3 border-t">
+              <p className="text-sm text-muted-foreground">
+                Showing {filteredEntries.filter(e => e.type === "application").length} out of {totalApplications} total applications
+              </p>
+            </div>
           </Card>
         </TabsContent>
         
         <TabsContent value="nominations">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Speaker Nominations</CardTitle>
-              <CardDescription>
-                Showing {filteredEntries.filter(e => e.type === "nomination").length} out of {totalNominations} total nominations
-              </CardDescription>
-            </CardHeader>
             <CardContent className="p-0">
               <DataTable
                 columns={columns}
@@ -588,6 +913,11 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                 onRowSelectionChange={setRowSelection}
               />
             </CardContent>
+            <div className="px-4 py-3 border-t">
+              <p className="text-sm text-muted-foreground">
+                Showing {filteredEntries.filter(e => e.type === "nomination").length} out of {totalNominations} total nominations
+              </p>
+            </div>
           </Card>
         </TabsContent>
       </Tabs>
@@ -866,6 +1196,7 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                       <Select
                         value={selectedEntry.status}
                         onValueChange={(value) => updateStatus(selectedEntry.id, value)}
+                        disabled={isUpdating}
                       >
                         <SelectTrigger className="w-full mt-1">
                           <SelectValue>
@@ -882,12 +1213,22 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                       </Select>
                     </div>
                     
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-muted-foreground">Flagged</p>
+                      <Checkbox 
+                        checked={selectedEntry.flagged}
+                        onCheckedChange={() => toggleFlag(selectedEntry.id)}
+                        disabled={isUpdating}
+                      />
+                    </div>
+                    
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Rating</p>
                       <div className="mt-1">
                         <Rating 
                           rating={selectedEntry.rating} 
                           onChange={(newRating) => updateRating(selectedEntry.id, newRating)}
+                          disabled={isUpdating}
                         />
                       </div>
                     </div>
@@ -895,11 +1236,30 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Notes</p>
                       <Textarea 
-                        className="mt-1"
-                        value={selectedEntry.notes}
-                        onChange={(e) => updateNotes(selectedEntry.id, e.target.value)}
+                        className="mt-1 w-full min-h-[100px]"
+                        value={selectedEntry.notes || ""}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => {
+                          // Update the notes in the selected entry state first for immediate feedback
+                          setSelectedEntry({
+                            ...selectedEntry,
+                            notes: e.target.value
+                          });
+                        }}
                         placeholder="Add your notes about this speaker..."
+                        disabled={isUpdating}
                       />
+                      <div className="flex justify-end mt-2">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            updateNotes(selectedEntry.id, selectedEntry.notes || "");
+                          }}
+                          disabled={isUpdating}
+                        >
+                          Save Notes
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -912,11 +1272,16 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                 >
                   Close
                 </Button>
-                
-                <Button
-                  onClick={() => setDetailsOpen(false)}
+                <Button 
+                  onClick={() => {
+                    // Close details view
+                    setDetailsOpen(false);
+                    // Open edit form
+                    openEditForm(selectedEntry);
+                  }}
                 >
-                  Save Changes
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Entry
                 </Button>
               </DialogFooter>
             </>
@@ -937,36 +1302,69 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="bulk-status">New Status</Label>
-              <Select onValueChange={(value) => {
-                // Get the current visible data based on active tab
-                let dataToUse = filteredEntries;
-                
-                if (activeTab === "applications") {
-                  dataToUse = filteredEntries.filter(e => e.type === "application");
-                } else if (activeTab === "nominations") {
-                  dataToUse = filteredEntries.filter(e => e.type === "nomination");
+              <Select onValueChange={async (value) => {
+                setIsUpdating(true);
+                try {
+                  // Get the current visible data based on active tab
+                  let dataToUse = filteredEntries;
+                  
+                  if (activeTab === "applications") {
+                    dataToUse = filteredEntries.filter(e => e.type === "application");
+                  } else if (activeTab === "nominations") {
+                    dataToUse = filteredEntries.filter(e => e.type === "nomination");
+                  }
+                  
+                  // Convert row indices to actual entry objects
+                  const selectedEntryIds = Object.keys(rowSelection)
+                    .map(index => {
+                      const idx = parseInt(index);
+                      return idx >= 0 && idx < dataToUse.length ? dataToUse[idx].id : null;
+                    })
+                    .filter(Boolean) as string[];
+                  
+                  // For each selected entry
+                  for (const id of selectedEntryIds) {
+                    const entry = entries.find(e => e.id === id);
+                    if (!entry) continue;
+                    
+                    // Update in database
+                    const result = entry.type === "application"
+                      ? await updateApplicationStatus(id, value)
+                      : await updateNominationStatus(id, value);
+                      
+                    if (!result.success) {
+                      throw new Error(`Failed to update status for entry ${id}`);
+                    }
+                    
+                    // Add to activity log
+                    addActivity(id, value);
+                  }
+                  
+                  // Update all entries in state
+                  setEntries(entries.map(entry => {
+                    if (selectedEntryIds.includes(entry.id)) {
+                      return { ...entry, status: value };
+                    }
+                    return entry;
+                  }));
+                  
+                  toast.success("Bulk update complete", {
+                    description: `Updated ${selectedEntryIds.length} entries to ${value.replace('_', ' ')}`
+                  });
+                } catch (error) {
+                  console.error('Error in bulk update:', error);
+                  toast.error("Bulk update failed", {
+                    description: "There was an error updating some entries. Please try again."
+                  });
+                } finally {
+                  // Close dialog and clear selection
+                  setBulkActionOpen(false);
+                  setRowSelection({});
+                  setIsUpdating(false);
                 }
-                
-                // Convert row indices to actual entry objects
-                const selectedEntryIds = Object.keys(rowSelection)
-                  .map(index => {
-                    const idx = parseInt(index);
-                    return idx >= 0 && idx < dataToUse.length ? dataToUse[idx].id : null;
-                  })
-                  .filter(Boolean) as string[];
-                
-                // Log for debugging
-                console.log(`Bulk updating ${selectedEntryIds.length} entries to status: ${value}`);
-                
-                // Update each selected entry
-                selectedEntryIds.forEach(id => {
-                  updateStatus(id, value);
-                });
-                
-                // Close dialog and clear selection
-                setBulkActionOpen(false);
-                setRowSelection({});
-              }}>
+              }}
+              disabled={isUpdating}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a status" />
                 </SelectTrigger>
@@ -998,6 +1396,7 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
               onClick={() => {
                 setBulkActionOpen(false);
               }}
+              disabled={isUpdating}
             >
               Cancel
             </Button>
@@ -1008,9 +1407,442 @@ export function SpeakerDashboardClient({ user }: SpeakerDashboardClientProps) {
                 setRowSelection({});
                 setBulkActionOpen(false);
               }}
+              disabled={isUpdating}
             >
               Clear Selection
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Entry Form Modal - For Creating and Editing Entries */}
+      <Dialog open={entryFormOpen} onOpenChange={setEntryFormOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editMode 
+                ? (selectedEntry ? "Edit Entry" : "Create New Entry") 
+                : "View Entry"}
+            </DialogTitle>
+            <DialogDescription>
+              {editMode
+                ? (selectedEntry 
+                  ? "Edit the details of this speaker entry" 
+                  : "Create a new speaker application or nomination")
+                : "View speaker details"}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {/* Entry Type Selector - Only show when creating a new entry */}
+          {editMode && !selectedEntry && (
+            <div className="mb-6">
+              <Label className="block mb-2">Entry Type</Label>
+              <div className="flex space-x-4">
+                <div 
+                  className={`flex-1 p-4 border rounded-lg cursor-pointer transition ${
+                    entryType === "application" 
+                      ? "border-primary bg-primary/5" 
+                      : "border-border hover:border-primary/50"
+                  }`}
+                  onClick={() => setEntryType("application")}
+                >
+                  <div className="font-medium mb-1">Application</div>
+                  <div className="text-sm text-muted-foreground">
+                    Speaker applied directly through the website
+                  </div>
+                </div>
+                <div 
+                  className={`flex-1 p-4 border rounded-lg cursor-pointer transition ${
+                    entryType === "nomination" 
+                      ? "border-primary bg-primary/5" 
+                      : "border-border hover:border-primary/50"
+                  }`}
+                  onClick={() => setEntryType("nomination")}
+                >
+                  <div className="font-medium mb-1">Nomination</div>
+                  <div className="text-sm text-muted-foreground">
+                    Speaker nominated by someone else
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Form Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input 
+                  id="fullName"
+                  placeholder="Full name of the speaker"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  disabled={!editMode || isUpdating}
+                  className="mt-1"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="topic">Talk Topic</Label>
+                <Input 
+                  id="topic"
+                  placeholder="Main topic or title of the talk"
+                  value={formData.topic}
+                  onChange={(e) => setFormData({...formData, topic: e.target.value})}
+                  disabled={!editMode || isUpdating}
+                  className="mt-1"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="priorTedTalk">Prior TED/TEDx Experience</Label>
+                <Input 
+                  id="priorTedTalk"
+                  placeholder="Any previous TED or TEDx talks"
+                  value={formData.priorTedTalk}
+                  onChange={(e) => setFormData({...formData, priorTedTalk: e.target.value})}
+                  disabled={!editMode || isUpdating}
+                  className="mt-1"
+                />
+              </div>
+              
+              {/* Application specific fields */}
+              {(entryType === "application" || (selectedEntry && selectedEntry.type === "application")) && (
+                <>
+                  <div>
+                    <Label htmlFor="gender">Gender</Label>
+                    <Select
+                      value={formData.gender}
+                      onValueChange={(value) => setFormData({...formData, gender: value})}
+                      disabled={!editMode || isUpdating}
+                    >
+                      <SelectTrigger id="gender" className="mt-1">
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                        <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="job">Job Title</Label>
+                    <Input 
+                      id="job"
+                      placeholder="Current position or job title"
+                      value={formData.job}
+                      onChange={(e) => setFormData({...formData, job: e.target.value})}
+                      disabled={!editMode || isUpdating}
+                      className="mt-1"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            
+            <div className="space-y-4">
+              {/* Application specific fields */}
+              {(entryType === "application" || (selectedEntry && selectedEntry.type === "application")) && (
+                <>
+                  <div>
+                    <Label htmlFor="mobilePhone">Mobile Phone</Label>
+                    <Input 
+                      id="mobilePhone"
+                      placeholder="Mobile phone number"
+                      value={formData.mobilePhone}
+                      onChange={(e) => setFormData({...formData, mobilePhone: e.target.value})}
+                      disabled={!editMode || isUpdating}
+                      className="mt-1"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="wechatId">WeChat ID</Label>
+                    <Input 
+                      id="wechatId"
+                      placeholder="WeChat ID for contact"
+                      value={formData.wechatId}
+                      onChange={(e) => setFormData({...formData, wechatId: e.target.value})}
+                      disabled={!editMode || isUpdating}
+                      className="mt-1"
+                    />
+                  </div>
+                </>
+              )}
+              
+              {/* Nomination specific fields */}
+              {(entryType === "nomination" || (selectedEntry && selectedEntry.type === "nomination")) && (
+                <>
+                  <div>
+                    <Label htmlFor="nominatedBy">Nominated By</Label>
+                    <Input 
+                      id="nominatedBy"
+                      placeholder="Name of the person who nominated"
+                      value={formData.nominatedBy}
+                      onChange={(e) => setFormData({...formData, nominatedBy: e.target.value})}
+                      disabled={!editMode || isUpdating}
+                      className="mt-1"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="contact">Contact Information</Label>
+                    <Input 
+                      id="contact"
+                      placeholder="Contact information for the speaker"
+                      value={formData.contact}
+                      onChange={(e) => setFormData({...formData, contact: e.target.value})}
+                      disabled={!editMode || isUpdating}
+                      className="mt-1"
+                    />
+                  </div>
+                </>
+              )}
+              
+              {/* Status field - shown for both types */}
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  value={formData.status}
+                  onValueChange={(value) => setFormData({...formData, status: value})}
+                  disabled={!editMode || isUpdating}
+                >
+                  <SelectTrigger id="status" className="mt-1">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusOptions.map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="flex justify-between mt-6">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEntryFormOpen(false);
+                // Reset form data
+                if (!selectedEntry) {
+                  setFormData({
+                    fullName: "",
+                    topic: "",
+                    priorTedTalk: "",
+                    status: "under_review",
+                    mobilePhone: "",
+                    wechatId: "",
+                    gender: "Male",
+                    job: "",
+                    contact: "",
+                    nominatedBy: "",
+                  });
+                }
+              }}
+              disabled={isUpdating}
+            >
+              Cancel
+            </Button>
+            
+            {editMode ? (
+              <Button 
+                onClick={async () => {
+                  setIsUpdating(true);
+                  
+                  try {
+                    // Validate form data
+                    if (!formData.fullName) throw new Error("Full name is required");
+                    if (!formData.topic) throw new Error("Topic is required");
+                    
+                    // Special validation for specific types
+                    if (entryType === "application" || (selectedEntry && selectedEntry.type === "application")) {
+                      if (!formData.mobilePhone) throw new Error("Mobile phone is required");
+                      if (!formData.job) throw new Error("Job title is required");
+                    }
+                    
+                    if (entryType === "nomination" || (selectedEntry && selectedEntry.type === "nomination")) {
+                      if (!formData.nominatedBy) throw new Error("Nominator name is required");
+                      if (!formData.contact) throw new Error("Contact information is required");
+                    }
+                    
+                    let result;
+                    
+                    // If we're editing an existing entry
+                    if (selectedEntry) {
+                      if (selectedEntry.type === "application") {
+                        result = await updateApplicationDetails(selectedEntry.id, {
+                          fullName: formData.fullName,
+                          topic: formData.topic,
+                          mobilePhone: formData.mobilePhone,
+                          wechatId: formData.wechatId,
+                          gender: formData.gender,
+                          job: formData.job,
+                          priorTedTalk: formData.priorTedTalk,
+                        });
+                        
+                        // Update status if it changed
+                        if (selectedEntry.status !== formData.status) {
+                          await updateApplicationStatus(selectedEntry.id, formData.status);
+                        }
+                      } else {
+                        result = await updateNominationDetails(selectedEntry.id, {
+                          fullName: formData.fullName,
+                          topic: formData.topic,
+                          contact: formData.contact,
+                          nominatedBy: formData.nominatedBy,
+                          priorTedTalk: formData.priorTedTalk,
+                        });
+                        
+                        // Update status if it changed
+                        if (selectedEntry.status !== formData.status) {
+                          await updateNominationStatus(selectedEntry.id, formData.status);
+                        }
+                      }
+                      
+                      if (!result.success) {
+                        throw new Error(`Failed to update ${selectedEntry.type}`);
+                      }
+                      
+                      // Update the entry in state
+                      setEntries(entries.map(entry => {
+                        if (entry.id === selectedEntry.id) {
+                          if (entry.type === "application") {
+                            const updatedEntry = {
+                              ...entry,
+                              fullName: formData.fullName,
+                              topic: formData.topic,
+                              mobilePhone: formData.mobilePhone,
+                              wechatId: formData.wechatId,
+                              gender: formData.gender,
+                              job: formData.job,
+                              priorTedTalk: formData.priorTedTalk,
+                              status: formData.status,
+                            };
+                            return updatedEntry;
+                          } else {
+                            const updatedEntry = {
+                              ...entry,
+                              fullName: formData.fullName,
+                              topic: formData.topic,
+                              contact: formData.contact,
+                              nominatedBy: formData.nominatedBy,
+                              priorTedTalk: formData.priorTedTalk,
+                              status: formData.status,
+                            };
+                            return updatedEntry;
+                          }
+                        }
+                        return entry;
+                      }));
+                      
+                      toast.success("Entry updated", {
+                        description: `${formData.fullName}'s information was updated successfully`
+                      });
+                    }
+                    // Creating a new entry
+                    else {
+                      if (entryType === "application") {
+                        result = await createDashboardApplication({
+                          fullName: formData.fullName,
+                          topic: formData.topic,
+                          mobilePhone: formData.mobilePhone,
+                          wechatId: formData.wechatId,
+                          gender: formData.gender,
+                          job: formData.job,
+                          priorTedTalk: formData.priorTedTalk,
+                          status: formData.status,
+                        });
+                      } else {
+                        result = await createDashboardNomination({
+                          fullName: formData.fullName,
+                          topic: formData.topic,
+                          contact: formData.contact,
+                          nominatedBy: formData.nominatedBy,
+                          priorTedTalk: formData.priorTedTalk,
+                          status: formData.status,
+                        });
+                      }
+                      
+                      if (!result.success) {
+                        throw new Error(`Failed to create ${entryType}`);
+                      }
+                      
+                      // Add the new entry to state
+                      if (result.success && result.data) {
+                        // Need to properly type the new entry based on entry type
+                        let newEntry: SpeakerEntry;
+                        
+                        if (entryType === "application") {
+                          newEntry = {
+                            ...result.data,
+                            type: "application",
+                            submissionDate: result.data.submissionDate.toISOString()
+                          } as ApplicationEntry;
+                        } else {
+                          newEntry = {
+                            ...result.data,
+                            type: "nomination",
+                            submissionDate: result.data.submissionDate.toISOString()
+                          } as NominationEntry;
+                        }
+                        
+                        setEntries([newEntry, ...entries]);
+                        
+                        toast.success("Entry created", {
+                          description: `New ${entryType} for ${formData.fullName} created successfully`
+                        });
+                      }
+                    }
+                    
+                    // Close the modal
+                    setEntryFormOpen(false);
+                    
+                    // Reset form data
+                    setFormData({
+                      fullName: "",
+                      topic: "",
+                      priorTedTalk: "",
+                      status: "under_review",
+                      mobilePhone: "",
+                      wechatId: "",
+                      gender: "Male",
+                      job: "",
+                      contact: "",
+                      nominatedBy: "",
+                    });
+                    
+                  } catch (error) {
+                    console.error("Error creating/updating entry:", error);
+                    toast.error("Operation failed", {
+                      description: error instanceof Error ? error.message : "An unexpected error occurred"
+                    });
+                  } finally {
+                    setIsUpdating(false);
+                  }
+                }}
+                disabled={isUpdating}
+              >
+                {isUpdating ? "Saving..." : (selectedEntry ? "Save Changes" : "Create Entry")}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  // Switch to edit mode
+                  setEditMode(true);
+                }}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Entry
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

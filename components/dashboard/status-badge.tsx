@@ -1,6 +1,8 @@
 "use client"
 
 import React from "react"
+import { ChevronDown } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Status badge component with better visual design
 export const StatusBadge = ({ status }: { status: string }) => {
@@ -57,38 +59,68 @@ export const StatusBadge = ({ status }: { status: string }) => {
   }
 }
 
-// Status select component for table cells
-export const StatusSelect = ({ status, onChange }: { status: string, onChange: (value: string) => void }) => {
-  const statusColors = {
-    under_review: "bg-yellow-400",
-    shortlisted: "bg-blue-400",
-    invited: "bg-green-500",
-    rejected: "bg-red-500", 
-    contacted: "bg-purple-400",
-    flagged: "bg-orange-400"
-  }
-  
-  const currentColor = statusColors[status as keyof typeof statusColors] || "bg-gray-400"
-  
+// Create a styled item for status dropdown
+const StatusItem = ({ value, label }: { value: string, label: string }) => {
+  const getColor = () => {
+    switch (value) {
+      case "under_review": return "bg-yellow-400";
+      case "shortlisted": return "bg-blue-400";
+      case "invited": return "bg-green-500";
+      case "rejected": return "bg-red-500";
+      case "contacted": return "bg-purple-400";
+      case "flagged": return "bg-orange-400";
+      default: return "bg-gray-400";
+    }
+  };
+
   return (
-    <div 
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md cursor-pointer"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className={`w-2 h-2 rounded-full ${currentColor}`}></div>
-      <select 
-        className="bg-transparent border-none outline-none cursor-pointer text-sm font-medium pr-8"
-        value={status}
-        onChange={(e) => onChange(e.target.value)}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <option value="under_review">Under Review</option>
-        <option value="shortlisted">Shortlisted</option>
-        <option value="invited">Invited</option>
-        <option value="contacted">Contacted</option>
-        <option value="rejected">Rejected</option>
-        <option value="flagged">Flagged</option>
-      </select>
+    <div className="flex items-center gap-2">
+      <div className={`w-2 h-2 rounded-full ${getColor()}`}></div>
+      <span>{label}</span>
     </div>
-  )
-}
+  );
+};
+
+// Status select component for table cells - using shadcn UI styling
+export const StatusSelect = ({ status, onChange }: { status: string, onChange: (value: string) => void }) => {
+  const handleValueChange = (value: string) => {
+    onChange(value);
+  };
+
+  // To prevent opening the row detail modal when clicking on the status dropdown
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  return (
+    <div onClick={handleClick} className="min-w-[140px]">
+      <Select value={status} onValueChange={handleValueChange}>
+        <SelectTrigger className="h-8 min-h-8 border-none bg-transparent shadow-none focus:ring-0 py-0">
+          <SelectValue>
+            <StatusBadge status={status} />
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="under_review">
+            <StatusItem value="under_review" label="Under Review" />
+          </SelectItem>
+          <SelectItem value="shortlisted">
+            <StatusItem value="shortlisted" label="Shortlisted" />
+          </SelectItem>
+          <SelectItem value="invited">
+            <StatusItem value="invited" label="Invited" />
+          </SelectItem>
+          <SelectItem value="contacted">
+            <StatusItem value="contacted" label="Contacted" />
+          </SelectItem>
+          <SelectItem value="rejected">
+            <StatusItem value="rejected" label="Rejected" />
+          </SelectItem>
+          <SelectItem value="flagged">
+            <StatusItem value="flagged" label="Flagged" />
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};

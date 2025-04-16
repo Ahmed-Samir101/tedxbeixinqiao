@@ -20,6 +20,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
 import { sendSpeakerApplicationEmail, sendSpeakerNominationEmail } from "@/lib/email/resend-service"
+import { createSpeakerApplication, createSpeakerNomination } from "@/lib/speakers-db-service"
 
 // Speaker Application schema with validation
 const speakerApplicationSchema = z.object({
@@ -139,10 +140,18 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       }
 
       // Send email notification with form data
-      const result = await sendSpeakerApplicationEmail(values, fileSelected);
+      const emailResult = await sendSpeakerApplicationEmail(values, fileSelected);
       
-      if (!result.success) {
+      if (!emailResult.success) {
         throw new Error("Failed to send application email");
+      }
+      
+      // Save to database
+      const dbResult = await createSpeakerApplication(values);
+      
+      if (!dbResult.success) {
+        console.error("Database save failed but email sent:", dbResult.error);
+        // Continue with success message since the email was sent
       }
       
       // Show success toast using Sonner
@@ -168,10 +177,18 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       setIsSubmitting(true);
 
       // Send email notification with form data
-      const result = await sendSpeakerNominationEmail(values);
+      const emailResult = await sendSpeakerNominationEmail(values);
       
-      if (!result.success) {
+      if (!emailResult.success) {
         throw new Error("Failed to send nomination email");
+      }
+      
+      // Save to database
+      const dbResult = await createSpeakerNomination(values);
+      
+      if (!dbResult.success) {
+        console.error("Database save failed but email sent:", dbResult.error);
+        // Continue with success message since the email was sent
       }
       
       // Show success toast using Sonner

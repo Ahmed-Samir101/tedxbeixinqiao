@@ -4,7 +4,15 @@ import { useState } from "react"
 import { Star } from "lucide-react"
 
 // Rating component
-export const Rating = ({ rating, onChange }: { rating: number, onChange?: (value: number) => void }) => {
+export const Rating = ({ 
+  rating, 
+  onChange,
+  disabled = false 
+}: { 
+  rating: number, 
+  onChange?: (value: number) => void,
+  disabled?: boolean 
+}) => {
   const [hoverRating, setHoverRating] = useState(0);
   
   return (
@@ -18,12 +26,13 @@ export const Rating = ({ rating, onChange }: { rating: number, onChange?: (value
           size={16}
           className={`
             ${star <= (hoverRating || rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
-            ${onChange ? "cursor-pointer transition-colors duration-150" : ""}
+            ${onChange && !disabled ? "cursor-pointer transition-colors duration-150" : ""}
+            ${disabled ? "opacity-70" : ""}
           `}
-          onMouseEnter={() => onChange && setHoverRating(star)}
-          onMouseLeave={() => onChange && setHoverRating(0)}
+          onMouseEnter={() => onChange && !disabled && setHoverRating(star)}
+          onMouseLeave={() => onChange && !disabled && setHoverRating(0)}
           onClick={(e) => {
-            if (onChange) {
+            if (onChange && !disabled) {
               e.stopPropagation();
               onChange(star);
             }

@@ -46,4 +46,45 @@ export const verification = pgTable("verification", {
 					updatedAt: timestamp('updated_at')
 });
 
-export const schema = { user, session, account, verification };
+// Speaker application table
+export const speakerApplication = pgTable("speaker_application", {
+					id: text('id').primaryKey(),
+					fullName: text('full_name').notNull(),
+					submissionDate: timestamp('submission_date').notNull(),
+					topic: text('topic').notNull(), // Using ideaPresentation as topic
+					mobilePhone: text('mobile_phone').notNull(),
+					wechatId: text('wechat_id').notNull(),
+					gender: text('gender').notNull(),
+					job: text('job').notNull(),
+					availableInBeijing: text('available_in_beijing').notNull(),
+					priorTedTalk: text('prior_ted_talk').notNull(),
+					remarks: text('remarks'),
+					websiteUrl: text('website_url'),
+					status: text('status').notNull().default('under_review'),
+					flagged: boolean('flagged').notNull().default(false),
+					notes: text('notes').default(''),
+					rating: integer('rating').default(0),
+					createdAt: timestamp('created_at').notNull().defaultNow(),
+					updatedAt: timestamp('updated_at').notNull().defaultNow()
+});
+
+// Speaker nomination table
+export const speakerNomination = pgTable("speaker_nomination", {
+					id: text('id').primaryKey(),
+					fullName: text('full_name').notNull(),
+					submissionDate: timestamp('submission_date').notNull(),
+					contact: text('contact').notNull(),
+					nominatedBy: text('nominated_by').notNull(), // This will be from the form submitter
+					priorTedTalk: text('prior_ted_talk').notNull(),
+					remarks: text('remarks').notNull(),
+					websiteUrl: text('website_url'),
+					topic: text('topic').notNull(), // Generated from remarks
+					status: text('status').notNull().default('under_review'),
+					flagged: boolean('flagged').notNull().default(false),
+					notes: text('notes').default(''),
+					rating: integer('rating').default(0),
+					createdAt: timestamp('created_at').notNull().defaultNow(),
+					updatedAt: timestamp('updated_at').notNull().defaultNow()
+});
+
+export const schema = { user, session, account, verification, speakerApplication, speakerNomination };

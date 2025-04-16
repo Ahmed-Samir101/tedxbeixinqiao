@@ -86,7 +86,7 @@ function DraggableRow<TData>({
       ref={setNodeRef}
       data-state={row.getIsSelected() && "selected"}
       data-dragging={isDragging}
-      className={`relative z-0 ${isDragging ? "z-10 opacity-80" : ""} ${
+      className={`relative z-0 cursor-pointer ${isDragging ? "z-10 opacity-80" : ""} ${
         row.getIsSelected() ? "bg-primary/5 dark:bg-primary/10" : ""
       }`}
       style={{
