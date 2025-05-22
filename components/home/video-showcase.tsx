@@ -84,8 +84,8 @@ export default function VideoShowcase() {
         <div className="absolute right-[10%] bottom-[10%] h-[300px] w-[300px] rounded-full bg-gradient-to-tl from-red-400 to-pink-600/30 dark:from-red-900/20 dark:to-pink-800/10 blur-[100px]"></div>
       </div>
 
-      {/* Subtle pattern overlay - adjusted for light/dark mode */}
-      <div className="absolute inset-0 bg-[url('/patterns/dot-pattern.png')] opacity-5 dark:opacity-[0.03]"></div>
+      {/* Subtle pattern overlay - adjusted for light/dark mode - REMOVE THIS */}
+      {/* <div className="absolute inset-0 bg-[url('/patterns/dot-pattern.png')] opacity-5 dark:opacity-[0.03]"></div> */}
       
       <motion.div
         ref={containerRef}
@@ -134,7 +134,7 @@ export default function VideoShowcase() {
             className="mb-20"
           >
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-900 to-black shadow-2xl border border-gray-800">
-              <div className="absolute inset-0 bg-[url('/patterns/circuit-pattern.png')] opacity-10 mix-blend-overlay"></div>
+              {/* <div className="absolute inset-0 bg-[url('/patterns/circuit-pattern.png')] opacity-10 mix-blend-overlay"></div> */}
                 
               <div className="grid grid-cols-1 md:grid-cols-12">
                 {/* Video Area */}

@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { ArrowDown } from "lucide-react"
+import { SpeakerApplicationModal } from "@/components/speaker-application-modal"
 
 export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -128,34 +129,95 @@ export default function Hero() {
             ideas in motion lead to change in progress.
           </motion.p>
 
-          {/* CTA buttons with hover effects */}
+          {/* CTA button with enhanced glow effect */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col items-center justify-center gap-6 sm:flex-row"
+            className="flex flex-col items-center justify-center"
           >
-            <Button
-              asChild
-              size="lg"
-              className="group relative overflow-hidden bg-red-600 px-8 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600 shadow-lg"
+            <motion.div 
+              id="speaker-application" 
+              className="glow-button"
+              whileHover={{ 
+                scale: 1.05, 
+                rotate: [0, -0.5, 0.5, -0.5, 0],
+                transition: { 
+                  scale: { duration: 0.2 }, 
+                  rotate: { duration: 0.5, repeat: Infinity, ease: "easeInOut" }
+                }
+              }}
+              whileTap={{ scale: 0.97 }}
+              animate={{ 
+                y: [0, -5, 0],
+                transition: { 
+                  y: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                }
+              }}
             >
-              <Link href="#video-showcase">
-                <span className="relative z-10 font-medium">Watch Talks</span>
-                <span className="absolute inset-0 -translate-x-full bg-red-700 transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="group relative overflow-hidden border-2 border-white px-8 text-white hover:text-white hover:border-white dark:border-white dark:text-white shadow-lg bg-black/20 backdrop-blur-sm"
-            >
-              <Link href="/speakers">
-                <span className="relative z-10 font-medium">Meet Speakers</span>
-                <span className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
-              </Link>
-            </Button>
+              <SpeakerApplicationModal 
+                className="relative overflow-hidden bg-gradient-to-r from-red-600 to-red-700 px-10 py-6 text-xl font-bold text-white hover:from-red-700 hover:to-red-800 dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800 shadow-xl rounded-lg border-2 border-red-400/80"
+              />
+              <style jsx>{`
+                .glow-button {
+                  position: relative;
+                  z-index: 10;
+                  isolation: isolate;
+                  cursor: pointer;
+                  box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), inset 0 0 10px rgba(239, 68, 68, 0.4);
+                  border-radius: 12px;
+                }
+                .glow-button::before {
+                  content: '';
+                  position: absolute;
+                  inset: -5px;
+                  z-index: -1;
+                  background: linear-gradient(45deg, #ef4444, #fb7185, #ef4444);
+                  border-radius: 16px;
+                  filter: blur(12px);
+                  opacity: 0.7;
+                  transition: all 0.3s ease;
+                  animation: borderPulse 3s infinite;
+                }
+                .glow-button::after {
+                  content: '';
+                  position: absolute;
+                  inset: -3px;
+                  z-index: -2;
+                  background: linear-gradient(45deg, #dc2626, #ef4444, #f87171);
+                  border-radius: 16px;
+                  filter: blur(8px);
+                  opacity: 0.6;
+                  animation: rotate 4s linear infinite;
+                }
+                .glow-button:hover::before {
+                  opacity: 0.9;
+                  filter: blur(15px);
+                }
+                .glow-button:hover::after {
+                  opacity: 0.8;
+                  filter: blur(10px);
+                }
+                @keyframes borderPulse {
+                  0%, 100% {
+                    opacity: 0.7;
+                    transform: scale(1);
+                  }
+                  50% {
+                    opacity: 0.9;
+                    transform: scale(1.05);
+                  }
+                }
+                @keyframes rotate {
+                  0% {
+                    transform: rotate(0deg);
+                  }
+                  100% {
+                    transform: rotate(360deg);
+                  }
+                }
+              `}</style>
+            </motion.div>
           </motion.div>
 
           {/* Tagline */}
@@ -163,11 +225,18 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.0 }}
-            className="mt-16 flex flex-col items-center"
+            className="mt-8 flex flex-col items-center"
           >
-            <p className="text-xl font-medium italic text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">
-              <span className="font-bold text-red-500">From spark</span> to <span className="font-bold text-red-500">shift</span>
-            </p>
+            <div className="relative px-8 py-2">
+              <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-lg"></div>
+              <p className="relative text-xl font-semibold tracking-wider text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.5)] uppercase flex items-center gap-3">
+                <span className="h-[1px] w-6 bg-gradient-to-r from-transparent to-red-500"></span>
+                <span className="font-bold text-red-500">FROM SPARK</span> 
+                <span className="font-light">TO</span> 
+                <span className="font-bold text-red-500">SHIFT</span>
+                <span className="h-[1px] w-6 bg-gradient-to-l from-transparent to-red-500"></span>
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>

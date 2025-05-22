@@ -148,8 +148,6 @@ export default function Navbar() {
             )
           })}
           
-          <SpeakerApplicationModal />
-          
           <div className="overflow-hidden rounded-md">
             <ModeToggle />
           </div>
@@ -157,14 +155,6 @@ export default function Navbar() {
 
         {/* Mobile Navigation Toggle */}
         <div className="flex items-center gap-3 md:hidden">
-          {/* Only show the mobile version after client-side hydration */}
-          {mounted && (
-            <SpeakerApplicationModal 
-              variant="mobile" 
-              className="text-xs px-2.5 h-8" 
-            />
-          )}
-          
           <div className="overflow-hidden rounded-md">
             <ModeToggle />
           </div>

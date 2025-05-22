@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 import { fileURLToPath } from 'url'
 import path from 'path'
-import fs from 'fs'
+
 
 let userConfig: any = undefined
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -19,10 +19,12 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
-    // Added serverActions configuration inside experimental
+    // Removed experimental features
+    // webpackBuildWorker: true,
+    // parallelServerBuildTraces: true,
+    // parallelServerCompiles: true,
+    
+    // Keeping serverActions as it may be needed for form submissions
     serverActions: {
       bodySizeLimit: '2mb',
     },
