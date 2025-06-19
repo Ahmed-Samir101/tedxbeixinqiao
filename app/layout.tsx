@@ -18,7 +18,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "TEDxBeixinqiao - Innovation Illustrated",
   description:
-    "TEDxBeixinqiao is an independently organized TED event that took place in Beijing on April 2024, bringing people together to share ideas worth spreading.",
+    "TEDxBeixinqiao is an independently organized TED event coming to Beijing on December 6, 2025, bringing people together to share ideas worth spreading.",
   generator: 'v0.dev'
 }
 

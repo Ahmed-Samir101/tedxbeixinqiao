@@ -81,7 +81,7 @@ export default function Hero() {
       {/* Content container */}
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-6xl">
-          {/* Upper badge - "April 2026" */}
+          {/* Upper badge - "December 6th, 2025" */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ export default function Hero() {
             className="mb-6 flex justify-center"
           >
             <span className="inline-flex items-center rounded-full border border-white/30 bg-black/30 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-              To Be Determined, 2025 • Beixinqiao, Beijing
+              December 6th, 2025 • Beixinqiao, Beijing
             </span>
           </motion.div>
 

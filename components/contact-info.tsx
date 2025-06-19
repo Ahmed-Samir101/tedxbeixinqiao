@@ -38,7 +38,7 @@ export default function ContactInfo() {
         </div>
         <div>
           <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">WeChat</h3>
-          <p className="text-gray-700 dark:text-gray-300">TedxBeixinqiao2024</p>
+          <p className="text-gray-700 dark:text-gray-300">TedxBeixinqiao2025</p>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Scan the QR-Code below to follow our official WeChat Page
           </p>

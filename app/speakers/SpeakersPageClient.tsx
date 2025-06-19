@@ -22,8 +22,8 @@ export default function SpeakersPageClient() {
             Our <span className="text-red-600 dark:text-red-500">Speakers</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-gray-700 dark:text-gray-300">
-            Meet the innovative minds who shared their ideas and experiences at TEDxBeixinqiao 2024. Click on a speaker
-            to watch their talk.
+            Meet the innovative minds who will share their ideas and experiences at TEDxBeixinqiao 2025. Click on a speaker
+            to learn more.
           </p>
         </motion.div>
 

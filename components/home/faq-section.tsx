@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const faqs = [
   {
     question: "Where is the event taking place?",
-    answer: "The TEDxBeixinqiao event took place at Beixinqiao subdistrict, Dongcheng, Beijing on April 20, 2024.",
+    answer: "The TEDxBeixinqiao event will take place at Beixinqiao subdistrict, Dongcheng, Beijing on December 6, 2025.",
   },
   {
     question: "How can I get a ticket?",
@@ -13,7 +13,7 @@ const faqs = [
   {
     question: "What time will the show begin?",
     answer:
-      "The event has concluded. For future events, we typically start at 1:00 PM, with registration opening an hour earlier. Specific timing details will be shared closer to the event date.",
+      "The event will start at 1:00 PM on December 6, 2025, with registration opening an hour earlier at 12:00 PM.",
   },
   {
     question: "Can I watch the talks online?",
