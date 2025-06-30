@@ -26,8 +26,7 @@ import { createSpeakerApplication, createSpeakerNomination } from "@/lib/speaker
 const speakerApplicationSchema = z.object({
   fullName: z.string().min(2, { message: "Name must be at least 2 characters." })
     .max(30, { message: "Name cannot exceed 30 words." }),
-  availableInBeijing: z.string().min(2, { message: "Please provide availability information." })
-    .max(30, { message: "Response cannot exceed 30 words." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
   mobilePhone: z.string().min(5, { message: "Please provide a valid phone number." })
     .max(30, { message: "Phone number cannot exceed 30 characters." }),
   wechatId: z.string().min(2, { message: "Please provide your WeChat ID." })
@@ -36,8 +35,6 @@ const speakerApplicationSchema = z.object({
     .max(30, { message: "Response cannot exceed 30 words." }),
   job: z.string().min(2, { message: "Please provide your job information." })
     .max(30, { message: "Job information cannot exceed 30 words." }),
-  gender: z.string().min(1, { message: "Please provide gender information." })
-    .max(30, { message: "Response cannot exceed 30 words." }),
   remarks: z.string().max(30, { message: "Remarks cannot exceed 30 words." }).optional(),
   ideaPresentation: z.string()
     .min(10, { message: "Please describe your idea in at least 10 words." })
@@ -48,6 +45,40 @@ const speakerApplicationSchema = z.object({
       },
       { message: "Description cannot exceed 50 words." }
     ),
+  commonBelief: z.string().min(5, { message: "Please describe the common belief." })
+    .refine(
+      (value) => {
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        return wordCount <= 150;
+      },
+      { message: "Response cannot exceed 150 words." }
+    ),
+  coreIdea: z.string().min(5, { message: "Please describe your core idea." })
+    .refine(
+      (value) => {
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        return wordCount <= 150;
+      },
+      { message: "Response cannot exceed 150 words." }
+    ),
+  personalInsight: z.string().min(5, { message: "Please share your personal insight or example." })
+    .refine(
+      (value) => {
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        return wordCount <= 150;
+      },
+      { message: "Response cannot exceed 150 words." }
+    ),
+  potentialImpact: z.string().min(5, { message: "Please describe the potential impact." })
+    .refine(
+      (value) => {
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        return wordCount <= 150;
+      },
+      { message: "Response cannot exceed 150 words." }
+    ),
+  rehearsalAvailability: z.string().min(2, { message: "Please provide your rehearsal availability." })
+    .max(50, { message: "Response cannot exceed 50 words." }),
   // Note: File upload would be handled separately in a real implementation
   websiteUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.string().length(0)),
 })
@@ -82,14 +113,18 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
     resolver: zodResolver(speakerApplicationSchema),
     defaultValues: {
       fullName: "",
-      availableInBeijing: "",
+      email: "",
       mobilePhone: "",
       wechatId: "",
       priorTedTalk: "",
       job: "",
-      gender: "",
       remarks: "",
       ideaPresentation: "",
+      commonBelief: "",
+      coreIdea: "",
+      personalInsight: "",
+      potentialImpact: "",
+      rehearsalAvailability: "",
       websiteUrl: "",
     },
   })
@@ -232,12 +267,26 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
             
             <FormField
               control={applicationForm.control}
-              name="availableInBeijing"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Available for auditions, rehearsals, show in Beijing? <span className="text-red-500">*</span></FormLabel>
+                  <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input placeholder="(for example, Yes - available all of May)" {...field} />
+                    <Input placeholder="Your email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={applicationForm.control}
+              name="rehearsalAvailability"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Will you be available in Beijing for rehearsals any time in September through November? If not, when? <span className="text-red-500">*</span></FormLabel>
+                  <FormControl>
+                    <Input placeholder="(for example, Yes - available September through November, or No - only available in December)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -302,20 +351,6 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
             
             <FormField
               control={applicationForm.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender <span className="text-red-500">*</span></FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your gender" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={applicationForm.control}
               name="remarks"
               render={({ field }) => (
                 <FormItem>
@@ -353,6 +388,122 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                     <div className="flex justify-end">
                       <p className={`text-xs ${isOverLimit ? 'text-red-500 font-medium' : 'text-muted-foreground'}`}>
                         {wordCount}/50 words
+                      </p>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            
+            <FormField
+              control={applicationForm.control}
+              name="commonBelief"
+              render={({ field }) => {
+                // Calculate word count
+                const wordCount = field.value.trim().split(/\s+/).filter(Boolean).length;
+                const isOverLimit = wordCount > 150;
+                
+                return (
+                  <FormItem>
+                    <FormLabel>1. Regarding your talk, what is the common belief/behavior that your talk will challenge, (Most People Think) <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Most people think..." 
+                        className={`min-h-[100px] ${isOverLimit ? 'border-red-500' : ''}`}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <div className="flex justify-end">
+                      <p className={`text-xs ${isOverLimit ? 'text-red-500 font-medium' : 'text-muted-foreground'}`}>
+                        {wordCount}/150 words
+                      </p>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            
+            <FormField
+              control={applicationForm.control}
+              name="coreIdea"
+              render={({ field }) => {
+                // Calculate word count
+                const wordCount = field.value.trim().split(/\s+/).filter(Boolean).length;
+                const isOverLimit = wordCount > 150;
+                
+                return (
+                  <FormItem>
+                    <FormLabel>2. But I believe [your core idea] <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="But I believe..." 
+                        className={`min-h-[100px] ${isOverLimit ? 'border-red-500' : ''}`}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <div className="flex justify-end">
+                      <p className={`text-xs ${isOverLimit ? 'text-red-500 font-medium' : 'text-muted-foreground'}`}>
+                        {wordCount}/150 words
+                      </p>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            
+            <FormField
+              control={applicationForm.control}
+              name="personalInsight"
+              render={({ field }) => {
+                // Calculate word count
+                const wordCount = field.value.trim().split(/\s+/).filter(Boolean).length;
+                const isOverLimit = wordCount > 150;
+                
+                return (
+                  <FormItem>
+                    <FormLabel>3. I've learned this through [brief example or personal insight] <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="I've learned this through..." 
+                        className={`min-h-[100px] ${isOverLimit ? 'border-red-500' : ''}`}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <div className="flex justify-end">
+                      <p className={`text-xs ${isOverLimit ? 'text-red-500 font-medium' : 'text-muted-foreground'}`}>
+                        {wordCount}/150 words
+                      </p>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            
+            <FormField
+              control={applicationForm.control}
+              name="potentialImpact"
+              render={({ field }) => {
+                // Calculate word count
+                const wordCount = field.value.trim().split(/\s+/).filter(Boolean).length;
+                const isOverLimit = wordCount > 150;
+                
+                return (
+                  <FormItem>
+                    <FormLabel>4. I believe if more people embraced this idea, it would [benefit / impact / change] <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="I believe if more people embraced this idea, it would..." 
+                        className={`min-h-[100px] ${isOverLimit ? 'border-red-500' : ''}`}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <div className="flex justify-end">
+                      <p className={`text-xs ${isOverLimit ? 'text-red-500 font-medium' : 'text-muted-foreground'}`}>
+                        {wordCount}/150 words
                       </p>
                     </div>
                     <FormMessage />

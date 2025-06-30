@@ -217,7 +217,7 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
         status: appEntry.status,
         mobilePhone: appEntry.mobilePhone,
         wechatId: appEntry.wechatId,
-        gender: appEntry.gender,
+        gender: appEntry.gender ?? "Not specified",
         job: appEntry.job,
         contact: "",
         nominatedBy: "",
@@ -1486,8 +1486,14 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                       <>
                         <div>
                           <p className="text-sm font-medium text-muted-foreground">Contact Information</p>
+                          <p>Email: {(selectedEntry as ApplicationEntry).email}</p>
                           <p>Mobile: {(selectedEntry as ApplicationEntry).mobilePhone}</p>
                           <p>WeChat: {(selectedEntry as ApplicationEntry).wechatId}</p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">Rehearsal Availability (Sep-Nov)</p>
+                          <p>{(selectedEntry as ApplicationEntry).rehearsalAvailability}</p>
                         </div>
                       </>
                     )}
@@ -1502,6 +1508,34 @@ export function SpeakerDashboardClient({ user, initialEntries }: SpeakerDashboar
                     )}
                   </div>
                 </div>
+                
+                {/* Structured Idea Framework - Only for applications */}
+                {selectedEntry.type === "application" && (
+                  <div className="col-span-1 md:col-span-2">
+                    <h3 className="font-medium text-lg mb-2">Structured Idea Framework</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">1. Common Belief/Behavior to Challenge</p>
+                        <p className="text-sm bg-muted/50 p-3 rounded-md">{(selectedEntry as ApplicationEntry).commonBelief || "Not provided"}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">2. Core Idea</p>
+                        <p className="text-sm bg-muted/50 p-3 rounded-md">{(selectedEntry as ApplicationEntry).coreIdea || "Not provided"}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">3. Personal Insight/Example</p>
+                        <p className="text-sm bg-muted/50 p-3 rounded-md">{(selectedEntry as ApplicationEntry).personalInsight || "Not provided"}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">4. Potential Impact</p>
+                        <p className="text-sm bg-muted/50 p-3 rounded-md">{(selectedEntry as ApplicationEntry).potentialImpact || "Not provided"}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
                 <div>
                   <h3 className="font-medium text-lg mb-2">Review & Status</h3>

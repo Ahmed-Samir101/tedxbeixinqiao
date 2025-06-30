@@ -50,14 +50,20 @@ export const verification = pgTable("verification", {
 export const speakerApplication = pgTable("speaker_application", {
 					id: text('id').primaryKey(),
 					fullName: text('full_name').notNull(),
+					email: text('email').notNull(),
 					submissionDate: timestamp('submission_date').notNull(),
 					topic: text('topic').notNull(), // Using ideaPresentation as topic
 					mobilePhone: text('mobile_phone').notNull(),
 					wechatId: text('wechat_id').notNull(),
-					gender: text('gender').notNull(),
+					gender: text('gender'), // Made optional since we're not collecting this anymore
 					job: text('job').notNull(),
-					availableInBeijing: text('available_in_beijing').notNull(),
+					rehearsalAvailability: text('rehearsal_availability').notNull(),
+					availableInBeijing: text('available_in_beijing'), // Made optional since we're using rehearsalAvailability instead
 					priorTedTalk: text('prior_ted_talk').notNull(),
+					commonBelief: text('common_belief').notNull(),
+					coreIdea: text('core_idea').notNull(),
+					personalInsight: text('personal_insight').notNull(),
+					potentialImpact: text('potential_impact').notNull(),
 					remarks: text('remarks'),
 					websiteUrl: text('website_url'),
 					status: text('status').notNull().default('under_review'),

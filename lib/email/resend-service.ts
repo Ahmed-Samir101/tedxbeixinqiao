@@ -23,16 +23,21 @@ export async function sendSpeakerApplicationEmail(applicationData: any, pdfFile:
         <h3>Personal Information</h3>
         <ul>
           <li><strong>Full Name:</strong> ${applicationData.fullName}</li>
-          <li><strong>Available in Beijing:</strong> ${applicationData.availableInBeijing}</li>
+          <li><strong>Email:</strong> ${applicationData.email}</li>
+          <li><strong>Rehearsal Availability (Sep-Nov):</strong> ${applicationData.rehearsalAvailability}</li>
           <li><strong>Mobile Phone:</strong> ${applicationData.mobilePhone}</li>
           <li><strong>WeChat ID:</strong> ${applicationData.wechatId}</li>
           <li><strong>Prior TED Talk:</strong> ${applicationData.priorTedTalk}</li>
           <li><strong>Job:</strong> ${applicationData.job}</li>
-          <li><strong>Gender:</strong> ${applicationData.gender}</li>
           ${applicationData.remarks ? `<li><strong>Remarks:</strong> ${applicationData.remarks}</li>` : ''}
         </ul>
         <h3>Presentation Idea</h3>
-        <p>${applicationData.ideaPresentation}</p>
+        <p><strong>Initial Description:</strong> ${applicationData.ideaPresentation}</p>
+        <h3>Structured Idea Framework</h3>
+        <p><strong>1. Common Belief/Behavior to Challenge:</strong> ${applicationData.commonBelief}</p>
+        <p><strong>2. Core Idea:</strong> ${applicationData.coreIdea}</p>
+        <p><strong>3. Personal Insight/Example:</strong> ${applicationData.personalInsight}</p>
+        <p><strong>4. Potential Impact:</strong> ${applicationData.potentialImpact}</p>
         ${applicationData.websiteUrl ? `<p><strong>Website URL:</strong> <a href="${applicationData.websiteUrl}">${applicationData.websiteUrl}</a></p>` : ''}
         ${pdfFile ? '<p><strong>PDF Attachment:</strong> Please see the attached PDF document.</p>' : '<p><em>No PDF attachment was provided.</em></p>'}
       `,

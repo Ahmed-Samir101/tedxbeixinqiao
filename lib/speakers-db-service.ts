@@ -8,14 +8,18 @@ import { eq } from 'drizzle-orm';
 // Speaker Application Types
 interface SpeakerApplicationData {
   fullName: string;
-  availableInBeijing: string;
+  email: string;
+  rehearsalAvailability: string;
   mobilePhone: string;
   wechatId: string;
   priorTedTalk: string;
   job: string;
-  gender: string;
   remarks?: string;
   ideaPresentation: string;
+  commonBelief: string;
+  coreIdea: string;
+  personalInsight: string;
+  potentialImpact: string;
   websiteUrl?: string;
 }
 
@@ -35,14 +39,20 @@ export async function createSpeakerApplication(data: SpeakerApplicationData) {
     const result = await db.insert(speakerApplication).values({
       id,
       fullName: data.fullName,
+      email: data.email,
       submissionDate: now,
       topic: data.ideaPresentation,
       mobilePhone: data.mobilePhone,
       wechatId: data.wechatId,
-      gender: data.gender,
+      gender: null, // Set null since we're not collecting this anymore
       job: data.job,
-      availableInBeijing: data.availableInBeijing,
+      rehearsalAvailability: data.rehearsalAvailability,
+      availableInBeijing: null, // Not used anymore
       priorTedTalk: data.priorTedTalk,
+      commonBelief: data.commonBelief,
+      coreIdea: data.coreIdea,
+      personalInsight: data.personalInsight,
+      potentialImpact: data.potentialImpact,
       remarks: data.remarks || null,
       websiteUrl: data.websiteUrl || null,
       status: "under_review",
