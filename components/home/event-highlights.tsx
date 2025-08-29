@@ -11,17 +11,17 @@ const eventHighlights = [
   {
     title: "Thought-Provoking Talks",
     description: "Our speakers deliver engaging presentations that challenge assumptions, spark new ideas, and inspire action across various disciplines.",
-    video: "https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/2.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby8yLm1wNCIsImlhdCI6MTc0NDMzOTg3OSwiZXhwIjoxODA3NDExODc5fQ.P4jbLXAQz3_3I-r1btpVnqIwFaVHdVWk6oRTkF229zg",
+    video: "https://keithcollea.me/2.mp4",
   },
   {
     title: "Interactive Experiences",
     description: "Between talks, attendees engage in hands-on activities, discussions, and demonstrations that bring ideas to life in creative ways.",
-    video: "https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/3.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby8zLm1wNCIsImlhdCI6MTc0NDMzOTk1NSwiZXhwIjoxODA3NDExOTU1fQ.jqaXrNyq04RZO2XMQREPSXfq1Gtx2hiWPp6LGlojmP4",
+    video: "https://keithcollea.me/3.mp4",
   },
   {
     title: "Community Connection",
     description: "Our events bring together diverse attendees from various backgrounds, fostering connections that often lead to collaboration and friendship.",
-    video: "https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/4.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby80Lm1wNCIsImlhdCI6MTc0NDMzOTk2NSwiZXhwIjoxODA3NDExOTY1fQ.5b4Nc4CB_F0WfD4vE_J17r1WxmXxMUaOGRLBGqHs2Qc",
+    video: "https://keithcollea.me/4.mp4",
   }
 ]
 

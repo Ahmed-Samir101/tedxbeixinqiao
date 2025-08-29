@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from "framer-motion"
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useId } from "react"
 import { Sparkles, Globe, Lightbulb, Play, Calendar, ArrowRight, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -60,6 +60,7 @@ export default function AboutSection() {
   const imageInView = useInView(imageRef, { once: true })
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isHoveringImage, setIsHoveringImage] = useState(false)
+  const aboutId = useId()
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -141,7 +142,7 @@ export default function AboutSection() {
                   className="relative h-full w-full"
                   >
                   <video 
-                    src="https://glegrxfhyqwlzdqrvwth.supabase.co/storage/v1/object/sign/tedxbeixinqiao/1.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZWR4YmVpeGlucWlhby8xLm1wNCIsImlhdCI6MTc0NDMzOTMzNSwiZXhwIjoxODA3NDExMzM1fQ.WOLNS9DfJvBpNi_3Q0RFOtYWfWl7IHnV_k_6ANSMHvs"
+                    src="https://keithcollea.me/1.mp4"
                     className="absolute inset-0 h-full w-full"
                     controls
                     loop
