@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import React, { useEffect } from "react"
+import React, { useEffect } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,7 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from '@tanstack/react-table';
 import {
   DndContext,
   KeyboardSensor,
@@ -24,17 +24,17 @@ import {
   useSensors,
   type DragEndEvent,
   type UniqueIdentifier,
-} from "@dnd-kit/core"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
+} from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   SortableContext,
   arrayMove,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import { GripVertical } from "lucide-react"
-import { Button } from "@/components/ui/button"
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -42,13 +42,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 
 // Create a separate component for the drag handle
 export function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
     id,
-  })
+  });
 
   return (
     <Button
@@ -61,19 +61,19 @@ export function DragHandle({ id }: { id: string }) {
       <GripVertical className="h-4 w-4 text-muted-foreground" />
       <span className="sr-only">Drag to reorder</span>
     </Button>
-  )
+  );
 }
 
-function DraggableRow<TData>({ 
-  row, 
+function DraggableRow<TData>({
+  row,
   onRowClick,
-}: { 
-  row: Row<TData>
-  onRowClick?: (row: Row<TData>) => void
+}: {
+  row: Row<TData>;
+  onRowClick?: (row: Row<TData>) => void;
 }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: (row.original as any).id,
-  })
+  });
 
   const handleRowClick = () => {
     if (onRowClick) {
@@ -84,10 +84,10 @@ function DraggableRow<TData>({
   return (
     <TableRow
       ref={setNodeRef}
-      data-state={row.getIsSelected() && "selected"}
+      data-state={row.getIsSelected() && 'selected'}
       data-dragging={isDragging}
-      className={`relative z-0 cursor-pointer ${isDragging ? "z-10 opacity-80" : ""} ${
-        row.getIsSelected() ? "bg-primary/5 dark:bg-primary/10" : ""
+      className={`relative z-0 cursor-pointer ${isDragging ? 'z-10 opacity-80' : ''} ${
+        row.getIsSelected() ? 'bg-primary/5 dark:bg-primary/10' : ''
       }`}
       style={{
         transform: CSS.Transform.toString(transform),
@@ -101,20 +101,20 @@ function DraggableRow<TData>({
         </TableCell>
       ))}
     </TableRow>
-  )
+  );
 }
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  onRowClick?: (row: Row<TData>) => void
-  updateStatus?: (id: string, status: string) => void
-  updateRating?: (id: string, rating: number) => void
-  columnVisibility?: VisibilityState
-  setColumnVisibility?: (state: VisibilityState) => void
-  rowSelection?: Record<string, boolean>
-  onRowSelectionChange?: (selection: Record<string, boolean>) => void
-  onTableChange?: (table: any) => void
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  onRowClick?: (row: Row<TData>) => void;
+  updateStatus?: (id: string, status: string) => void;
+  updateRating?: (id: string, rating: number) => void;
+  columnVisibility?: VisibilityState;
+  setColumnVisibility?: (state: VisibilityState) => void;
+  rowSelection?: Record<string, boolean>;
+  onRowSelectionChange?: (selection: Record<string, boolean>) => void;
+  onTableChange?: (table: any) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -129,17 +129,21 @@ export function DataTable<TData, TValue>({
   onRowSelectionChange,
   onTableChange,
 }: DataTableProps<TData, TValue>) {
-  const [data, setData] = React.useState(() => initialData)
-  const [rowSelection, setRowSelection] = React.useState(parentRowSelection || {})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  
-  const sortableId = React.useId()
+  const [data, setData] = React.useState(() => initialData);
+  const [rowSelection, setRowSelection] = React.useState(
+    parentRowSelection || {}
+  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const sortableId = React.useId();
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
-  )
+  );
 
   // Update data when initialData changes
   useEffect(() => {
@@ -149,7 +153,7 @@ export function DataTable<TData, TValue>({
   const dataIds = React.useMemo<UniqueIdentifier[]>(
     () => data?.map((item: any) => item.id) || [],
     [data]
-  )
+  );
 
   const table = useReactTable({
     data,
@@ -166,36 +170,37 @@ export function DataTable<TData, TValue>({
     },
     enableRowSelection: true,
     onRowSelectionChange: (updaterOrValue) => {
-      setRowSelection(updaterOrValue)
+      setRowSelection(updaterOrValue);
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility 
-      ? (updaterOrValue) => setColumnVisibility(
-          typeof updaterOrValue === 'function' 
-            ? updaterOrValue(columnVisibility || {}) 
-            : updaterOrValue
-        )
+    onColumnVisibilityChange: setColumnVisibility
+      ? (updaterOrValue) =>
+          setColumnVisibility(
+            typeof updaterOrValue === 'function'
+              ? updaterOrValue(columnVisibility || {})
+              : updaterOrValue
+          )
       : undefined,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  })
+  });
 
   // Pass table's row selection state back to parent
   useEffect(() => {
     if (table.getState().rowSelection !== rowSelection) {
-      setRowSelection(table.getState().rowSelection)
+      setRowSelection(table.getState().rowSelection);
     }
-  }, [table.getState().rowSelection])
-  
+  }, [table.getState().rowSelection]);
+
   // Share rowSelection state with parent component if provided
   useEffect(() => {
     if (parentRowSelection !== undefined && onRowSelectionChange) {
-      setRowSelection(parentRowSelection)
+      setRowSelection(parentRowSelection);
     }
-  }, [parentRowSelection])
+  }, [parentRowSelection]);
 
   // Notify parent component of row selection changes
   useEffect(() => {
@@ -205,13 +210,13 @@ export function DataTable<TData, TValue>({
   }, [rowSelection, onRowSelectionChange]);
 
   function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event
+    const { active, over } = event;
     if (active && over && active.id !== over.id) {
       setData((prevData) => {
-        const oldIndex = dataIds.indexOf(active.id)
-        const newIndex = dataIds.indexOf(over.id)
-        return arrayMove([...prevData], oldIndex, newIndex)
-      })
+        const oldIndex = dataIds.indexOf(active.id);
+        const newIndex = dataIds.indexOf(over.id);
+        return arrayMove([...prevData], oldIndex, newIndex);
+      });
     }
   }
 
@@ -245,7 +250,7 @@ export function DataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -257,9 +262,9 @@ export function DataTable<TData, TValue>({
                 strategy={verticalListSortingStrategy}
               >
                 {table.getRowModel().rows.map((row) => (
-                  <DraggableRow 
-                    key={row.id} 
-                    row={row} 
+                  <DraggableRow
+                    key={row.id}
+                    row={row}
                     onRowClick={onRowClick}
                   />
                 ))}
@@ -278,5 +283,5 @@ export function DataTable<TData, TValue>({
         </Table>
       </DndContext>
     </div>
-  )
+  );
 }

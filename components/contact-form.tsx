@@ -1,121 +1,128 @@
-"use client"
+'use client';
 
-import { useState, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { motion, useInView, AnimatePresence } from "framer-motion"
-import { Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
+import { useState, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  })
-  const [activeField, setActiveField] = useState<keyof typeof formData | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState({ success: false, message: "" })
-  const formRef = useRef(null)
-  const isInView = useInView(formRef, { once: false, amount: 0.3 })
-  
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [activeField, setActiveField] = useState<keyof typeof formData | null>(
+    null
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({
+    success: false,
+    message: '',
+  });
+  const formRef = useRef(null);
+  const isInView = useInView(formRef, { once: false, amount: 0.3 });
+
   const handleFocus = (fieldName: keyof typeof formData) => {
-    setActiveField(fieldName)
-  }
-  
+    setActiveField(fieldName);
+  };
+
   const handleBlur = () => {
-    setActiveField(null)
-  }
+    setActiveField(null);
+  };
 
   interface FormData {
-    name: string
-    email: string
-    message: string
+    name: string;
+    email: string;
+    message: string;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value as keyof FormData }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value as keyof FormData }));
+  };
 
   interface SubmitStatus {
-    success: boolean
-    message: string
+    success: boolean;
+    message: string;
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     // Simulate form submission
     setTimeout(() => {
-      console.log("Form submitted:", formData)
-      setFormData({ name: "", email: "", message: "" })
-      setIsSubmitting(false)
-      setSubmitStatus({ 
-        success: true, 
-        message: "Your message has been sent! We'll get back to you soon." 
-      })
+      console.log('Form submitted:', formData);
+      setFormData({ name: '', email: '', message: '' });
+      setIsSubmitting(false);
+      setSubmitStatus({
+        success: true,
+        message: "Your message has been sent! We'll get back to you soon.",
+      });
 
       // Reset success message after 5 seconds
       setTimeout(() => {
-        setSubmitStatus({ success: false, message: "" })
-      }, 5000)
-    }, 1500)
-  }
+        setSubmitStatus({ success: false, message: '' });
+      }, 5000);
+    }, 1500);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 300,
         damping: 30,
         staggerChildren: 0.07,
-        delayChildren: 0.1
-      }
+        delayChildren: 0.1,
+      },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  }
-  
+  };
+
   const formLabelVariants = {
     initial: { y: 0 },
     focus: { y: -5, scale: 0.9 },
-  }
-  
+  };
+
   const buttonVariants = {
     idle: { scale: 1 },
     hover: { scale: 1.02 },
     tap: { scale: 0.98 },
-  }
-  
+  };
+
   const checkMarkVariants = {
     hidden: { pathLength: 0, opacity: 0 },
-    visible: { 
-      pathLength: 1, 
+    visible: {
+      pathLength: 1,
       opacity: 1,
-      transition: { 
+      transition: {
         duration: 0.8,
-        ease: "easeInOut"
-      }
-    }
-  }
+        ease: 'easeInOut',
+      },
+    },
+  };
 
   return (
     <motion.div
       ref={formRef}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={isInView ? 'visible' : 'hidden'}
       variants={containerVariants}
       className="overflow-hidden rounded-xl bg-white p-8 shadow-lg dark:bg-gray-900"
     >
-      <motion.div 
+      <motion.div
         variants={itemVariants}
         className="mb-6 flex flex-col space-y-2"
       >
@@ -140,9 +147,9 @@ export default function ContactForm() {
             className="flex flex-col items-center space-y-4 rounded-lg bg-green-50 p-6 text-center dark:bg-green-900/20"
           >
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-              <svg 
-                viewBox="0 0 32 32" 
-                fill="none" 
+              <svg
+                viewBox="0 0 32 32"
+                fill="none"
                 className="h-8 w-8 text-green-600 dark:text-green-400"
               >
                 <motion.path
@@ -157,33 +164,34 @@ export default function ContactForm() {
                 />
               </svg>
             </div>
-            <h4 className="text-xl font-semibold text-gray-900 dark:text-white">Message Sent!</h4>
-            <p className="text-gray-600 dark:text-gray-300">{submitStatus.message}</p>
+            <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Message Sent!
+            </h4>
+            <p className="text-gray-600 dark:text-gray-300">
+              {submitStatus.message}
+            </p>
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setSubmitStatus({ success: false, message: "" })}
+              onClick={() => setSubmitStatus({ success: false, message: '' })}
               className="mt-2 text-sm font-medium text-red-600 dark:text-red-400"
             >
               Send another message
             </motion.button>
           </motion.div>
         ) : (
-          <motion.form 
+          <motion.form
             key="form"
             onSubmit={handleSubmit}
             variants={containerVariants}
             className="space-y-6"
           >
-            <motion.div 
-              variants={itemVariants}
-              className="space-y-1"
-            >
-              <motion.label 
+            <motion.div variants={itemVariants} className="space-y-1">
+              <motion.label
                 htmlFor="name"
                 variants={formLabelVariants}
                 initial="initial"
-                animate={activeField === 'name' ? "focus" : "initial"}
+                animate={activeField === 'name' ? 'focus' : 'initial'}
                 className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Your Name
@@ -201,7 +209,7 @@ export default function ContactForm() {
                   required
                   className="border-gray-300 bg-gray-50 py-6 pl-4 pr-4 transition-all duration-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-800/50 dark:focus:border-red-500"
                 />
-                <motion.span 
+                <motion.span
                   initial={{ width: '0%' }}
                   animate={{ width: activeField === 'name' ? '100%' : '0%' }}
                   transition={{ duration: 0.3 }}
@@ -210,15 +218,12 @@ export default function ContactForm() {
               </div>
             </motion.div>
 
-            <motion.div 
-              variants={itemVariants}
-              className="space-y-1"
-            >
-              <motion.label 
+            <motion.div variants={itemVariants} className="space-y-1">
+              <motion.label
                 htmlFor="email"
                 variants={formLabelVariants}
                 initial="initial"
-                animate={activeField === 'email' ? "focus" : "initial"}
+                animate={activeField === 'email' ? 'focus' : 'initial'}
                 className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Your Email
@@ -236,7 +241,7 @@ export default function ContactForm() {
                   required
                   className="border-gray-300 bg-gray-50 py-6 pl-4 pr-4 transition-all duration-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-800/50 dark:focus:border-red-500"
                 />
-                <motion.span 
+                <motion.span
                   initial={{ width: '0%' }}
                   animate={{ width: activeField === 'email' ? '100%' : '0%' }}
                   transition={{ duration: 0.3 }}
@@ -245,15 +250,12 @@ export default function ContactForm() {
               </div>
             </motion.div>
 
-            <motion.div 
-              variants={itemVariants}
-              className="space-y-1"
-            >
-              <motion.label 
+            <motion.div variants={itemVariants} className="space-y-1">
+              <motion.label
                 htmlFor="message"
                 variants={formLabelVariants}
                 initial="initial"
-                animate={activeField === 'message' ? "focus" : "initial"}
+                animate={activeField === 'message' ? 'focus' : 'initial'}
                 className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Your Message
@@ -270,7 +272,7 @@ export default function ContactForm() {
                   required
                   className="min-h-[150px] border-gray-300 bg-gray-50 py-4 pl-4 pr-4 transition-all duration-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-800/50 dark:focus:border-red-500"
                 />
-                <motion.span 
+                <motion.span
                   initial={{ width: '0%' }}
                   animate={{ width: activeField === 'message' ? '100%' : '0%' }}
                   transition={{ duration: 0.3 }}
@@ -279,9 +281,7 @@ export default function ContactForm() {
               </div>
             </motion.div>
 
-            <motion.div
-              variants={itemVariants}
-            >
+            <motion.div variants={itemVariants}>
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
@@ -311,5 +311,5 @@ export default function ContactForm() {
         )}
       </AnimatePresence>
     </motion.div>
-  )
+  );
 }

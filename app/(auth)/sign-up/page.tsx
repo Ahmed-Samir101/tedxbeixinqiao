@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,14 +8,16 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
+} from '@/components/ui/card';
+import Link from 'next/link';
 
 export default function SignUp() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Registration Closed</CardTitle>
+        <CardTitle className="text-lg md:text-xl">
+          Registration Closed
+        </CardTitle>
         <CardDescription className="text-xs md:text-sm">
           Public registration is currently not available
         </CardDescription>
@@ -24,19 +26,15 @@ export default function SignUp() {
         <div className="space-y-4">
           <div className="text-center p-4">
             <p className="mb-6 text-muted-foreground">
-              Please contact us for registration options and information on how to participate in TEDxBeixinqiao.
+              Please contact us for registration options and information on how
+              to participate in TEDxBeixinqiao.
             </p>
             <p className="text-sm text-muted-foreground">
               If you already have an account, you can sign in below.
             </p>
           </div>
-          <Button 
-            className="w-full"
-            asChild
-          >
-            <Link href="/sign-in">
-              Go to Sign In
-            </Link>
+          <Button className="w-full" asChild>
+            <Link href="/sign-in">Go to Sign In</Link>
           </Button>
         </div>
       </CardContent>

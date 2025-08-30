@@ -1,81 +1,81 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/mode-toggle"
-import { Menu, X, ChevronRight } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useMobile } from "@/hooks/use-mobile"
-import { motion, AnimatePresence } from "framer-motion"
-import { SpeakerApplicationModal } from "@/components/speaker-application-modal"
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ModeToggle } from '@/components/mode-toggle';
+import { Menu, X, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useMobile } from '@/hooks/use-mobile';
+import { motion, AnimatePresence } from 'framer-motion';
+import { SpeakerApplicationModal } from '@/components/speaker-application-modal';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const isMobile = useMobile()
-  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const isMobile = useMobile();
+  const pathname = usePathname();
 
   const navigation = [
-    { name: "Speakers", path: "/speakers" },
-    { name: "Team", path: "/team" },
-    { name: "Contact", path: "/contact" },
-  ]
+    { name: 'Speakers', path: '/speakers' },
+    { name: 'Team', path: '/team' },
+    { name: 'Contact', path: '/contact' },
+  ];
 
   // Handle mounting to avoid hydration issues
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
+      setScrolled(window.scrollY > 10);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close mobile menu when path changes
   useEffect(() => {
-    setIsOpen(false)
-  }, [pathname])
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 100, 
-        damping: 20 
+      transition={{
+        type: 'spring',
+        stiffness: 100,
+        damping: 20,
       }}
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-500",
-        "bg-white/30 backdrop-blur-lg dark:bg-black/30",
-        scrolled && "shadow-lg"
+        'fixed top-0 z-50 w-full transition-all duration-500',
+        'bg-white/30 backdrop-blur-lg dark:bg-black/30',
+        scrolled && 'shadow-lg'
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-6">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-          <motion.div 
+          <motion.div
             className={cn(
-              "relative flex items-center",
-              mounted && isMobile && "scale-[0.85]"
+              'relative flex items-center',
+              mounted && isMobile && 'scale-[0.85]'
             )}
             whileHover={{ scale: mounted && isMobile ? 1 : 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
           >
             <motion.span
               className={cn(
-                "font-extrabold text-red-600 dark:text-red-500",
+                'font-extrabold text-red-600 dark:text-red-500',
                 // Only apply mobile-specific styles after mounting
-                mounted ? (isMobile ? "text-lg" : "text-2xl") : "text-2xl"
+                mounted ? (isMobile ? 'text-lg' : 'text-2xl') : 'text-2xl'
               )}
-              whileHover={{ 
-                textShadow: "0 0 8px rgba(239, 68, 68, 0.5)"
+              whileHover={{
+                textShadow: '0 0 8px rgba(239, 68, 68, 0.5)',
               }}
               transition={{ duration: 0.2 }}
             >
@@ -83,19 +83,19 @@ export default function Navbar() {
             </motion.span>
             <motion.span
               className={cn(
-                "font-bold text-black dark:text-white",
+                'font-bold text-black dark:text-white',
                 // Only apply mobile-specific styles after mounting
-                mounted ? (isMobile ? "text-lg" : "text-2xl") : "text-2xl"
+                mounted ? (isMobile ? 'text-lg' : 'text-2xl') : 'text-2xl'
               )}
             >
               Beixinqiao
             </motion.span>
-            
+
             {/* Animated underline */}
             <motion.div
               className="absolute -bottom-1 left-0 h-[2px] w-0 bg-red-600 dark:bg-red-500"
               initial={{ width: 0 }}
-              whileHover={{ width: "100%" }}
+              whileHover={{ width: '100%' }}
               transition={{ duration: 0.3 }}
             />
           </motion.div>
@@ -104,50 +104,50 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex md:items-center md:gap-6">
           {navigation.map((item) => {
-            const isActive = pathname === item.path
-            
+            const isActive = pathname === item.path;
+
             return (
               <Link
                 key={item.name}
                 href={item.path}
                 className={cn(
-                  "group relative px-2 py-1.5 text-sm font-medium transition-colors",
-                  isActive 
-                    ? "text-red-600 dark:text-red-500" 
-                    : "text-gray-800 hover:text-red-600 dark:text-gray-100 dark:hover:text-red-500"
+                  'group relative px-2 py-1.5 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'text-red-600 dark:text-red-500'
+                    : 'text-gray-800 hover:text-red-600 dark:text-gray-100 dark:hover:text-red-500'
                 )}
               >
                 <span className="relative z-10">{item.name}</span>
-                
+
                 {/* Animated highlight */}
-                <motion.span 
+                <motion.span
                   className={cn(
-                    "absolute inset-0 -z-10 rounded-md bg-red-100 dark:bg-red-900/30",
-                    isActive ? "opacity-100" : "opacity-0"
+                    'absolute inset-0 -z-10 rounded-md bg-red-100 dark:bg-red-900/30',
+                    isActive ? 'opacity-100' : 'opacity-0'
                   )}
                   initial={false}
-                  animate={{ 
+                  animate={{
                     opacity: isActive ? 1 : 0,
-                    scale: isActive ? 1 : 0.9
+                    scale: isActive ? 1 : 0.9,
                   }}
                   transition={{ duration: 0.2 }}
                 />
-                
+
                 {/* Animated underline */}
-                <motion.span 
+                <motion.span
                   className={cn(
-                    "absolute bottom-0 left-0 h-[2px] bg-red-600 dark:bg-red-500",
-                    isActive ? "w-full" : "w-0"
+                    'absolute bottom-0 left-0 h-[2px] bg-red-600 dark:bg-red-500',
+                    isActive ? 'w-full' : 'w-0'
                   )}
                   initial={false}
-                  animate={{ width: isActive ? "100%" : "0%" }}
-                  whileHover={{ width: "100%" }}
+                  animate={{ width: isActive ? '100%' : '0%' }}
+                  whileHover={{ width: '100%' }}
                   transition={{ duration: 0.3 }}
                 />
               </Link>
-            )
+            );
           })}
-          
+
           <div className="overflow-hidden rounded-md">
             <ModeToggle />
           </div>
@@ -158,11 +158,11 @@ export default function Navbar() {
           <div className="overflow-hidden rounded-md">
             <ModeToggle />
           </div>
-          
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setIsOpen(!isOpen)} 
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
             className="flex h-8 w-8 items-center justify-center rounded-md ml-1"
           >
@@ -198,63 +198,63 @@ export default function Navbar() {
         {isOpen && isMobile && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="absolute left-0 right-0 top-16 overflow-hidden bg-white/95 backdrop-blur-md shadow-xl dark:bg-gray-950/95 md:hidden"
           >
-            <motion.nav 
+            <motion.nav
               className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800"
               initial="closed"
               animate="open"
               variants={{
                 open: {
-                  transition: { staggerChildren: 0.08, delayChildren: 0.1 }
+                  transition: { staggerChildren: 0.08, delayChildren: 0.1 },
                 },
                 closed: {
-                  transition: { staggerChildren: 0.05, staggerDirection: -1 }
-                }
+                  transition: { staggerChildren: 0.05, staggerDirection: -1 },
+                },
               }}
             >
               {navigation.map((item) => {
-                const isActive = pathname === item.path
-                
+                const isActive = pathname === item.path;
+
                 return (
                   <motion.div
                     key={item.name}
                     variants={{
                       open: { opacity: 1, y: 0 },
-                      closed: { opacity: 0, y: -20 }
+                      closed: { opacity: 0, y: -20 },
                     }}
                   >
                     <Link
                       href={item.path}
                       className={cn(
-                        "flex items-center justify-between px-6 py-3.5 text-base font-medium transition-colors",
-                        isActive 
-                          ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-500" 
-                          : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-900/50"
+                        'flex items-center justify-between px-6 py-3.5 text-base font-medium transition-colors',
+                        isActive
+                          ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-500'
+                          : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-900/50'
                       )}
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
-                      
+
                       {isActive && (
                         <motion.div
                           layoutId="activeIndicator"
-                          transition={{ type: "spring", duration: 0.5 }}
+                          transition={{ type: 'spring', duration: 0.5 }}
                         >
                           <div className="h-2 w-2 rounded-full bg-red-600 dark:bg-red-500" />
                         </motion.div>
                       )}
                     </Link>
                   </motion.div>
-                )
+                );
               })}
             </motion.nav>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.header>
-  )
+  );
 }

@@ -1,36 +1,50 @@
-"use client"
+'use client';
 
-import { useRef } from "react"
-import Image from "next/image"
-import { Card } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Facebook, Twitter, Linkedin, Instagram, Play, ExternalLink, X } from "lucide-react"
-import { motion, useInView } from "framer-motion"
-import { speakers, type Speaker, type Social } from "@/data/speakers"
+import { useRef } from 'react';
+import Image from 'next/image';
+import { Card } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Play,
+  ExternalLink,
+  X,
+} from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { speakers, type Speaker, type Social } from '@/data/speakers';
 
 // Removed duplicate speakers array as it's now imported from data/speakers.ts
 
 export default function SpeakersGrid() {
-  const gridRef = useRef(null)
-  const isInView = useInView(gridRef, { once: true, amount: 0.1 })
+  const gridRef = useRef(null);
+  const isInView = useInView(gridRef, { once: true, amount: 0.1 });
 
   // Removed redundant Speaker interface as it's imported from data/speakers.ts
 
   const renderSocialIcon = (platform: string) => {
     switch (platform) {
-      case "facebook":
+      case 'facebook':
         return <Facebook className="h-4 w-4" />;
-      case "twitter":
+      case 'twitter':
         return <Twitter className="h-4 w-4" />;
-      case "linkedin":
+      case 'linkedin':
         return <Linkedin className="h-4 w-4" />;
-      case "instagram":
+      case 'instagram':
         return <Instagram className="h-4 w-4" />;
       default:
         return null;
     }
-  }
+  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -40,19 +54,19 @@ export default function SpeakersGrid() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  };
 
   return (
     <motion.div
       ref={gridRef}
       variants={container}
       initial="hidden"
-      animate={isInView ? "show" : "hidden"}
+      animate={isInView ? 'show' : 'hidden'}
       className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
     >
       {speakers.map((speaker, index) => (
@@ -82,8 +96,12 @@ export default function SpeakersGrid() {
                   {/* Speaker Info */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                     <h3 className="mb-1 text-2xl font-bold">{speaker.name}</h3>
-                    <p className="mb-2 text-sm font-medium text-gray-300">{speaker.title}</p>
-                    <p className="mb-4 text-base font-medium text-red-400">{speaker.talkTitle}</p>
+                    <p className="mb-2 text-sm font-medium text-gray-300">
+                      {speaker.title}
+                    </p>
+                    <p className="mb-4 text-base font-medium text-red-400">
+                      {speaker.talkTitle}
+                    </p>
 
                     {/* Watch Talk Button */}
                     <div className="flex items-center gap-2">
@@ -117,11 +135,13 @@ export default function SpeakersGrid() {
                 {/* Background decorative elements */}
                 <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
                 <div className="absolute -right-20 -bottom-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
-                
+
                 <div className="relative z-10 p-6 md:p-8">
                   <DialogHeader className="mb-6">
                     <div className="flex items-center justify-between">
-                      <DialogTitle className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{speaker.talkTitle}</DialogTitle>
+                      <DialogTitle className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                        {speaker.talkTitle}
+                      </DialogTitle>
                     </div>
                   </DialogHeader>
 
@@ -149,7 +169,10 @@ export default function SpeakersGrid() {
                       <div className="flex items-center gap-4 mb-4">
                         <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-red-500 shadow-lg">
                           <Image
-                            src={speaker.imageSrc || `/placeholder.svg?height=100&width=100&text=${encodeURIComponent(speaker.name.charAt(0))}`}
+                            src={
+                              speaker.imageSrc ||
+                              `/placeholder.svg?height=100&width=100&text=${encodeURIComponent(speaker.name.charAt(0))}`
+                            }
                             alt={speaker.name}
                             width={64}
                             height={64}
@@ -157,24 +180,38 @@ export default function SpeakersGrid() {
                           />
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900 dark:text-white">{speaker.name}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{speaker.title}</p>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                            {speaker.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {speaker.title}
+                          </p>
                         </div>
                       </div>
 
                       <div className="bg-gray-50 dark:bg-gray-900/70 rounded-xl p-4 mb-6">
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">About the Talk</h4>
-                        <p className="text-gray-700 dark:text-gray-300">{speaker.description}</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                          About the Talk
+                        </h4>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          {speaker.description}
+                        </p>
                       </div>
 
                       <div className="space-y-4">
                         <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Talk Summary</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{speaker.talkSummary}</p>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                            Talk Summary
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {speaker.talkSummary}
+                          </p>
                         </div>
 
                         <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Connect</h4>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                            Connect
+                          </h4>
                           <div className="flex gap-3">
                             {speaker.socials.map((social, idx) => (
                               <Button
@@ -183,7 +220,11 @@ export default function SpeakersGrid() {
                                 size="icon"
                                 className="h-9 w-9 rounded-full transition-all duration-300 bg-white dark:bg-gray-800 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-500 border border-gray-200 dark:border-gray-700"
                               >
-                                <a href={social.url} target="_blank" rel="noopener noreferrer">
+                                <a
+                                  href={social.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
                                   {renderSocialIcon(social.platform)}
                                 </a>
                               </Button>
@@ -200,5 +241,5 @@ export default function SpeakersGrid() {
         </motion.div>
       ))}
     </motion.div>
-  )
+  );
 }

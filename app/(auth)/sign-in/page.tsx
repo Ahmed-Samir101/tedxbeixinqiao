@@ -1,21 +1,27 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
-import { signIn, signOut, useSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState, useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
+import { signIn, signOut, useSession } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const session = useSession();
-  
+
   // If user is redirected to sign-in but still has a session, force logout
   useEffect(() => {
     const cleanupSession = async () => {
@@ -26,10 +32,10 @@ export default function SignIn() {
         window.location.reload();
       }
     };
-    
+
     cleanupSession();
   }, [session.data]);
-  
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -73,15 +79,15 @@ export default function SignIn() {
                 {
                   email,
                   password,
-                  callbackURL: "/speaker-dashboard"
+                  callbackURL: '/speaker-dashboard',
                 },
                 {
                   onRequest: () => setLoading(true),
                   onResponse: () => setLoading(false),
                   onSuccess: () => {
-                    router.push("/speaker-dashboard");
-                  }
-                },
+                    router.push('/speaker-dashboard');
+                  },
+                }
               );
             }}
           >

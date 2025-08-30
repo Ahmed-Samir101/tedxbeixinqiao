@@ -1,4 +1,4 @@
-"use server"
+'use server';
 
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/db/drizzle';
@@ -35,7 +35,7 @@ export async function createSpeakerApplication(data: SpeakerApplicationData) {
   try {
     const now = new Date();
     const id = `APP${now.getTime().toString().slice(-6)}`;
-    
+
     const result = await db.insert(speakerApplication).values({
       id,
       fullName: data.fullName,
@@ -55,14 +55,14 @@ export async function createSpeakerApplication(data: SpeakerApplicationData) {
       potentialImpact: data.potentialImpact,
       remarks: data.remarks || null,
       websiteUrl: data.websiteUrl || null,
-      status: "under_review",
+      status: 'under_review',
       flagged: false,
-      notes: "",
+      notes: '',
       rating: 0,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     });
-    
+
     return { success: true, data: { id } };
   } catch (error) {
     console.error('Failed to create speaker application:', error);
@@ -70,14 +70,17 @@ export async function createSpeakerApplication(data: SpeakerApplicationData) {
   }
 }
 
-export async function createSpeakerNomination(data: SpeakerNominationData, submitterName: string = "Website User") {
+export async function createSpeakerNomination(
+  data: SpeakerNominationData,
+  submitterName: string = 'Website User'
+) {
   try {
     const now = new Date();
     const id = `NOM${now.getTime().toString().slice(-6)}`;
-    
+
     // Generate a topic from the remarks - taking the first sentence or first few words
     const topic = data.remarks.split('.')[0].trim();
-    
+
     const result = await db.insert(speakerNomination).values({
       id,
       fullName: data.fullName,
@@ -87,15 +90,15 @@ export async function createSpeakerNomination(data: SpeakerNominationData, submi
       priorTedTalk: data.priorTedTalk,
       remarks: data.remarks,
       websiteUrl: data.websiteUrl || null,
-      topic: topic.length > 10 ? topic : data.remarks.substring(0, 30) + "...",
-      status: "under_review",
+      topic: topic.length > 10 ? topic : data.remarks.substring(0, 30) + '...',
+      status: 'under_review',
       flagged: false,
-      notes: "",
+      notes: '',
       rating: 0,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     });
-    
+
     return { success: true, data: { id } };
   } catch (error) {
     console.error('Failed to create speaker nomination:', error);
@@ -125,13 +128,14 @@ export async function getAllSpeakerNominations() {
 
 export async function updateApplicationStatus(id: string, status: string) {
   try {
-    await db.update(speakerApplication)
-      .set({ 
+    await db
+      .update(speakerApplication)
+      .set({
         status,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerApplication.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update application status:', error);
@@ -141,13 +145,14 @@ export async function updateApplicationStatus(id: string, status: string) {
 
 export async function updateNominationStatus(id: string, status: string) {
   try {
-    await db.update(speakerNomination)
-      .set({ 
+    await db
+      .update(speakerNomination)
+      .set({
         status,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerNomination.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update nomination status:', error);
@@ -157,13 +162,14 @@ export async function updateNominationStatus(id: string, status: string) {
 
 export async function updateApplicationRating(id: string, rating: number) {
   try {
-    await db.update(speakerApplication)
-      .set({ 
+    await db
+      .update(speakerApplication)
+      .set({
         rating,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerApplication.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update application rating:', error);
@@ -173,13 +179,14 @@ export async function updateApplicationRating(id: string, rating: number) {
 
 export async function updateNominationRating(id: string, rating: number) {
   try {
-    await db.update(speakerNomination)
-      .set({ 
+    await db
+      .update(speakerNomination)
+      .set({
         rating,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerNomination.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update nomination rating:', error);
@@ -189,13 +196,14 @@ export async function updateNominationRating(id: string, rating: number) {
 
 export async function updateApplicationNotes(id: string, notes: string) {
   try {
-    await db.update(speakerApplication)
-      .set({ 
+    await db
+      .update(speakerApplication)
+      .set({
         notes,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerApplication.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update application notes:', error);
@@ -205,13 +213,14 @@ export async function updateApplicationNotes(id: string, notes: string) {
 
 export async function updateNominationNotes(id: string, notes: string) {
   try {
-    await db.update(speakerNomination)
-      .set({ 
+    await db
+      .update(speakerNomination)
+      .set({
         notes,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerNomination.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update nomination notes:', error);
@@ -222,24 +231,26 @@ export async function updateNominationNotes(id: string, notes: string) {
 export async function toggleApplicationFlag(id: string) {
   try {
     // First get the current flag status
-    const [application] = await db.select({
-      flagged: speakerApplication.flagged
-    })
-    .from(speakerApplication)
-    .where(eq(speakerApplication.id, id));
-    
+    const [application] = await db
+      .select({
+        flagged: speakerApplication.flagged,
+      })
+      .from(speakerApplication)
+      .where(eq(speakerApplication.id, id));
+
     if (!application) {
       throw new Error('Application not found');
     }
-    
+
     // Toggle the flag
-    await db.update(speakerApplication)
-      .set({ 
+    await db
+      .update(speakerApplication)
+      .set({
         flagged: !application.flagged,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerApplication.id, id));
-      
+
     return { success: true, flagged: !application.flagged };
   } catch (error) {
     console.error('Failed to toggle application flag:', error);
@@ -250,24 +261,26 @@ export async function toggleApplicationFlag(id: string) {
 export async function toggleNominationFlag(id: string) {
   try {
     // First get the current flag status
-    const [nomination] = await db.select({
-      flagged: speakerNomination.flagged
-    })
-    .from(speakerNomination)
-    .where(eq(speakerNomination.id, id));
-    
+    const [nomination] = await db
+      .select({
+        flagged: speakerNomination.flagged,
+      })
+      .from(speakerNomination)
+      .where(eq(speakerNomination.id, id));
+
     if (!nomination) {
       throw new Error('Nomination not found');
     }
-    
+
     // Toggle the flag
-    await db.update(speakerNomination)
-      .set({ 
+    await db
+      .update(speakerNomination)
+      .set({
         flagged: !nomination.flagged,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerNomination.id, id));
-      
+
     return { success: true, flagged: !nomination.flagged };
   } catch (error) {
     console.error('Failed to toggle nomination flag:', error);
@@ -292,7 +305,7 @@ export async function createDashboardApplication(data: {
   try {
     const now = new Date();
     const id = `APP${now.getTime().toString().slice(-6)}`;
-    
+
     const result = await db.insert(speakerApplication).values({
       id,
       fullName: data.fullName,
@@ -302,21 +315,21 @@ export async function createDashboardApplication(data: {
       wechatId: data.wechatId,
       gender: data.gender,
       job: data.job,
-      availableInBeijing: "Yes",
+      availableInBeijing: 'Yes',
       priorTedTalk: data.priorTedTalk,
       remarks: null,
       websiteUrl: null,
-      status: data.status || "under_review",
+      status: data.status || 'under_review',
       flagged: data.flagged || false,
-      notes: data.notes || "",
+      notes: data.notes || '',
       rating: data.rating || 0,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     });
-    
-    return { 
-      success: true, 
-      data: { 
+
+    return {
+      success: true,
+      data: {
         id,
         fullName: data.fullName,
         submissionDate: now,
@@ -326,11 +339,11 @@ export async function createDashboardApplication(data: {
         gender: data.gender,
         job: data.job,
         priorTedTalk: data.priorTedTalk,
-        status: data.status || "under_review",
+        status: data.status || 'under_review',
         flagged: data.flagged || false,
-        notes: data.notes || "",
-        rating: data.rating || 0
-      } 
+        notes: data.notes || '',
+        rating: data.rating || 0,
+      },
     };
   } catch (error) {
     console.error('Failed to create application from dashboard:', error);
@@ -353,7 +366,7 @@ export async function createDashboardNomination(data: {
   try {
     const now = new Date();
     const id = `NOM${now.getTime().toString().slice(-6)}`;
-    
+
     const result = await db.insert(speakerNomination).values({
       id,
       fullName: data.fullName,
@@ -362,19 +375,19 @@ export async function createDashboardNomination(data: {
       contact: data.contact,
       nominatedBy: data.nominatedBy,
       priorTedTalk: data.priorTedTalk,
-      remarks: "",
+      remarks: '',
       websiteUrl: null,
-      status: data.status || "under_review",
+      status: data.status || 'under_review',
       flagged: data.flagged || false,
-      notes: data.notes || "",
+      notes: data.notes || '',
       rating: data.rating || 0,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     });
-    
-    return { 
-      success: true, 
-      data: { 
+
+    return {
+      success: true,
+      data: {
         id,
         fullName: data.fullName,
         submissionDate: now,
@@ -382,11 +395,11 @@ export async function createDashboardNomination(data: {
         contact: data.contact,
         nominatedBy: data.nominatedBy,
         priorTedTalk: data.priorTedTalk,
-        status: data.status || "under_review",
+        status: data.status || 'under_review',
         flagged: data.flagged || false,
-        notes: data.notes || "",
-        rating: data.rating || 0
-      } 
+        notes: data.notes || '',
+        rating: data.rating || 0,
+      },
     };
   } catch (error) {
     console.error('Failed to create nomination from dashboard:', error);
@@ -395,18 +408,22 @@ export async function createDashboardNomination(data: {
 }
 
 // Update an application's details
-export async function updateApplicationDetails(id: string, data: {
-  fullName?: string;
-  topic?: string;
-  mobilePhone?: string;
-  wechatId?: string;
-  gender?: string;
-  job?: string;
-  priorTedTalk?: string;
-}) {
+export async function updateApplicationDetails(
+  id: string,
+  data: {
+    fullName?: string;
+    topic?: string;
+    mobilePhone?: string;
+    wechatId?: string;
+    gender?: string;
+    job?: string;
+    priorTedTalk?: string;
+  }
+) {
   try {
-    await db.update(speakerApplication)
-      .set({ 
+    await db
+      .update(speakerApplication)
+      .set({
         ...(data.fullName && { fullName: data.fullName }),
         ...(data.topic && { topic: data.topic }),
         ...(data.mobilePhone && { mobilePhone: data.mobilePhone }),
@@ -414,10 +431,10 @@ export async function updateApplicationDetails(id: string, data: {
         ...(data.gender && { gender: data.gender }),
         ...(data.job && { job: data.job }),
         ...(data.priorTedTalk && { priorTedTalk: data.priorTedTalk }),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerApplication.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update application details:', error);
@@ -426,25 +443,29 @@ export async function updateApplicationDetails(id: string, data: {
 }
 
 // Update a nomination's details
-export async function updateNominationDetails(id: string, data: {
-  fullName?: string;
-  topic?: string;
-  contact?: string;
-  nominatedBy?: string;
-  priorTedTalk?: string;
-}) {
+export async function updateNominationDetails(
+  id: string,
+  data: {
+    fullName?: string;
+    topic?: string;
+    contact?: string;
+    nominatedBy?: string;
+    priorTedTalk?: string;
+  }
+) {
   try {
-    await db.update(speakerNomination)
-      .set({ 
+    await db
+      .update(speakerNomination)
+      .set({
         ...(data.fullName && { fullName: data.fullName }),
         ...(data.topic && { topic: data.topic }),
         ...(data.contact && { contact: data.contact }),
         ...(data.nominatedBy && { nominatedBy: data.nominatedBy }),
         ...(data.priorTedTalk && { priorTedTalk: data.priorTedTalk }),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(speakerNomination.id, id));
-      
+
     return { success: true };
   } catch (error) {
     console.error('Failed to update nomination details:', error);

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { ArrowUp, Sun, Moon, Heart } from "lucide-react";
-import { DIcons } from "dicons";
-import { useTheme } from "next-themes";
+import Link from 'next/link';
+import { ArrowUp, Sun, Moon, Heart } from 'lucide-react';
+import { DIcons } from 'dicons';
+import { useTheme } from 'next-themes';
 
 function handleScrollTop() {
   window.scroll({
     top: 0,
-    behavior: "smooth",
+    behavior: 'smooth',
   });
 }
 
 // WeChat SVG icon component since it's not in DIcons
 const WeChatIcon = ({ className }: { className?: string }) => (
-  <svg 
-  className={className} 
-  viewBox="0 0 512 512" 
-  xmlns="http://www.w3.org/2000/svg"
-  fill="currentColor"
->
-  <path d="M407.3 337.2c-5.3 0-10.6.5-15.6 1.5-26.2-29.2-70.2-48.2-119.2-48.2-79.5 0-144 54.2-144 121 0 23.8 9 46 24.4 63.9-15.2 7.4-33 11.7-51.9 11.7-7.4 0-14.5-.5-21.5-1.5-2.6-.5-5.3.9-6.3 3.4-1 2.5.2 5.3 2.5 6.5 20.3 10.8 44.1 17.2 69.4 17.2 93.5 0 169.5-64.3 169.5-143.5 0-4.4-.3-8.8-.8-13.2 6.2-.8 12.6-1.3 19.1-1.3 60.5 0 109.5 38.3 109.5 85.4 0 19.3-8.4 37-23.1 50.8 2.3 6.2 4.3 12.6 5.8 19.2.7 3.1 3.3 5.1 6.4 5.1 1.2 0 2.4-.3 3.5-.9 25.1-13.2 42.2-39.5 42.2-70.1 0-50.3-51.2-91.2-114.3-91.2zM178.4 243.7c0-6.5 5.3-11.8 11.8-11.8s11.8 5.3 11.8 11.8-5.3 11.8-11.8 11.8-11.8-5.3-11.8-11.8zm65.1 11.8c-6.5 0-11.8-5.3-11.8-11.8s5.3-11.8 11.8-11.8 11.8 5.3 11.8 11.8-5.3 11.8-11.8 11.8zM256 64C150 64 64 139.6 64 233.5c0 48.7 26.4 92.5 68.2 121.1-3.2 11.7-9.5 24.1-20.6 35.2-2.5 2.5-1.3 6.9 2.1 8.1 14.5 5.2 30.2 7.9 45.9 7.9 6.4 0 12.8-.5 19.1-1.5 24.6 13.7 53.9 21.8 85.2 21.8 106 0 192-75.6 192-169.5S362 64 256 64zm-54.7 137.6c9.2 0 16.6 7.5 16.6 16.6s-7.5 16.6-16.6 16.6c-9.2 0-16.6-7.5-16.6-16.6s7.4-16.6 16.6-16.6zm109.4 33.1c-9.2 0-16.6-7.5-16.6-16.6s7.5-16.6 16.6-16.6 16.6 7.5 16.6 16.6-7.4 16.6-16.6 16.6z"/>
-</svg>
+  <svg
+    className={className}
+    viewBox="0 0 512 512"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+  >
+    <path d="M407.3 337.2c-5.3 0-10.6.5-15.6 1.5-26.2-29.2-70.2-48.2-119.2-48.2-79.5 0-144 54.2-144 121 0 23.8 9 46 24.4 63.9-15.2 7.4-33 11.7-51.9 11.7-7.4 0-14.5-.5-21.5-1.5-2.6-.5-5.3.9-6.3 3.4-1 2.5.2 5.3 2.5 6.5 20.3 10.8 44.1 17.2 69.4 17.2 93.5 0 169.5-64.3 169.5-143.5 0-4.4-.3-8.8-.8-13.2 6.2-.8 12.6-1.3 19.1-1.3 60.5 0 109.5 38.3 109.5 85.4 0 19.3-8.4 37-23.1 50.8 2.3 6.2 4.3 12.6 5.8 19.2.7 3.1 3.3 5.1 6.4 5.1 1.2 0 2.4-.3 3.5-.9 25.1-13.2 42.2-39.5 42.2-70.1 0-50.3-51.2-91.2-114.3-91.2zM178.4 243.7c0-6.5 5.3-11.8 11.8-11.8s11.8 5.3 11.8 11.8-5.3 11.8-11.8 11.8-11.8-5.3-11.8-11.8zm65.1 11.8c-6.5 0-11.8-5.3-11.8-11.8s5.3-11.8 11.8-11.8 11.8 5.3 11.8 11.8-5.3 11.8-11.8 11.8zM256 64C150 64 64 139.6 64 233.5c0 48.7 26.4 92.5 68.2 121.1-3.2 11.7-9.5 24.1-20.6 35.2-2.5 2.5-1.3 6.9 2.1 8.1 14.5 5.2 30.2 7.9 45.9 7.9 6.4 0 12.8-.5 19.1-1.5 24.6 13.7 53.9 21.8 85.2 21.8 106 0 192-75.6 192-169.5S362 64 256 64zm-54.7 137.6c9.2 0 16.6 7.5 16.6 16.6s-7.5 16.6-16.6 16.6c-9.2 0-16.6-7.5-16.6-16.6s7.4-16.6 16.6-16.6zm109.4 33.1c-9.2 0-16.6-7.5-16.6-16.6s7.5-16.6 16.6-16.6 16.6 7.5 16.6 16.6-7.4 16.6-16.6 16.6z" />
+  </svg>
 );
 
 const ThemeToggle = () => {
@@ -31,7 +31,7 @@ const ThemeToggle = () => {
     <div className="flex items-center justify-center py-6">
       <div className="flex items-center rounded-full border border-dotted">
         <button
-          onClick={() => setTheme("light")}
+          onClick={() => setTheme('light')}
           className="bg-black mr-3 rounded-full p-2 text-white dark:bg-background dark:text-white"
         >
           <Sun className="h-5 w-5" strokeWidth={1} />
@@ -44,7 +44,7 @@ const ThemeToggle = () => {
         </button>
 
         <button
-          onClick={() => setTheme("dark")}
+          onClick={() => setTheme('dark')}
           className="dark:bg-black ml-3 rounded-full p-2 text-black dark:text-white"
         >
           <Moon className="h-5 w-5" strokeWidth={1} />
@@ -60,43 +60,46 @@ const Underline = `hover:-translate-y-1 border border-dotted rounded-xl p-2.5 tr
 const navigation = {
   categories: [
     {
-      id: "tedx",
-      name: "TEDx",
+      id: 'tedx',
+      name: 'TEDx',
       sections: [
         {
-          id: "about",
-          name: "About",
+          id: 'about',
+          name: 'About',
           items: [
-            { name: "Home", href: "/" },
-            { name: "Speakers", href: "/speakers" },
-            { name: "Team", href: "/team" },
+            { name: 'Home', href: '/' },
+            { name: 'Speakers', href: '/speakers' },
+            { name: 'Team', href: '/team' },
           ],
         },
         {
-          id: "info",
-          name: "Information",
+          id: 'info',
+          name: 'Information',
           items: [
-            { name: "About TEDx", href: "https://www.ted.com/about/programs-initiatives/tedx-program" },
-            { name: "TED Talks", href: "https://www.ted.com/talks" },
-            { name: "TEDx Events", href: "https://www.ted.com/tedx/events" },
+            {
+              name: 'About TEDx',
+              href: 'https://www.ted.com/about/programs-initiatives/tedx-program',
+            },
+            { name: 'TED Talks', href: 'https://www.ted.com/talks' },
+            { name: 'TEDx Events', href: 'https://www.ted.com/tedx/events' },
           ],
         },
         {
-          id: "resources",
-          name: "Resources",
+          id: 'resources',
+          name: 'Resources',
           items: [
-            { name: "Contact", href: "/contact" },
-            { name: "Event Info", href: "/contact" },
-            { name: "Partners", href: "/contact" },
+            { name: 'Contact', href: '/contact' },
+            { name: 'Event Info', href: '/contact' },
+            { name: 'Partners', href: '/contact' },
           ],
         },
         {
-          id: "legal",
-          name: "Legal",
+          id: 'legal',
+          name: 'Legal',
           items: [
-            { name: "Privacy Policy", href: "/contact" },
-            { name: "Terms of Use", href: "/contact" },
-            { name: "Cookie Policy", href: "/contact" },
+            { name: 'Privacy Policy', href: '/contact' },
+            { name: 'Terms of Use', href: '/contact' },
+            { name: 'Cookie Policy', href: '/contact' },
           ],
         },
       ],
@@ -111,16 +114,21 @@ export default function Footer() {
         <Link href="/">
           <p className="flex items-center justify-center rounded-full">
             <span className="flex items-center gap-2 text-xl font-bold">
-              <span className="text-2xl text-red-600 dark:text-red-500">TEDx</span>
+              <span className="text-2xl text-red-600 dark:text-red-500">
+                TEDx
+              </span>
               <span className="text-black dark:text-white">Beixinqiao</span>
             </span>
           </p>
         </Link>
         <p className="bg-transparent text-center text-xs leading-4 text-primary/60 md:text-left dark:text-gray-400">
-          TEDxBeixinqiao is an independently organized TED event that brings together innovative thinkers, creative minds, 
-          and thought leaders to share ideas worth spreading. Our events aim to inspire action, foster connections, and 
-          drive positive change in our community and beyond. In the spirit of ideas worth spreading, TEDx is a program of 
-          local, self-organized events that bring people together to share a TED-like experience.
+          TEDxBeixinqiao is an independently organized TED event that brings
+          together innovative thinkers, creative minds, and thought leaders to
+          share ideas worth spreading. Our events aim to inspire action, foster
+          connections, and drive positive change in our community and beyond. In
+          the spirit of ideas worth spreading, TEDx is a program of local,
+          self-organized events that bring people together to share a TED-like
+          experience.
         </p>
       </div>
 
@@ -134,7 +142,9 @@ export default function Footer() {
             >
               {category.sections.map((section) => (
                 <div key={section.name}>
-                  <h3 className="font-semibold text-red-600 dark:text-red-500 mb-3">{section.name}</h3>
+                  <h3 className="font-semibold text-red-600 dark:text-red-500 mb-3">
+                    {section.name}
+                  </h3>
                   <ul
                     role="list"
                     aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
@@ -254,7 +264,9 @@ export default function Footer() {
           <span>Made with</span>
           <Heart className="text-red-600 mx-1 h-4 w-4 animate-pulse" />
           <span>All rights reserved.</span>
-          <span>This independent TEDx event is operated under license from TED.</span>
+          <span>
+            This independent TEDx event is operated under license from TED.
+          </span>
         </div>
       </div>
     </footer>

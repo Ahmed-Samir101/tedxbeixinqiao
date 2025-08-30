@@ -27,7 +27,7 @@
   --muted-foreground: oklch(0.45 0 0);
   --accent: oklch(0.96 0 0);
   --accent-foreground: oklch(0.09 0 0);
-  --destructive: oklch(0.60 0.24 25);
+  --destructive: oklch(0.6 0.24 25);
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.9 0 0);
   --input: oklch(0.9 0 0);
@@ -37,7 +37,7 @@
   /* Chart colors */
   --chart-1: oklch(0.61 0.19 40);
   --chart-2: oklch(0.39 0.15 180);
-  --chart-3: oklch(0.24 0.10 200);
+  --chart-3: oklch(0.24 0.1 200);
   --chart-4: oklch(0.66 0.19 75);
   --chart-5: oklch(0.67 0.22 40);
 
@@ -49,7 +49,7 @@
   --sidebar-accent: oklch(0.96 0.01 240);
   --sidebar-accent-foreground: oklch(0.1 0.01 240);
   --sidebar-border: oklch(0.91 0.02 220);
-  --sidebar-ring: oklch(0.60 0.25 217);
+  --sidebar-ring: oklch(0.6 0.25 217);
 
   /* Layout */
   --container-padding: 2rem;
@@ -80,39 +80,57 @@
   /* Chart colors - dark mode */
   --chart-1: oklch(0.5 0.18 220);
   --chart-2: oklch(0.45 0.15 160);
-  --chart-3: oklch(0.55 0.20 30);
+  --chart-3: oklch(0.55 0.2 30);
   --chart-4: oklch(0.6 0.17 280);
   --chart-5: oklch(0.55 0.19 340);
 
   /* Sidebar theme - dark mode */
   --sidebar-background: oklch(0.1 0.01 240);
   --sidebar-foreground: oklch(0.96 0.01 240);
-  --sidebar-primary: oklch(0.48 0.20 224);
+  --sidebar-primary: oklch(0.48 0.2 224);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.16 0.01 240);
   --sidebar-accent-foreground: oklch(0.96 0.01 240);
   --sidebar-border: oklch(0.16 0.01 240);
-  --sidebar-ring: oklch(0.60 0.25 217);
+  --sidebar-ring: oklch(0.6 0.25 217);
 }
 
 @keyframes accordion-down {
-  from { height: 0 }
-  to { height: var(--radix-accordion-content-height) }
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
 
 @keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height) }
-  to { height: 0 }
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 @keyframes glow {
-  0%, 100% { boxShadow: "0 0 15px 5px rgba(235, 0, 40, 0.2)" }
-  50% { boxShadow: "0 0 25px 10px rgba(235, 0, 40, 0.4)" }
+  0%,
+  100% {
+    boxShadow: "0 0 15px 5px rgba(235, 0, 40, 0.2)";
+  }
+  50% {
+    boxShadow: "0 0 25px 10px rgba(235, 0, 40, 0.4)";
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: "translateY(0)" }
-  50% { transform: "translateY(-10px)" }
+  0%,
+  100% {
+    transform: "translateY(0)";
+  }
+  50% {
+    transform: "translateY(-10px)";
+  }
 }
 
 /* Base styles */
@@ -139,16 +157,22 @@ html {
 
 /* Custom animations */
 .glow-on-hover:hover {
-  box-shadow: 0 0 15px 5px color-mix(in oklab, var(--color-red-500), transparent 70%);
+  box-shadow: 0 0 15px 5px
+    color-mix(in oklab, var(--color-red-500), transparent 70%);
 }
 
 .dark .glow-on-hover:hover {
-  box-shadow: 0 0 15px 5px color-mix(in oklab, var(--color-red-500), transparent 50%);
+  box-shadow: 0 0 15px 5px
+    color-mix(in oklab, var(--color-red-500), transparent 50%);
 }
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(90deg, var(--color-red-600) 0%, color-mix(in oklab, var(--color-red-600), white 20%) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-red-600) 0%,
+    color-mix(in oklab, var(--color-red-600), white 20%) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

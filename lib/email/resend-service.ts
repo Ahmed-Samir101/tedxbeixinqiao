@@ -1,4 +1,4 @@
-"use server"
+'use server';
 
 import { Resend } from 'resend';
 import { config } from 'dotenv';
@@ -11,7 +11,10 @@ const resend = new Resend(process.env.RESEND_API_KEY as string);
 /**
  * Send a speaker application email notification
  */
-export async function sendSpeakerApplicationEmail(applicationData: any, pdfFile: File | null = null) {
+export async function sendSpeakerApplicationEmail(
+  applicationData: any,
+  pdfFile: File | null = null
+) {
   try {
     const emailOptions: any = {
       from: 'forms@tedxbeixinqiao.com',
@@ -47,7 +50,7 @@ export async function sendSpeakerApplicationEmail(applicationData: any, pdfFile:
     if (pdfFile) {
       const arrayBuffer = await pdfFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      
+
       emailOptions.attachments = [
         {
           filename: pdfFile.name,
@@ -55,9 +58,9 @@ export async function sendSpeakerApplicationEmail(applicationData: any, pdfFile:
         },
       ];
     }
-    
+
     const response = await resend.emails.send(emailOptions);
-    
+
     return { success: true, data: response };
   } catch (error) {
     console.error('Failed to send application email:', error);
@@ -87,7 +90,7 @@ export async function sendSpeakerNominationEmail(nominationData: any) {
         </ul>
       `,
     });
-    
+
     return { success: true, data: response };
   } catch (error) {
     console.error('Failed to send nomination email:', error);

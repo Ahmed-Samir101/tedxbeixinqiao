@@ -1,9 +1,14 @@
-"use client"
-import Image from "next/image"
-import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { motion } from "framer-motion"
-import { teamMembers } from "@/data/team-members"
+'use client';
+import Image from 'next/image';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { motion } from 'framer-motion';
+import { teamMembers } from '@/data/team-members';
 
 // Removed duplicate team data array as it's now imported from data/team-members.ts
 
@@ -16,12 +21,12 @@ export default function TeamGrid() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  };
 
   return (
     <motion.div
@@ -48,8 +53,12 @@ export default function TeamGrid() {
                 </div>
               </div>
               <CardContent className="p-4">
-                <h3 className="text-lg font-semibold text-black dark:text-white">{member.name}</h3>
-                <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">{member.title}</p>
+                <h3 className="text-lg font-semibold text-black dark:text-white">
+                  {member.name}
+                </h3>
+                <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+                  {member.title}
+                </p>
 
                 <DialogTrigger asChild>
                   {/* Making the entire card clickable but without showing a button */}
@@ -73,14 +82,22 @@ export default function TeamGrid() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="text-xl font-bold mb-1 text-gray-900 dark:text-white">{member.name}</h3>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">{member.title}</p>
+                    <h3 className="text-xl font-bold mb-1 text-gray-900 dark:text-white">
+                      {member.name}
+                    </h3>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">
+                      {member.title}
+                    </p>
 
                     {member.quote && (
-                      <div className="rounded-lg bg-gray-100 p-4 italic dark:bg-gray-800 mb-4">"{member.quote}"</div>
+                      <div className="rounded-lg bg-gray-100 p-4 italic dark:bg-gray-800 mb-4">
+                        "{member.quote}"
+                      </div>
                     )}
 
-                    <p className="text-gray-700 dark:text-gray-300">{member.bio}</p>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {member.bio}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -89,5 +106,5 @@ export default function TeamGrid() {
         </motion.div>
       ))}
     </motion.div>
-  )
+  );
 }

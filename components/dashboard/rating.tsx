@@ -1,22 +1,22 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Star } from "lucide-react"
+import { useState } from 'react';
+import { Star } from 'lucide-react';
 
 // Rating component
-export const Rating = ({ 
-  rating, 
+export const Rating = ({
+  rating,
   onChange,
-  disabled = false 
-}: { 
-  rating: number, 
-  onChange?: (value: number) => void,
-  disabled?: boolean 
+  disabled = false,
+}: {
+  rating: number;
+  onChange?: (value: number) => void;
+  disabled?: boolean;
 }) => {
   const [hoverRating, setHoverRating] = useState(0);
-  
+
   return (
-    <div 
+    <div
       className="flex items-center gap-1 px-2 py-1.5 rounded-md transition-colors"
       onClick={(e) => e.stopPropagation()} // Prevent opening the modal when clicking on the container
     >
@@ -25,9 +25,9 @@ export const Rating = ({
           key={star}
           size={16}
           className={`
-            ${star <= (hoverRating || rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
-            ${onChange && !disabled ? "cursor-pointer transition-colors duration-150" : ""}
-            ${disabled ? "opacity-70" : ""}
+            ${star <= (hoverRating || rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}
+            ${onChange && !disabled ? 'cursor-pointer transition-colors duration-150' : ''}
+            ${disabled ? 'opacity-70' : ''}
           `}
           onMouseEnter={() => onChange && !disabled && setHoverRating(star)}
           onMouseLeave={() => onChange && !disabled && setHoverRating(0)}
@@ -41,4 +41,4 @@ export const Rating = ({
       ))}
     </div>
   );
-}
+};

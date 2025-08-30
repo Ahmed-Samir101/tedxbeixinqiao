@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
-import SpeakersGrid from "@/components/speakers/speakers-grid"
-import { motion } from "framer-motion"
+import SpeakersGrid from '@/components/speakers/speakers-grid';
+import { motion } from 'framer-motion';
 
 export default function SpeakersPageClient() {
   return (
@@ -22,13 +22,13 @@ export default function SpeakersPageClient() {
             Our <span className="text-red-600 dark:text-red-500">Speakers</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-gray-700 dark:text-gray-300">
-            Meet the innovative minds who will share their ideas and experiences at TEDxBeixinqiao 2025. Click on a speaker
-            to learn more.
+            Meet the innovative minds who will share their ideas and experiences
+            at TEDxBeixinqiao 2025. Click on a speaker to learn more.
           </p>
         </motion.div>
 
         <SpeakersGrid />
       </div>
     </div>
-  )
+  );
 }

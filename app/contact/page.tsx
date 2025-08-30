@@ -1,12 +1,12 @@
-import ContactForm from "@/components/contact-form"
-import GoogleMap from "@/components/google-map"
-import ContactInfo from "@/components/contact-info"
-import type { Metadata } from "next"
+import ContactForm from '@/components/contact-form';
+import GoogleMap from '@/components/google-map';
+import ContactInfo from '@/components/contact-info';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Contact - TEDxBeixinqiao",
-  description: "Get in touch with the TEDxBeixinqiao team.",
-}
+  title: 'Contact - TEDxBeixinqiao',
+  description: 'Get in touch with the TEDxBeixinqiao team.',
+};
 
 export default function ContactPage() {
   return (
@@ -16,7 +16,8 @@ export default function ContactPage() {
           Get in <span className="text-red-600 dark:text-red-500">Touch</span>
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-gray-700 dark:text-gray-300">
-          Have questions or want to learn more about TEDxBeixinqiao? Reach out to us!
+          Have questions or want to learn more about TEDxBeixinqiao? Reach out
+          to us!
         </p>
       </div>
 
@@ -37,5 +38,5 @@ export default function ContactPage() {
         <ContactForm />
       </div>
     </div>
-  )
+  );
 }
