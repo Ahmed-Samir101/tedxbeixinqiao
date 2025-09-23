@@ -80,7 +80,11 @@ export function SpeakerApplicationMessageModal({
           </DialogTitle>
           <DialogDescription className="mt-4 text-center text-lg leading-relaxed">
             The response to the 2025 speaker applications has been extraordinary
-            - Thank you for sharing so many powerful ideas!
+            — thank you for sharing so many powerful ideas. Our 2025 speakers
+            are now in the final stages. But 2026 is just around the corner!
+            Join our Community Events to learn the TED format, get tips from
+            coaches, and experience the stage live at our December 6th show. And
+            stand by — the next round of speaker applications will open soon.
           </DialogDescription>
         </DialogHeader>
 

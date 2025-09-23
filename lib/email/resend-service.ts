@@ -1,7 +1,7 @@
 'use server';
 
-import { Resend } from 'resend';
 import { config } from 'dotenv';
+import { Resend } from 'resend';
 
 config();
 
@@ -18,7 +18,7 @@ export async function sendSpeakerApplicationEmail(
   try {
     const emailOptions: any = {
       from: 'forms@tedxbeixinqiao.com',
-      to: 'frank.liang@tedxbeixinqiao.com',
+      to: 'info@tedxbeixinqiao.com',
       subject: `Speaker Application: ${applicationData.fullName}`,
       html: `
         <h2>New Speaker Application Received</h2>
@@ -75,7 +75,7 @@ export async function sendSpeakerNominationEmail(nominationData: any) {
   try {
     const response = await resend.emails.send({
       from: 'forms@tedxbeixinqiao.com',
-      to: 'frank.liang@tedxbeixinqiao.com',
+      to: 'info@tedxbeixinqiao.com',
       subject: `Speaker Nomination: ${nominationData.fullName}`,
       html: `
         <h2>New Speaker Nomination Received</h2>
