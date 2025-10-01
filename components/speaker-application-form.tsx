@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
   sendSpeakerApplicationEmail,
@@ -29,7 +27,11 @@ import {
 } from "@/lib/speakers-db-service";
 
 // Lint constants
-const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+const MAX_FILE_SIZE_MB = 2;
+const BYTES_PER_KILOBYTE = 1024;
+const KILOBYTES_PER_MEGABYTE = 1024;
+const MAX_FILE_SIZE_BYTES =
+  MAX_FILE_SIZE_MB * KILOBYTES_PER_MEGABYTE * BYTES_PER_KILOBYTE;
 const IDEA_WORD_LIMIT = 50;
 const LONG_WORD_LIMIT = 150;
 const SHORT_WORD_LIMIT = 30;
@@ -301,7 +303,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       // Reset the form
       applicationForm.reset();
       setFileSelected(null);
-    } catch (error) {
+    } catch {
       toast.error("Submission Error", {
         description:
           "There was an error submitting your application. Please try again later.",
@@ -333,7 +335,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
 
       // Reset the form
       nominationForm.reset();
-    } catch (error) {
+    } catch {
       toast.error("Submission Error", {
         description:
           "There was an error submitting your nomination. Please try again later.",

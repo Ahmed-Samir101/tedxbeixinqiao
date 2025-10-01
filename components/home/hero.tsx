@@ -7,6 +7,51 @@ import { useEffect, useState } from "react";
 import { SpeakerApplicationMessageModal } from "@/components/speaker-application-message-modal";
 import { cn } from "@/lib/utils";
 
+// Lint constants
+const SCROLL_THRESHOLD = 50;
+const IMAGE_LOAD_DELAY_MS = 300;
+const MOTION_BADGE_DURATION = 0.7;
+const MOTION_TITLE_DURATION = 0.8;
+const MOTION_TITLE_DELAY = 0.3;
+const MOTION_LINE_DELAY = 0.8;
+const MOTION_LINE_DURATION = 1;
+const MOTION_DESC_DURATION = 0.8;
+const MOTION_DESC_DELAY = 0.6;
+const MOTION_CTA_DURATION = 0.8;
+const MOTION_CTA_DELAY = 0.8;
+const MOTION_TAGLINE_DURATION = 0.8;
+const MOTION_TAGLINE_DELAY = 1.0;
+const MOTION_SCROLL_OPACITY_DELAY = 1.5;
+const MOTION_SCROLL_OPACITY_DURATION = 1;
+const MOTION_SCROLL_Y_DELAY = 1.5;
+const MOTION_SCROLL_Y_DURATION = 2;
+// Unused constants removed
+const MOTION_ARROW_DURATION = 1.5;
+const MOTION_ARROW_REPEAT = Number.POSITIVE_INFINITY;
+const MOTION_ARROW_EASE = "easeInOut";
+const MOTION_LINE_WIDTH = "80%";
+const MOTION_LINE_WIDTH_INIT = 0;
+// Unused constant removed
+const MOTION_ARROW_Y_START = 0;
+const MOTION_ARROW_Y_PEAK = -5;
+const MOTION_ARROW_Y_END = 0;
+const MOTION_ARROW_Y_ANIMATION = [
+  MOTION_ARROW_Y_START,
+  MOTION_ARROW_Y_PEAK,
+  MOTION_ARROW_Y_END,
+];
+
+const MOTION_ROTATE_START = 0;
+const MOTION_ROTATE_LEFT = -0.5;
+const MOTION_ROTATE_RIGHT = 0.5;
+const MOTION_ROTATE_ANIMATION = [
+  MOTION_ROTATE_START,
+  MOTION_ROTATE_LEFT,
+  MOTION_ROTATE_RIGHT,
+  MOTION_ROTATE_LEFT,
+  MOTION_ROTATE_START,
+];
+
 export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -15,7 +60,7 @@ export default function Hero() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      setScrolled(scrollTop > 50);
+      setScrolled(scrollTop > SCROLL_THRESHOLD);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -64,7 +109,7 @@ export default function Hero() {
             onLoad={() => {
               setTimeout(() => {
                 setIsLoaded(true);
-              }, 300);
+              }, IMAGE_LOAD_DELAY_MS);
             }}
             priority
             src="/hero-bg.jpg"
@@ -84,7 +129,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 flex justify-center"
             initial={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: MOTION_BADGE_DURATION }}
           >
             <span className="inline-flex items-center rounded-full border border-white/30 bg-black/30 px-4 py-1.5 font-medium text-sm text-white backdrop-blur-sm">
               December 6th, 2025 • Beixinqiao, Beijing
@@ -97,7 +142,10 @@ export default function Hero() {
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center text-center"
               initial={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{
+                duration: MOTION_TITLE_DURATION,
+                delay: MOTION_TITLE_DELAY,
+              }}
             >
               <div className="mb-4 flex items-center gap-1 text-center">
                 <h1 className="font-extrabold text-5xl text-red-600 text-shadow-lg sm:text-6xl md:text-7xl">
@@ -108,10 +156,13 @@ export default function Hero() {
                 </h1>
               </div>
               <motion.div
-                animate={{ width: "80%" }}
+                animate={{ width: MOTION_LINE_WIDTH }}
                 className="mx-auto mb-4 h-[3px] bg-gradient-to-r from-red-600/0 via-red-600 to-red-600/0"
-                initial={{ width: 0 }}
-                transition={{ delay: 0.8, duration: 1 }}
+                initial={{ width: MOTION_LINE_WIDTH_INIT }}
+                transition={{
+                  delay: MOTION_LINE_DELAY,
+                  duration: MOTION_LINE_DURATION,
+                }}
               />
               <h2 className="font-medium text-2xl text-shadow-sm text-white sm:text-3xl md:text-4xl">
                 Ideas <span className="text-red-500">That Move</span>
@@ -124,7 +175,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             className="mx-auto mb-10 max-w-3xl text-center font-medium text-lg text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.5)] md:text-xl"
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{
+              duration: MOTION_DESC_DURATION,
+              delay: MOTION_DESC_DELAY,
+            }}
           >
             IdeasThatMove celebrates powerful ideas, whether it's a leap of
             innovation, a shift in mindset, or a story that stirs something deep
@@ -137,16 +191,19 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center"
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{
+              duration: MOTION_CTA_DURATION,
+              delay: MOTION_CTA_DELAY,
+            }}
           >
             <motion.div
               animate={{
-                y: [0, -5, 0],
+                y: MOTION_ARROW_Y_ANIMATION,
                 transition: {
                   y: {
-                    duration: 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
+                    duration: MOTION_ARROW_DURATION,
+                    repeat: MOTION_ARROW_REPEAT,
+                    ease: MOTION_ARROW_EASE,
                   },
                 },
               }}
@@ -154,13 +211,13 @@ export default function Hero() {
               id="speaker-application"
               whileHover={{
                 scale: 1.05,
-                rotate: [0, -0.5, 0.5, -0.5, 0],
+                rotate: MOTION_ROTATE_ANIMATION,
                 transition: {
                   scale: { duration: 0.2 },
                   rotate: {
                     duration: 0.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
+                    repeat: MOTION_ARROW_REPEAT,
+                    ease: MOTION_ARROW_EASE,
                   },
                 },
               }}
@@ -234,7 +291,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 flex flex-col items-center"
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
+            transition={{
+              duration: MOTION_TAGLINE_DURATION,
+              delay: MOTION_TAGLINE_DELAY,
+            }}
           >
             <div className="relative px-8 py-2">
               <div className="absolute inset-0 rounded-lg bg-black/30 backdrop-blur-sm" />
@@ -260,11 +320,14 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         onClick={scrollToNextSection}
         transition={{
-          opacity: { delay: 1.5, duration: 1 },
+          opacity: {
+            delay: MOTION_SCROLL_OPACITY_DELAY,
+            duration: MOTION_SCROLL_OPACITY_DURATION,
+          },
           y: {
-            delay: 1.5,
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
+            delay: MOTION_SCROLL_Y_DELAY,
+            duration: MOTION_SCROLL_Y_DURATION,
+            repeat: MOTION_ARROW_REPEAT,
             repeatType: "loop",
           },
         }}
