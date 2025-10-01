@@ -1,10 +1,10 @@
 // Define types for speaker data
-export interface Social {
+export type Social = {
   platform: string;
   url: string;
-}
+};
 
-export interface Speaker {
+export type Speaker = {
   name: string;
   title: string;
   talkTitle: string;
@@ -16,7 +16,7 @@ export interface Speaker {
   duration: string;
   date: string;
   category: string;
-}
+};
 
 // Centralized speakers data
 export const speakers: Speaker[] = [
@@ -141,10 +141,7 @@ export const speakers: Speaker[] = [
 ];
 
 // Helper functions
-export const getAllSpeakers = () => {
-  return speakers;
-};
+export const getAllSpeakers = () => speakers;
 
-export const getSpeakerByName = (name: string) => {
-  return speakers.find((speaker) => speaker.name === name);
-};
+export const getSpeakerByName = (name: string) =>
+  speakers.find((speaker) => speaker.name === name);

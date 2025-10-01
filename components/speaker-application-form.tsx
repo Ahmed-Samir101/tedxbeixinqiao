@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,10 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import {
   sendSpeakerApplicationEmail,
   sendSpeakerNominationEmail,
@@ -28,87 +28,134 @@ import {
   createSpeakerNomination,
 } from "@/lib/speakers-db-service";
 
+// Lint constants
+const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+const IDEA_WORD_LIMIT = 50;
+const LONG_WORD_LIMIT = 150;
+const SHORT_WORD_LIMIT = 30;
+const SHORT_MIN_LENGTH = 2;
+const MEDIUM_MIN_LENGTH = 5;
+const PHONE_MIN_LENGTH = 5;
+const WECHAT_MIN_LENGTH = 2;
+const WORD_SPLIT_REGEX = /\s+/;
+
 // Speaker Application schema with validation
 const speakerApplicationSchema = z.object({
   fullName: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters." })
-    .max(30, { message: "Name cannot exceed 30 words." }),
+    .min(SHORT_MIN_LENGTH, {
+      message: `Name must be at least ${SHORT_MIN_LENGTH} characters.`,
+    })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Name cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   mobilePhone: z
     .string()
-    .min(5, { message: "Please provide a valid phone number." })
-    .max(30, { message: "Phone number cannot exceed 30 characters." }),
+    .min(PHONE_MIN_LENGTH, { message: "Please provide a valid phone number." })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Phone number cannot exceed ${SHORT_WORD_LIMIT} characters.`,
+    }),
   wechatId: z
     .string()
-    .min(2, { message: "Please provide your WeChat ID." })
-    .max(30, { message: "WeChat ID cannot exceed 30 characters." }),
+    .min(WECHAT_MIN_LENGTH, { message: "Please provide your WeChat ID." })
+    .max(SHORT_WORD_LIMIT, {
+      message: `WeChat ID cannot exceed ${SHORT_WORD_LIMIT} characters.`,
+    }),
   priorTedTalk: z
     .string()
-    .min(2, { message: "Please answer if you've given a TED talk before." })
-    .max(30, { message: "Response cannot exceed 30 words." }),
+    .min(SHORT_MIN_LENGTH, {
+      message: `Please answer if you've given a TED talk before.`,
+    })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Response cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   job: z
     .string()
-    .min(2, { message: "Please provide your job information." })
-    .max(30, { message: "Job information cannot exceed 30 words." }),
+    .min(SHORT_MIN_LENGTH, { message: "Please provide your job information." })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Job information cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   remarks: z
     .string()
-    .max(30, { message: "Remarks cannot exceed 30 words." })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Remarks cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    })
     .optional(),
   ideaPresentation: z
     .string()
     .min(10, { message: "Please describe your idea in at least 10 words." })
     .refine(
       (value) => {
-        const wordCount = value.trim().split(/\s+/).length;
-        return wordCount <= 50;
+        const wordCount = value.trim().split(WORD_SPLIT_REGEX).length;
+        return wordCount <= IDEA_WORD_LIMIT;
       },
-      { message: "Description cannot exceed 50 words." }
+      { message: `Description cannot exceed ${IDEA_WORD_LIMIT} words.` }
     ),
   commonBelief: z
     .string()
-    .min(5, { message: "Please describe the common belief." })
+    .min(MEDIUM_MIN_LENGTH, { message: "Please describe the common belief." })
     .refine(
       (value) => {
-        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-        return wordCount <= 150;
+        const wordCount = value
+          .trim()
+          .split(WORD_SPLIT_REGEX)
+          .filter(Boolean).length;
+        return wordCount <= LONG_WORD_LIMIT;
       },
-      { message: "Response cannot exceed 150 words." }
+      { message: `Response cannot exceed ${LONG_WORD_LIMIT} words.` }
     ),
   coreIdea: z
     .string()
-    .min(5, { message: "Please describe your core idea." })
+    .min(MEDIUM_MIN_LENGTH, { message: "Please describe your core idea." })
     .refine(
       (value) => {
-        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-        return wordCount <= 150;
+        const wordCount = value
+          .trim()
+          .split(WORD_SPLIT_REGEX)
+          .filter(Boolean).length;
+        return wordCount <= LONG_WORD_LIMIT;
       },
-      { message: "Response cannot exceed 150 words." }
+      { message: `Response cannot exceed ${LONG_WORD_LIMIT} words.` }
     ),
   personalInsight: z
     .string()
-    .min(5, { message: "Please share your personal insight or example." })
+    .min(MEDIUM_MIN_LENGTH, {
+      message: "Please share your personal insight or example.",
+    })
     .refine(
       (value) => {
-        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-        return wordCount <= 150;
+        const wordCount = value
+          .trim()
+          .split(WORD_SPLIT_REGEX)
+          .filter(Boolean).length;
+        return wordCount <= LONG_WORD_LIMIT;
       },
-      { message: "Response cannot exceed 150 words." }
+      { message: `Response cannot exceed ${LONG_WORD_LIMIT} words.` }
     ),
   potentialImpact: z
     .string()
-    .min(5, { message: "Please describe the potential impact." })
+    .min(MEDIUM_MIN_LENGTH, {
+      message: "Please describe the potential impact.",
+    })
     .refine(
       (value) => {
-        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-        return wordCount <= 150;
+        const wordCount = value
+          .trim()
+          .split(WORD_SPLIT_REGEX)
+          .filter(Boolean).length;
+        return wordCount <= LONG_WORD_LIMIT;
       },
-      { message: "Response cannot exceed 150 words." }
+      { message: `Response cannot exceed ${LONG_WORD_LIMIT} words.` }
     ),
   rehearsalAvailability: z
     .string()
-    .min(2, { message: "Please provide your rehearsal availability." })
-    .max(50, { message: "Response cannot exceed 50 words." }),
+    .min(SHORT_MIN_LENGTH, {
+      message: "Please provide your rehearsal availability.",
+    })
+    .max(IDEA_WORD_LIMIT, {
+      message: `Response cannot exceed ${IDEA_WORD_LIMIT} words.`,
+    }),
   // Note: File upload would be handled separately in a real implementation
   websiteUrl: z
     .string()
@@ -123,20 +170,32 @@ type SpeakerApplicationValues = z.infer<typeof speakerApplicationSchema>;
 const nominateSpeakerSchema = z.object({
   fullName: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters." })
-    .max(30, { message: "Name cannot exceed 30 words." }),
+    .min(SHORT_MIN_LENGTH, {
+      message: `Name must be at least ${SHORT_MIN_LENGTH} characters.`,
+    })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Name cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   contact: z
     .string()
-    .min(5, { message: "Please provide contact information." })
-    .max(30, { message: "Contact information cannot exceed 30 words." }),
+    .min(PHONE_MIN_LENGTH, { message: "Please provide contact information." })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Contact information cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   priorTedTalk: z
     .string()
-    .min(2, { message: "Please answer if they've given a TED talk before." })
-    .max(30, { message: "Response cannot exceed 30 words." }),
+    .min(SHORT_MIN_LENGTH, {
+      message: `Please answer if they've given a TED talk before.`,
+    })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Response cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   remarks: z
     .string()
-    .min(2, { message: "Please provide some remarks." })
-    .max(30, { message: "Remarks cannot exceed 30 words." }),
+    .min(SHORT_MIN_LENGTH, { message: "Please provide some remarks." })
+    .max(SHORT_WORD_LIMIT, {
+      message: `Remarks cannot exceed ${SHORT_WORD_LIMIT} words.`,
+    }),
   websiteUrl: z
     .string()
     .url({ message: "Please enter a valid URL." })
@@ -146,13 +205,14 @@ const nominateSpeakerSchema = z.object({
 
 type NominateSpeakerValues = z.infer<typeof nominateSpeakerSchema>;
 
-interface SpeakerFormProps {
+type SpeakerFormProps = {
   formType: "application" | "nomination";
-}
+};
 
 export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
   const [fileSelected, setFileSelected] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   // Speaker Application Form
   const applicationForm = useForm<SpeakerApplicationValues>({
@@ -191,7 +251,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
     const file = event.target.files?.[0] || null;
 
     // Check file size if a file is selected (2MB limit)
-    if (file && file.size > 2 * 1024 * 1024) {
+    if (file && file.size > MAX_FILE_SIZE_BYTES) {
       toast.error("File too large", {
         description: "The PDF file must be smaller than 2MB",
       });
@@ -211,9 +271,9 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       const formData = new FormData();
 
       // Add all form values
-      Object.entries(values).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(values)) {
         formData.append(key, value as string);
-      });
+      }
 
       // Add the file if selected
       if (fileSelected) {
@@ -230,13 +290,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
         throw new Error("Failed to send application email");
       }
 
-      // Save to database
-      const dbResult = await createSpeakerApplication(values);
-
-      if (!dbResult.success) {
-        console.error("Database save failed but email sent:", dbResult.error);
-        // Continue with success message since the email was sent
-      }
+      await createSpeakerApplication(values);
 
       // Show success toast using Sonner
       toast.success("Application Submitted", {
@@ -248,7 +302,6 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       applicationForm.reset();
       setFileSelected(null);
     } catch (error) {
-      console.error("Error submitting application:", error);
       toast.error("Submission Error", {
         description:
           "There was an error submitting your application. Please try again later.",
@@ -270,12 +323,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       }
 
       // Save to database
-      const dbResult = await createSpeakerNomination(values);
-
-      if (!dbResult.success) {
-        console.error("Database save failed but email sent:", dbResult.error);
-        // Continue with success message since the email was sent
-      }
+      await createSpeakerNomination(values);
 
       // Show success toast using Sonner
       toast.success("Nomination Submitted", {
@@ -286,7 +334,6 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
       // Reset the form
       nominationForm.reset();
     } catch (error) {
-      console.error("Error submitting nomination:", error);
       toast.error("Submission Error", {
         description:
           "There was an error submitting your nomination. Please try again later.",
@@ -301,11 +348,11 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
     return (
       <Form {...applicationForm}>
         <form
-          onSubmit={applicationForm.handleSubmit(onSubmitApplication)}
           className="space-y-6"
+          onSubmit={applicationForm.handleSubmit(onSubmitApplication)}
         >
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold border-b pb-2">
+            <h3 className="border-b pb-2 font-semibold text-lg">
               Personal Information
             </h3>
 
@@ -449,7 +496,7 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold border-b pb-2">Your Idea</h3>
+            <h3 className="border-b pb-2 font-semibold text-lg">Your Idea</h3>
 
             <FormField
               control={applicationForm.control}
@@ -458,9 +505,9 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 // Calculate word count
                 const wordCount = field.value
                   .trim()
-                  .split(/\s+/)
+                  .split(WORD_SPLIT_REGEX)
                   .filter(Boolean).length;
-                const isOverLimit = wordCount > 50;
+                const isOverLimit = wordCount > IDEA_WORD_LIMIT;
 
                 return (
                   <FormItem>
@@ -471,14 +518,14 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Describe your idea and why it matters..."
                         className={`min-h-[100px] ${isOverLimit ? "border-red-500" : ""}`}
+                        placeholder="Describe your idea and why it matters..."
                         {...field}
                       />
                     </FormControl>
                     <div className="flex justify-end">
                       <p
-                        className={`text-xs ${isOverLimit ? "text-red-500 font-medium" : "text-muted-foreground"}`}
+                        className={`text-xs ${isOverLimit ? "font-medium text-red-500" : "text-muted-foreground"}`}
                       >
                         {wordCount}/50 words
                       </p>
@@ -496,9 +543,9 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 // Calculate word count
                 const wordCount = field.value
                   .trim()
-                  .split(/\s+/)
+                  .split(WORD_SPLIT_REGEX)
                   .filter(Boolean).length;
-                const isOverLimit = wordCount > 150;
+                const isOverLimit = wordCount > LONG_WORD_LIMIT;
 
                 return (
                   <FormItem>
@@ -509,14 +556,14 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Most people think..."
                         className={`min-h-[100px] ${isOverLimit ? "border-red-500" : ""}`}
+                        placeholder="Most people think..."
                         {...field}
                       />
                     </FormControl>
                     <div className="flex justify-end">
                       <p
-                        className={`text-xs ${isOverLimit ? "text-red-500 font-medium" : "text-muted-foreground"}`}
+                        className={`text-xs ${isOverLimit ? "font-medium text-red-500" : "text-muted-foreground"}`}
                       >
                         {wordCount}/150 words
                       </p>
@@ -534,9 +581,9 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 // Calculate word count
                 const wordCount = field.value
                   .trim()
-                  .split(/\s+/)
+                  .split(WORD_SPLIT_REGEX)
                   .filter(Boolean).length;
-                const isOverLimit = wordCount > 150;
+                const isOverLimit = wordCount > LONG_WORD_LIMIT;
 
                 return (
                   <FormItem>
@@ -546,14 +593,14 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="But I believe..."
                         className={`min-h-[100px] ${isOverLimit ? "border-red-500" : ""}`}
+                        placeholder="But I believe..."
                         {...field}
                       />
                     </FormControl>
                     <div className="flex justify-end">
                       <p
-                        className={`text-xs ${isOverLimit ? "text-red-500 font-medium" : "text-muted-foreground"}`}
+                        className={`text-xs ${isOverLimit ? "font-medium text-red-500" : "text-muted-foreground"}`}
                       >
                         {wordCount}/150 words
                       </p>
@@ -571,9 +618,9 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 // Calculate word count
                 const wordCount = field.value
                   .trim()
-                  .split(/\s+/)
+                  .split(WORD_SPLIT_REGEX)
                   .filter(Boolean).length;
-                const isOverLimit = wordCount > 150;
+                const isOverLimit = wordCount > LONG_WORD_LIMIT;
 
                 return (
                   <FormItem>
@@ -583,14 +630,14 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="I've learned this through..."
                         className={`min-h-[100px] ${isOverLimit ? "border-red-500" : ""}`}
+                        placeholder="I've learned this through..."
                         {...field}
                       />
                     </FormControl>
                     <div className="flex justify-end">
                       <p
-                        className={`text-xs ${isOverLimit ? "text-red-500 font-medium" : "text-muted-foreground"}`}
+                        className={`text-xs ${isOverLimit ? "font-medium text-red-500" : "text-muted-foreground"}`}
                       >
                         {wordCount}/150 words
                       </p>
@@ -608,9 +655,9 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 // Calculate word count
                 const wordCount = field.value
                   .trim()
-                  .split(/\s+/)
+                  .split(WORD_SPLIT_REGEX)
                   .filter(Boolean).length;
-                const isOverLimit = wordCount > 150;
+                const isOverLimit = wordCount > LONG_WORD_LIMIT;
 
                 return (
                   <FormItem>
@@ -621,14 +668,14 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="I believe if more people embraced this idea, it would..."
                         className={`min-h-[100px] ${isOverLimit ? "border-red-500" : ""}`}
+                        placeholder="I believe if more people embraced this idea, it would..."
                         {...field}
                       />
                     </FormControl>
                     <div className="flex justify-end">
                       <p
-                        className={`text-xs ${isOverLimit ? "text-red-500 font-medium" : "text-muted-foreground"}`}
+                        className={`text-xs ${isOverLimit ? "font-medium text-red-500" : "text-muted-foreground"}`}
                       >
                         {wordCount}/150 words
                       </p>
@@ -644,13 +691,13 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
                 Optional PDF Upload (CV, portfolio, etc.)
               </Label>
               <Input
-                id="file-upload"
-                type="file"
                 accept=".pdf"
-                onChange={handleFileChange}
                 className="cursor-pointer"
+                id="file-upload"
+                onChange={handleFileChange}
+                type="file"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {fileSelected
                   ? `Selected: ${fileSelected.name}`
                   : "No file selected"}
@@ -677,15 +724,24 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
             />
           </div>
 
-          <div className="flex justify-between items-center gap-2">
-            <p className="text-sm text-gray-500 flex-grow">
-              * The selection committee will invite some candidates for
-              audition. Others may not hear back.
-            </p>
+          <div className="flex items-center justify-between gap-2">
+            <label className="flex cursor-pointer select-none items-center gap-2">
+              <input
+                aria-required="true"
+                checked={agreed}
+                className="h-4 w-4 accent-green-600"
+                onChange={(e) => setAgreed(e.target.checked)}
+                type="checkbox"
+              />
+              <span className="text-gray-500 text-sm">
+                I understand the selection committee will invite some candidates
+                for audition. Others may not hear back.
+              </span>
+            </label>
             <Button
+              className="whitespace-nowrap bg-red-600 hover:bg-red-700"
+              disabled={isSubmitting || !agreed}
               type="submit"
-              className="bg-red-600 hover:bg-red-700 whitespace-nowrap"
-              disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit Application"}
             </Button>
@@ -699,11 +755,11 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
   return (
     <Form {...nominationForm}>
       <form
-        onSubmit={nominationForm.handleSubmit(onSubmitNomination)}
         className="space-y-6"
+        onSubmit={nominationForm.handleSubmit(onSubmitNomination)}
       >
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold border-b pb-2">
+          <h3 className="border-b pb-2 font-semibold text-lg">
             Nominee Information
           </h3>
 
@@ -802,15 +858,24 @@ export function SpeakerApplicationForm({ formType }: SpeakerFormProps) {
           />
         </div>
 
-        <div className="flex justify-between items-center gap-2">
-          <p className="text-sm text-gray-500 flex-grow">
-            * The selection committee will invite some candidates for audition.
-            Others may not hear back.
-          </p>
+        <div className="flex items-center justify-between gap-2">
+          <label className="flex cursor-pointer select-none items-center gap-2">
+            <input
+              aria-required="true"
+              checked={agreed}
+              className="h-4 w-4 accent-green-600"
+              onChange={(e) => setAgreed(e.target.checked)}
+              type="checkbox"
+            />
+            <span className="text-gray-500 text-sm">
+              I understand the selection committee will invite some candidates
+              for audition. Others may not hear back.
+            </span>
+          </label>
           <Button
+            className="whitespace-nowrap bg-red-600 hover:bg-red-700"
+            disabled={isSubmitting || !agreed}
             type="submit"
-            className="bg-red-600 hover:bg-red-700 whitespace-nowrap"
-            disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "Submit Nomination"}
           </Button>
