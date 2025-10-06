@@ -1,30 +1,30 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  Facebook,
-  Twitter,
-  Linkedin,
-  Instagram,
-  Globe,
-  Mail,
   ArrowLeft,
   ArrowRight,
+  Facebook,
+  Globe,
+  Instagram,
+  Linkedin,
+  Mail,
+  Twitter,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { TeamModal } from "@/components/team/team-modal";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  TeamMember,
-  roleCategories,
   getSortedTeam,
   getTeamByRole,
+  roleCategories,
+  type TeamMember,
 } from "@/data/team-members";
-import { TeamModal } from "@/components/team/team-modal";
+import { cn } from "@/lib/utils";
 
 function getSocialIcon(platform: string) {
   switch (platform) {
@@ -79,7 +79,7 @@ export default function TeamPageClient() {
 
       return () => tabsEl.removeEventListener("scroll", handleScroll);
     }
-  }, []);
+  }, [handleScroll]);
 
   // Scroll tabs left/right
   const scrollTabs = (direction: "left" | "right") => {
@@ -95,18 +95,18 @@ export default function TeamPageClient() {
   return (
     <div className="relative overflow-hidden bg-white py-24 dark:bg-black">
       {/* Background decorative elements */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_0,rgba(0,0,0,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0,rgba(255,255,255,0)_100%)]"></div>
-      <div className="absolute left-0 top-40 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10"></div>
-      <div className="absolute bottom-20 right-0 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10"></div>
+      <div className="-z-10 absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.03)_0,rgba(0,0,0,0)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0,rgba(255,255,255,0)_100%)]" />
+      <div className="absolute top-40 left-0 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10" />
+      <div className="absolute right-0 bottom-20 h-96 w-96 rounded-full bg-red-600/5 blur-3xl dark:bg-red-600/10" />
 
       {/* Main content */}
       <div className="container relative z-10 mx-auto max-w-7xl px-4">
         {/* Team header with animated underline */}
         <div className="mb-12 text-center">
           <motion.h1
-            className="mb-4 bg-gradient-to-r from-black to-gray-700 bg-clip-text text-5xl font-bold leading-tight text-transparent dark:from-white dark:to-gray-300 md:text-6xl"
-            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
+            className="mb-4 bg-gradient-to-r from-black to-gray-700 bg-clip-text font-bold text-5xl text-transparent leading-tight md:text-6xl dark:from-white dark:to-gray-300"
+            initial={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.7 }}
           >
             Meet our{" "}
@@ -114,16 +114,16 @@ export default function TeamPageClient() {
           </motion.h1>
 
           <motion.div
+            animate={{ width: 96, opacity: 1 }}
             className="mx-auto mb-6 h-1 w-24 bg-gradient-to-r from-red-600 to-red-300"
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 96, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           />
 
           <motion.p
-            className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-700 dark:text-gray-300"
-            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            className="mx-auto max-w-3xl text-gray-700 text-lg leading-relaxed dark:text-gray-300"
+            initial={{ opacity: 0, y: 10 }}
             transition={{ delay: 0.6, duration: 0.7 }}
           >
             The passionate individuals who bring TEDxBeixinqiao to life.
@@ -134,9 +134,9 @@ export default function TeamPageClient() {
 
         {/* Team member filtering with animated tabs */}
         <motion.div
+          animate={{ opacity: 1, y: 0 }}
           className="relative mb-12"
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.7 }}
         >
           <div className="relative">
@@ -144,17 +144,17 @@ export default function TeamPageClient() {
             <AnimatePresence>
               {showScrollShadows.left && (
                 <motion.div
-                  initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
                   className="absolute inset-y-0 left-0 z-10 flex items-center"
+                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0 }}
                 >
-                  <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white via-white to-transparent dark:from-gray-900 dark:via-gray-900"></div>
+                  <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white via-white to-transparent dark:from-gray-900 dark:via-gray-900" />
                   <Button
-                    variant="ghost"
-                    size="icon"
                     className="relative ml-1 rounded-full"
                     onClick={() => scrollTabs("left")}
+                    size="icon"
+                    variant="ghost"
                   >
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
@@ -166,17 +166,17 @@ export default function TeamPageClient() {
             <AnimatePresence>
               {showScrollShadows.right && (
                 <motion.div
-                  initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
                   className="absolute inset-y-0 right-0 z-10 flex items-center"
+                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0 }}
                 >
-                  <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white via-white to-transparent dark:from-gray-900 dark:via-gray-900"></div>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white via-white to-transparent dark:from-gray-900 dark:via-gray-900" />
                   <Button
-                    variant="ghost"
-                    size="icon"
                     className="relative mr-1 rounded-full"
                     onClick={() => scrollTabs("right")}
+                    size="icon"
+                    variant="ghost"
                   >
                     <ArrowRight className="h-4 w-4" />
                   </Button>
@@ -186,21 +186,21 @@ export default function TeamPageClient() {
 
             {/* Scrollable tabs */}
             <div
+              className="scrollbar-hide flex overflow-x-auto pb-2"
               ref={tabsContainerRef}
-              className="flex overflow-x-auto pb-2 scrollbar-hide"
             >
               <Tabs
-                defaultValue="all"
-                value={activeFilter}
-                onValueChange={setActiveFilter}
                 className="mx-auto"
+                defaultValue="all"
+                onValueChange={setActiveFilter}
+                value={activeFilter}
               >
                 <TabsList className="bg-gray-100/80 backdrop-blur dark:bg-gray-800/50">
                   {roleCategories.map((category) => (
                     <TabsTrigger
+                      className="data-[state=active]:bg-red-600 data-[state=active]:text-white dark:data-[state=active]:bg-red-600"
                       key={category.id}
                       value={category.id}
-                      className="data-[state=active]:bg-red-600 data-[state=active]:text-white dark:data-[state=active]:bg-red-600"
                     >
                       {category.label}
                     </TabsTrigger>
@@ -213,28 +213,28 @@ export default function TeamPageClient() {
 
         {/* Team members grid */}
         <motion.div
-          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.7 }}
-          layout
           className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          initial={{ opacity: 0 }}
+          layout
+          transition={{ delay: 1, duration: 0.7 }}
         >
           <AnimatePresence mode="popLayout">
             {filteredTeam.map((member, index) => (
               <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, y: 20 }}
+                key={member.name}
+                layout
                 transition={{
                   duration: 0.5,
                   delay: index * 0.05,
                 }}
-                layout
                 whileHover={{ y: -8 }}
               >
                 <Card
-                  className="group h-full overflow-hidden border-none bg-white shadow-lg transition-all duration-500 hover:shadow-xl hover:shadow-red-600/10 dark:bg-gray-900 dark:hover:shadow-red-600/20"
+                  className="group h-full overflow-hidden border-none bg-white shadow-lg transition-all duration-500 hover:shadow-red-600/10 hover:shadow-xl dark:bg-gray-900 dark:hover:shadow-red-600/20"
                   onClick={() => {
                     setSelectedMember(member);
                     setDialogOpen(true);
@@ -242,32 +242,32 @@ export default function TeamPageClient() {
                 >
                   {/* Image with gradient overlay */}
                   <div
-                    className="relative aspect-square w-full overflow-hidden cursor-pointer"
+                    className="relative aspect-square w-full cursor-pointer overflow-hidden"
                     onMouseEnter={() => setHoveredMember(member.name)}
                     onMouseLeave={() => setHoveredMember(null)}
                   >
                     <Image
-                      src={member.image}
                       alt={member.name}
-                      fill
                       className={cn(
                         "object-cover transition-transform duration-700",
                         hoveredMember === member.name
                           ? "scale-110"
                           : "scale-100"
                       )}
+                      fill
+                      src={member.image}
                     />
                   </div>
 
                   {/* Name, title and role chip */}
-                  <div className="p-4 cursor-pointer">
+                  <div className="cursor-pointer p-4">
                     <div className="mb-1 flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-black dark:text-white">
+                      <h3 className="font-semibold text-black text-lg dark:text-white">
                         {member.name}
                       </h3>
                       <div
                         className={cn(
-                          "rounded-full px-2 py-0.5 text-xs font-medium",
+                          "rounded-full px-2 py-0.5 font-medium text-xs",
                           member.role === "leadership"
                             ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
                             : member.role === "communications"
@@ -289,7 +289,7 @@ export default function TeamPageClient() {
                           member.role.slice(1)}
                       </div>
                     </div>
-                    <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mb-4 text-gray-500 text-sm dark:text-gray-400">
                       {member.title}
                     </p>
 
@@ -298,14 +298,14 @@ export default function TeamPageClient() {
                       <div className="flex gap-1.5">
                         {member.socials?.slice(0, 2).map((social, idx) => (
                           <motion.a
-                            key={idx}
-                            href={social.url}
                             className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-red-100 hover:text-red-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            target="_blank"
+                            href={social.url}
+                            key={idx}
+                            onClick={(e) => e.stopPropagation()}
                             rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()} // Prevent modal from opening when clicking social links
+                            target="_blank"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }} // Prevent modal from opening when clicking social links
                           >
                             {getSocialIcon(social.platform)}
                           </motion.a>
@@ -317,12 +317,14 @@ export default function TeamPageClient() {
 
                 {/* Hidden Dialog trigger component */}
                 <Dialog
-                  open={dialogOpen && selectedMember === member}
                   onOpenChange={(open) => {
-                    if (!open) setDialogOpen(false);
+                    if (!open) {
+                      setDialogOpen(false);
+                    }
                   }}
+                  open={dialogOpen && selectedMember === member}
                 >
-                  <DialogTrigger className="hidden"></DialogTrigger>
+                  <DialogTrigger className="hidden" />
                 </Dialog>
               </motion.div>
             ))}
@@ -332,8 +334,8 @@ export default function TeamPageClient() {
         {/* Team modal component */}
         <TeamModal
           member={selectedMember}
-          open={dialogOpen}
           onOpenChange={setDialogOpen}
+          open={dialogOpen}
         />
       </div>
     </div>

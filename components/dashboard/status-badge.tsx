@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { ChevronDown } from "lucide-react";
+import type React from "react";
 import {
   Select,
   SelectContent,
@@ -16,50 +15,50 @@ export const StatusBadge = ({ status }: { status: string }) => {
     case "under_review":
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-          <span className="text-sm font-medium">Under Review</span>
+          <div className="h-2 w-2 rounded-full bg-yellow-400" />
+          <span className="font-medium text-sm">Under Review</span>
         </div>
       );
     case "shortlisted":
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-          <span className="text-sm font-medium">Shortlisted</span>
+          <div className="h-2 w-2 rounded-full bg-blue-400" />
+          <span className="font-medium text-sm">Shortlisted</span>
         </div>
       );
     case "invited":
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-green-500"></div>
-          <span className="text-sm font-medium">Invited</span>
+          <div className="h-2 w-2 rounded-full bg-green-500" />
+          <span className="font-medium text-sm">Invited</span>
         </div>
       );
     case "rejected":
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-red-500"></div>
-          <span className="text-sm font-medium">Rejected</span>
+          <div className="h-2 w-2 rounded-full bg-red-500" />
+          <span className="font-medium text-sm">Rejected</span>
         </div>
       );
     case "contacted":
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-purple-400"></div>
-          <span className="text-sm font-medium">Contacted</span>
+          <div className="h-2 w-2 rounded-full bg-purple-400" />
+          <span className="font-medium text-sm">Contacted</span>
         </div>
       );
     case "flagged":
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-orange-400"></div>
-          <span className="text-sm font-medium">Flagged</span>
+          <div className="h-2 w-2 rounded-full bg-orange-400" />
+          <span className="font-medium text-sm">Flagged</span>
         </div>
       );
     default:
       return (
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-gray-400"></div>
-          <span className="text-sm font-medium">Unknown</span>
+          <div className="h-2 w-2 rounded-full bg-gray-400" />
+          <span className="font-medium text-sm">Unknown</span>
         </div>
       );
   }
@@ -88,7 +87,7 @@ const StatusItem = ({ value, label }: { value: string; label: string }) => {
 
   return (
     <div className="flex items-center gap-2">
-      <div className={`w-2 h-2 rounded-full ${getColor()}`}></div>
+      <div className={`h-2 w-2 rounded-full ${getColor()}`} />
       <span>{label}</span>
     </div>
   );
@@ -112,31 +111,31 @@ export const StatusSelect = ({
   };
 
   return (
-    <div onClick={handleClick} className="min-w-[140px]">
-      <Select value={status} onValueChange={handleValueChange}>
-        <SelectTrigger className="h-8 min-h-8 border-none bg-transparent shadow-none focus:ring-0 py-0">
+    <div className="min-w-[140px]" onClick={handleClick}>
+      <Select onValueChange={handleValueChange} value={status}>
+        <SelectTrigger className="h-8 min-h-8 border-none bg-transparent py-0 shadow-none focus:ring-0">
           <SelectValue>
             <StatusBadge status={status} />
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="under_review">
-            <StatusItem value="under_review" label="Under Review" />
+            <StatusItem label="Under Review" value="under_review" />
           </SelectItem>
           <SelectItem value="shortlisted">
-            <StatusItem value="shortlisted" label="Shortlisted" />
+            <StatusItem label="Shortlisted" value="shortlisted" />
           </SelectItem>
           <SelectItem value="invited">
-            <StatusItem value="invited" label="Invited" />
+            <StatusItem label="Invited" value="invited" />
           </SelectItem>
           <SelectItem value="contacted">
-            <StatusItem value="contacted" label="Contacted" />
+            <StatusItem label="Contacted" value="contacted" />
           </SelectItem>
           <SelectItem value="rejected">
-            <StatusItem value="rejected" label="Rejected" />
+            <StatusItem label="Rejected" value="rejected" />
           </SelectItem>
           <SelectItem value="flagged">
-            <StatusItem value="flagged" label="Flagged" />
+            <StatusItem label="Flagged" value="flagged" />
           </SelectItem>
         </SelectContent>
       </Select>

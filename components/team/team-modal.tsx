@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import type { TeamMember } from "@/data/team-members";
 import { cn } from "@/lib/utils";
-import { TeamMember } from "@/data/team-members";
 
 // Import getSocialIcon from TeamPageClient
 function getSocialIcon(platform: string) {
@@ -29,64 +29,66 @@ function getSocialIcon(platform: string) {
 // Import missing icons
 import {
   Facebook,
-  Twitter,
-  Linkedin,
-  Instagram,
   Globe,
+  Instagram,
+  Linkedin,
   Mail,
+  Twitter,
 } from "lucide-react";
 
-interface TeamModalProps {
+type TeamModalProps = {
   member: TeamMember | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
-  if (!member) return null;
+  if (!member) {
+    return null;
+  }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl p-0 overflow-hidden border-none bg-transparent shadow-none">
+    <Dialog onOpenChange={onOpenChange} open={open}>
+      <DialogContent className="max-w-5xl overflow-hidden border-none bg-transparent p-0 shadow-none">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
+          className="relative flex flex-col overflow-hidden rounded-3xl bg-white/80 backdrop-blur-lg md:min-h-[650px] md:flex-row dark:bg-gray-900/90"
           exit={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           transition={{ type: "spring", damping: 20, stiffness: 300 }}
-          className="relative flex flex-col overflow-hidden rounded-3xl bg-white/80 backdrop-blur-lg dark:bg-gray-900/90 md:flex-row md:min-h-[650px]"
         >
           {/* Left column: cinematic image section without gradient overlay */}
           <div className="relative w-full overflow-hidden md:w-2/5 lg:w-1/2">
             {/* Main image */}
             <div className="relative h-96 w-full md:h-full">
               <Image
-                src={member.image}
                 alt={member.name}
-                fill
                 className="object-cover object-center"
+                fill
                 sizes="(max-width: 768px) 100vw, 50vw"
+                src={member.image}
               />
 
               {/* Role badge with elegant styling */}
               <div className="absolute top-6 left-6 z-10">
                 <div
                   className={cn(
-                    "rounded-full px-3 py-1 text-xs font-medium backdrop-blur-sm",
+                    "rounded-full px-3 py-1 font-medium text-xs backdrop-blur-sm",
                     member.role === "leadership"
-                      ? "bg-red-500/20 text-red-50 border border-red-500/30"
+                      ? "border border-red-500/30 bg-red-500/20 text-red-50"
                       : member.role === "communications"
-                        ? "bg-blue-500/20 text-blue-50 border border-blue-500/30"
+                        ? "border border-blue-500/30 bg-blue-500/20 text-blue-50"
                         : member.role === "operations"
-                          ? "bg-amber-500/20 text-amber-50 border border-amber-500/30"
+                          ? "border border-amber-500/30 bg-amber-500/20 text-amber-50"
                           : member.role === "speakers"
-                            ? "bg-emerald-500/20 text-emerald-50 border border-emerald-500/30"
+                            ? "border border-emerald-500/30 bg-emerald-500/20 text-emerald-50"
                             : member.role === "creative"
-                              ? "bg-purple-500/20 text-purple-50 border border-purple-500/30"
+                              ? "border border-purple-500/30 bg-purple-500/20 text-purple-50"
                               : member.role === "funding"
-                                ? "bg-teal-500/20 text-teal-50 border border-teal-500/30"
+                                ? "border border-teal-500/30 bg-teal-500/20 text-teal-50"
                                 : member.role === "technical"
-                                  ? "bg-indigo-500/20 text-indigo-50 border border-indigo-500/30"
-                                  : "bg-gray-500/20 text-gray-50 border border-gray-500/30"
+                                  ? "border border-indigo-500/30 bg-indigo-500/20 text-indigo-50"
+                                  : "border border-gray-500/30 bg-gray-500/20 text-gray-50"
                   )}
                 >
                   {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
@@ -95,21 +97,21 @@ export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
             </div>
 
             {/* Elegant name overlay positioned at the bottom of the image */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 p-6 pt-12">
+            <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/90 p-6 pt-12">
               <div className="flex flex-col items-start space-y-1">
                 <motion.h2
-                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  className="max-w-xs font-bold text-3xl text-white tracking-tight md:text-4xl"
+                  initial={{ opacity: 0, y: 10 }}
                   transition={{ delay: 0.2 }}
-                  className="max-w-xs text-3xl font-bold tracking-tight text-white md:text-4xl"
                 >
                   {member.name}
                 </motion.h2>
                 <motion.p
-                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  className="font-medium text-lg text-white/80"
+                  initial={{ opacity: 0, y: 10 }}
                   transition={{ delay: 0.3 }}
-                  className="text-lg font-medium text-white/80"
                 >
                   {member.title}
                 </motion.p>
@@ -118,25 +120,25 @@ export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
 
             {/* Decorative elements */}
             <motion.div
-              className="absolute -top-12 -right-12 h-40 w-40 rounded-full bg-red-500/20 blur-3xl"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.2, 0.3, 0.2],
               }}
+              className="-top-12 -right-12 absolute h-40 w-40 rounded-full bg-red-500/20 blur-3xl"
               transition={{
-                repeat: Infinity,
+                repeat: Number.POSITIVE_INFINITY,
                 duration: 8,
                 ease: "easeInOut",
               }}
             />
             <motion.div
-              className="absolute -bottom-8 left-1/3 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl"
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [0.15, 0.25, 0.15],
               }}
+              className="-bottom-8 absolute left-1/3 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl"
               transition={{
-                repeat: Infinity,
+                repeat: Number.POSITIVE_INFINITY,
                 duration: 10,
                 ease: "easeInOut",
                 delay: 1,
@@ -158,16 +160,16 @@ export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
               {/* Quote section with elegant styling */}
               {member.quote && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
                   className="mb-8"
+                  initial={{ opacity: 0, y: 10 }}
+                  transition={{ delay: 0.3 }}
                 >
                   <div className="relative rounded-xl bg-gradient-to-br from-gray-50/80 to-gray-100/50 p-6 dark:from-gray-800/50 dark:to-gray-700/30">
                     <svg
-                      className="absolute left-4 top-4 h-8 w-8 text-red-300/30 dark:text-red-500/20"
-                      viewBox="0 0 24 24"
+                      className="absolute top-4 left-4 h-8 w-8 text-red-300/30 dark:text-red-500/20"
                       fill="none"
+                      viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
@@ -175,7 +177,7 @@ export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
                         fill="currentColor"
                       />
                     </svg>
-                    <blockquote className="pl-4 text-lg italic text-gray-700 dark:text-gray-300">
+                    <blockquote className="pl-4 text-gray-700 text-lg italic dark:text-gray-300">
                       {member.quote}
                     </blockquote>
                   </div>
@@ -184,16 +186,16 @@ export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
 
               {/* Bio with premium typography */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
                 className="mb-8"
+                initial={{ opacity: 0, y: 10 }}
+                transition={{ delay: 0.4 }}
               >
-                <p className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                <p className="mb-4 font-semibold text-gray-900 text-lg dark:text-gray-100">
                   About {member.firstName}
                 </p>
-                <div className="prose prose-lg max-w-none dark:prose-invert">
-                  <p className="first-letter:float-left first-letter:mr-3 first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:text-red-600 dark:first-letter:text-red-500">
+                <div className="prose prose-lg dark:prose-invert max-w-none">
+                  <p className="first-letter:float-left first-letter:mr-3 first-letter:font-bold first-letter:font-serif first-letter:text-5xl first-letter:text-red-600 dark:first-letter:text-red-500">
                     {member.fullBio}
                   </p>
                 </div>
@@ -201,41 +203,41 @@ export function TeamModal({ member, open, onOpenChange }: TeamModalProps) {
 
               {/* Social media links with premium styling */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
+                className="mt-10 border-gray-200/50 border-t pt-6 dark:border-gray-700/50"
+                initial={{ opacity: 0, y: 10 }}
                 transition={{ delay: 0.5 }}
-                className="mt-10 border-t border-gray-200/50 pt-6 dark:border-gray-700/50"
               >
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <h3 className="font-medium text-gray-500 text-sm dark:text-gray-400">
                     Connect with {member.firstName}
                   </h3>
                   <div className="flex gap-3">
                     {member.socials?.map((social, idx) => (
                       <motion.a
-                        key={idx}
-                        href={social.url}
                         className={cn(
                           "group flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300",
                           social.platform === "linkedin"
-                            ? "border-[#0A66C2]/30 text-[#0A66C2] hover:bg-[#0A66C2] hover:border-[#0A66C2] dark:border-[#0A66C2]/50"
+                            ? "border-[#0A66C2]/30 text-[#0A66C2] hover:border-[#0A66C2] hover:bg-[#0A66C2] dark:border-[#0A66C2]/50"
                             : social.platform === "twitter"
-                              ? "border-[#1DA1F2]/30 text-[#1DA1F2] hover:bg-[#1DA1F2] hover:border-[#1DA1F2] dark:border-[#1DA1F2]/50"
+                              ? "border-[#1DA1F2]/30 text-[#1DA1F2] hover:border-[#1DA1F2] hover:bg-[#1DA1F2] dark:border-[#1DA1F2]/50"
                               : social.platform === "instagram"
-                                ? "border-[#E4405F]/30 text-[#E4405F] hover:bg-[#E4405F] hover:border-[#E4405F] dark:border-[#E4405F]/50"
+                                ? "border-[#E4405F]/30 text-[#E4405F] hover:border-[#E4405F] hover:bg-[#E4405F] dark:border-[#E4405F]/50"
                                 : social.platform === "facebook"
-                                  ? "border-[#1877F2]/30 text-[#1877F2] hover:bg-[#1877F2] hover:border-[#1877F2] dark:border-[#1877F2]/50"
+                                  ? "border-[#1877F2]/30 text-[#1877F2] hover:border-[#1877F2] hover:bg-[#1877F2] dark:border-[#1877F2]/50"
                                   : social.platform === "website"
-                                    ? "border-gray-400/30 text-gray-500 hover:bg-gray-500 hover:border-gray-500 dark:border-gray-400/50"
-                                    : "border-gray-400/30 text-gray-500 hover:bg-gray-500 hover:border-gray-500 dark:border-gray-400/50"
+                                    ? "border-gray-400/30 text-gray-500 hover:border-gray-500 hover:bg-gray-500 dark:border-gray-400/50"
+                                    : "border-gray-400/30 text-gray-500 hover:border-gray-500 hover:bg-gray-500 dark:border-gray-400/50"
                         )}
+                        href={social.url}
+                        key={idx}
+                        rel="noopener noreferrer"
+                        target="_blank"
                         whileHover={{ y: -4, scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         {getSocialIcon(social.platform)}
-                        <span className="absolute -bottom-7 opacity-0 text-xs font-medium transition-all group-hover:opacity-100 group-hover:-bottom-9">
+                        <span className="-bottom-7 group-hover:-bottom-9 absolute font-medium text-xs opacity-0 transition-all group-hover:opacity-100">
                           {social.platform.charAt(0).toUpperCase() +
                             social.platform.slice(1)}
                         </span>

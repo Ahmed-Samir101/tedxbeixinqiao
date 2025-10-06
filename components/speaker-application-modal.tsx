@@ -1,6 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { SpeakerApplicationForm } from "@/components/speaker-application-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,17 +13,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SpeakerApplicationForm } from "@/components/speaker-application-form";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
-interface SpeakerApplicationModalProps {
+type SpeakerApplicationModalProps = {
   variant?: "default" | "mobile";
   className?: string;
-}
+};
 
 export function SpeakerApplicationModal({
   variant = "default",
@@ -29,7 +29,7 @@ export function SpeakerApplicationModal({
   const [activeTab, setActiveTab] = useState("application");
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild>
         {variant === "default" ? (
           <Button
@@ -39,43 +39,43 @@ export function SpeakerApplicationModal({
             )}
           >
             <motion.span
-              initial={{ width: "100%", height: "100%", x: "-101%" }}
-              whileHover={{ x: "101%" }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
               className="absolute inset-0 bg-red-500/40"
+              initial={{ width: "100%", height: "100%", x: "-101%" }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              whileHover={{ x: "101%" }}
             />
             <span className="z-10">Become a Speaker</span>
             <motion.div
               className="z-10"
-              whileHover={{ x: 3 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              whileHover={{ x: 3 }}
             >
               <ChevronRight className="h-4 w-4" />
             </motion.div>
           </Button>
         ) : (
           <Button
-            variant="default"
-            size="sm"
             className={cn(
               "group relative overflow-hidden bg-red-600 text-white transition-all duration-300 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700",
               className
             )}
+            size="sm"
+            variant="default"
           >
             <motion.span
-              initial={{ width: "100%", height: "100%", x: "-101%" }}
-              whileHover={{ x: "101%" }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
               className="absolute inset-0 bg-red-500/40"
+              initial={{ width: "100%", height: "100%", x: "-101%" }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              whileHover={{ x: "101%" }}
             />
             <span className="z-10">Become a Speaker</span>
           </Button>
         )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold text-red-600 dark:text-red-500">
+          <DialogTitle className="text-center font-bold text-2xl text-red-600 dark:text-red-500">
             Speaker Portal
           </DialogTitle>
           <DialogDescription className="text-center">
@@ -84,21 +84,21 @@ export function SpeakerApplicationModal({
         </DialogHeader>
 
         <Tabs
+          className="mt-4 w-full"
           defaultValue="application"
-          value={activeTab}
           onValueChange={setActiveTab}
-          className="w-full mt-4"
+          value={activeTab}
         >
-          <TabsList className="w-full grid grid-cols-2 mb-6">
+          <TabsList className="mb-6 grid w-full grid-cols-2">
             <TabsTrigger
-              value="application"
               className="data-[state=active]:bg-red-600 data-[state=active]:text-white"
+              value="application"
             >
               Speaker Application
             </TabsTrigger>
             <TabsTrigger
-              value="nomination"
               className="data-[state=active]:bg-red-600 data-[state=active]:text-white"
+              value="nomination"
             >
               Nominate Speaker
             </TabsTrigger>

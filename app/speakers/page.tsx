@@ -1,5 +1,5 @@
-import SpeakersPageClient from "./SpeakersPageClient";
 import type { Metadata } from "next";
+import SpeakersPageClient from "./SpeakersPageClient";
 
 export const metadata: Metadata = {
   title: "Speakers - TEDxBeixinqiao",

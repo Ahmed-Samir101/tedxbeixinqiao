@@ -2,8 +2,17 @@
 
 import { useEffect, useRef } from "react";
 
+const GRID_SIZE = 20;
+const SHADOW_OFFSET = 2;
+const PIN_RADIUS = 10;
+const PIN_INNER_RADIUS = 5;
+const SHADOW_RADIUS = 8;
+const ROAD_LINE_WIDTH = 3;
+const LABEL_OFFSET = 30;
+const BOTTOM_TEXT_OFFSET = 20;
+
 export default function GoogleMap() {
-  const mapRef = useRef(null);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // This is a placeholder for a real Google Maps implementation
@@ -28,7 +37,7 @@ export default function GoogleMap() {
         ctx.lineWidth = 1;
 
         // Horizontal grid lines
-        for (let i = 0; i < canvas.height; i += 20) {
+        for (let i = 0; i < canvas.height; i += GRID_SIZE) {
           ctx.beginPath();
           ctx.moveTo(0, i);
           ctx.lineTo(canvas.width, i);
@@ -36,7 +45,7 @@ export default function GoogleMap() {
         }
 
         // Vertical grid lines
-        for (let i = 0; i < canvas.width; i += 20) {
+        for (let i = 0; i < canvas.width; i += GRID_SIZE) {
           ctx.beginPath();
           ctx.moveTo(i, 0);
           ctx.lineTo(i, canvas.height);
@@ -45,7 +54,7 @@ export default function GoogleMap() {
 
         // Roads
         ctx.strokeStyle = "#9ca3af";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = ROAD_LINE_WIDTH;
 
         // Main road
         ctx.beginPath();
@@ -65,19 +74,25 @@ export default function GoogleMap() {
 
         // Pin shadow
         ctx.beginPath();
-        ctx.arc(centerX, centerY + 2, 8, 0, Math.PI * 2);
+        ctx.arc(
+          centerX,
+          centerY + SHADOW_OFFSET,
+          SHADOW_RADIUS,
+          0,
+          Math.PI * 2
+        );
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
         ctx.fill();
 
         // Pin body
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 10, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, PIN_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#ef4444";
         ctx.fill();
 
         // Pin inner circle
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, PIN_INNER_RADIUS, 0, Math.PI * 2);
         ctx.fillStyle = "#ffffff";
         ctx.fill();
 
@@ -85,7 +100,7 @@ export default function GoogleMap() {
         ctx.font = "bold 14px Arial";
         ctx.fillStyle = "#111827";
         ctx.textAlign = "center";
-        ctx.fillText("Beixinqiao, Beijing", centerX, centerY + 30);
+        ctx.fillText("Beixinqiao, Beijing", centerX, centerY + LABEL_OFFSET);
 
         // Note text
         ctx.font = "12px Arial";
@@ -94,7 +109,7 @@ export default function GoogleMap() {
         ctx.fillText(
           "Interactive Google Map would be implemented here",
           centerX,
-          canvas.height - 20
+          canvas.height - BOTTOM_TEXT_OFFSET
         );
       }
     }
@@ -110,9 +125,10 @@ export default function GoogleMap() {
 
   return (
     <div
-      ref={mapRef}
-      className="h-full w-full rounded-lg bg-gray-100 dark:bg-gray-800"
       aria-label="Map showing Beixinqiao subdistrict, Dongcheng, Beijing"
-    ></div>
+      className="h-full w-full rounded-lg bg-gray-100 dark:bg-gray-800"
+      ref={mapRef}
+      role="img"
+    />
   );
 }

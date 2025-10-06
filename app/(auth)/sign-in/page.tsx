@@ -24,7 +24,9 @@ export default function SignIn() {
 
   // Only redirect if session is loaded and user exists
   useEffect(() => {
-    if (session.isPending) return;
+    if (session.isPending) {
+      return;
+    }
     if (session.data?.user) {
       router.replace("/speaker-dashboard");
     }

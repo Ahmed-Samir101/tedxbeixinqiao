@@ -1,50 +1,53 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import {
-  BarChart2,
-  Search,
-  Filter,
-  ChevronDown,
-  Download,
-  Clock,
-  Users,
-  Star,
-  Check,
-  CalendarIcon,
-  Flag,
-  PhoneCall,
-  X,
-  LogOut,
-  PlusCircle,
-  Edit,
-} from "lucide-react";
-import {
+import type {
   ColumnFiltersState,
   Row,
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
 import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Tooltip,
-  CartesianGrid,
-  PieChart,
-  Pie,
+  BarChart2,
+  CalendarIcon,
+  Check,
+  ChevronDown,
+  Clock,
+  Download,
+  Edit,
+  Filter,
+  Flag,
+  LogOut,
+  PhoneCall,
+  PlusCircle,
+  Search,
+  Star,
+  Users,
+  X,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import {
   Cell,
   Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts";
-import { signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-
+import { toast } from "sonner";
+import { columns } from "@/components/dashboard/columns";
+import { DataTable } from "@/components/dashboard/data-table";
+import { Rating } from "@/components/dashboard/rating";
+import { StatusBadge } from "@/components/dashboard/status-badge";
+import {
+  type ApplicationEntry,
+  type NominationEntry,
+  type SpeakerEntry,
+  statusOptions,
+} from "@/components/dashboard/types";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -52,24 +55,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -78,39 +63,44 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-
+import { signOut } from "@/lib/auth-client";
 import {
-  SpeakerEntry,
-  ApplicationEntry,
-  NominationEntry,
-  statusOptions,
-} from "@/components/dashboard/types";
-import { DataTable } from "@/components/dashboard/data-table";
-import { StatusBadge } from "@/components/dashboard/status-badge";
-import { Rating } from "@/components/dashboard/rating";
-import { columns } from "@/components/dashboard/columns";
-import {
-  updateApplicationStatus,
-  updateNominationStatus,
-  updateApplicationRating,
-  updateNominationRating,
-  updateApplicationNotes,
-  updateNominationNotes,
-  toggleApplicationFlag,
-  toggleNominationFlag,
   createDashboardApplication,
   createDashboardNomination,
+  toggleApplicationFlag,
+  toggleNominationFlag,
   updateApplicationDetails,
+  updateApplicationNotes,
+  updateApplicationRating,
+  updateApplicationStatus,
   updateNominationDetails,
+  updateNominationNotes,
+  updateNominationRating,
+  updateNominationStatus,
 } from "@/lib/speakers-db-service";
-import { toast } from "sonner";
 
 // Add interface for the SpeakerDashboardClient props
-interface SpeakerDashboardClientProps {
+type SpeakerDashboardClientProps = {
   user: {
     id: string;
     name?: string;
@@ -119,7 +109,7 @@ interface SpeakerDashboardClientProps {
     [key: string]: any;
   };
   initialEntries: SpeakerEntry[];
-}
+};
 
 export function SpeakerDashboardClient({
   user,
@@ -143,7 +133,7 @@ export function SpeakerDashboardClient({
     }>
   >([]);
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
-  const [selectedEntries, setSelectedEntries] = useState<string[]>([]);
+  const [_selectedEntries, _setSelectedEntries] = useState<string[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [newBulkStatus, setNewBulkStatus] = useState("");
 
@@ -172,8 +162,8 @@ export function SpeakerDashboardClient({
   const router = useRouter();
 
   // TanStack Table states
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [_sorting, _setSorting] = useState<SortingState>([]);
+  const [_columnFilters, _setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
@@ -193,17 +183,23 @@ export function SpeakerDashboardClient({
     return date;
   }, []);
 
-  const applicationsSinceLastWeek = useMemo(() => {
-    return entries.filter(
-      (e) => e.type === "application" && new Date(e.submissionDate) > oneWeekAgo
-    ).length;
-  }, [entries, oneWeekAgo]);
+  const applicationsSinceLastWeek = useMemo(
+    () =>
+      entries.filter(
+        (e) =>
+          e.type === "application" && new Date(e.submissionDate) > oneWeekAgo
+      ).length,
+    [entries, oneWeekAgo]
+  );
 
-  const nominationsSinceLastWeek = useMemo(() => {
-    return entries.filter(
-      (e) => e.type === "nomination" && new Date(e.submissionDate) > oneWeekAgo
-    ).length;
-  }, [entries, oneWeekAgo]);
+  const nominationsSinceLastWeek = useMemo(
+    () =>
+      entries.filter(
+        (e) =>
+          e.type === "nomination" && new Date(e.submissionDate) > oneWeekAgo
+      ).length,
+    [entries, oneWeekAgo]
+  );
 
   const totalSlots = 10;
 
@@ -211,11 +207,16 @@ export function SpeakerDashboardClient({
   const filteredEntries = useMemo(() => {
     return entries.filter((entry) => {
       // Filter by type
-      if (typeFilter !== "all" && entry.type !== typeFilter) return false;
+      if (typeFilter !== "all" && entry.type !== typeFilter) {
+        return false;
+      }
 
       // Filter by status - only filter if we have specific statuses selected (not "all")
-      if (!statusFilter.includes("all") && !statusFilter.includes(entry.status))
+      if (
+        !(statusFilter.includes("all") || statusFilter.includes(entry.status))
+      ) {
         return false;
+      }
 
       // Filter by search query
       if (
@@ -299,7 +300,9 @@ export function SpeakerDashboardClient({
   // Add activity when status changes
   const addActivity = (entryId: string, newStatus: string) => {
     const entry = entries.find((e) => e.id === entryId);
-    if (!entry) return;
+    if (!entry) {
+      return;
+    }
 
     let activityText = "";
 
@@ -344,7 +347,9 @@ export function SpeakerDashboardClient({
   // Update status of an entry
   const updateStatus = async (entryId: string, newStatus: string) => {
     const entry = entries.find((e) => e.id === entryId);
-    if (!entry || entry.status === newStatus) return;
+    if (!entry || entry.status === newStatus) {
+      return;
+    }
 
     setIsUpdating(true);
 
@@ -370,8 +375,7 @@ export function SpeakerDashboardClient({
       toast.success("Status updated", {
         description: `${entry.fullName}'s status was updated to ${newStatus.replace("_", " ")}`,
       });
-    } catch (error) {
-      console.error("Error updating status:", error);
+    } catch (_error) {
       toast.error("Update failed", {
         description:
           "There was an error updating the status. Please try again.",
@@ -384,7 +388,9 @@ export function SpeakerDashboardClient({
   // Update rating of an entry
   const updateRating = async (entryId: string, newRating: number) => {
     const entry = entries.find((e) => e.id === entryId);
-    if (!entry || entry.rating === newRating) return;
+    if (!entry || entry.rating === newRating) {
+      return;
+    }
 
     setIsUpdating(true);
 
@@ -409,8 +415,7 @@ export function SpeakerDashboardClient({
       toast.success("Rating updated", {
         description: `${entry.fullName}'s rating was updated to ${newRating}`,
       });
-    } catch (error) {
-      console.error("Error updating rating:", error);
+    } catch (_error) {
       toast.error("Update failed", {
         description:
           "There was an error updating the rating. Please try again.",
@@ -423,7 +428,9 @@ export function SpeakerDashboardClient({
   // Update notes for an entry
   const updateNotes = async (entryId: string, newNotes: string) => {
     const entry = entries.find((e) => e.id === entryId);
-    if (!entry || entry.notes === newNotes) return;
+    if (!entry || entry.notes === newNotes) {
+      return;
+    }
 
     setIsUpdating(true);
 
@@ -448,8 +455,7 @@ export function SpeakerDashboardClient({
       toast.success("Notes updated", {
         description: `Notes for ${entry.fullName} were saved successfully`,
       });
-    } catch (error) {
-      console.error("Error updating notes:", error);
+    } catch (_error) {
       toast.error("Update failed", {
         description: "There was an error updating the notes. Please try again.",
       });
@@ -459,9 +465,11 @@ export function SpeakerDashboardClient({
   };
 
   // Toggle flag status for an entry
-  const toggleFlag = async (entryId: string) => {
+  const _toggleFlag = async (entryId: string) => {
     const entry = entries.find((e) => e.id === entryId);
-    if (!entry) return;
+    if (!entry) {
+      return;
+    }
 
     setIsUpdating(true);
 
@@ -487,8 +495,7 @@ export function SpeakerDashboardClient({
       toast.success(`Entry ${action}`, {
         description: `${entry.fullName} was ${action} successfully`,
       });
-    } catch (error) {
-      console.error("Error toggling flag:", error);
+    } catch (_error) {
       toast.error("Update failed", {
         description:
           "There was an error updating the flag status. Please try again.",
@@ -624,7 +631,7 @@ export function SpeakerDashboardClient({
       );
 
       if (applicationsData.length > 0) {
-        csvContent += applicationHeaders.join(",") + "\n";
+        csvContent += `${applicationHeaders.join(",")}\n`;
 
         applicationsData.forEach((entry) => {
           const appEntry = entry as ApplicationEntry;
@@ -643,7 +650,7 @@ export function SpeakerDashboardClient({
             `"${appEntry.notes ? appEntry.notes.replace(/"/g, '""') : ""}"`,
             `"${new Date(appEntry.submissionDate).toLocaleDateString()}"`,
           ].join(",");
-          csvContent += row + "\n";
+          csvContent += `${row}\n`;
         });
 
         // If only applications tab, download now
@@ -675,7 +682,7 @@ export function SpeakerDashboardClient({
           csvContent += "\n\nNOMINATIONS\n";
         }
 
-        csvContent += nominationHeaders.join(",") + "\n";
+        csvContent += `${nominationHeaders.join(",")}\n`;
 
         nominationsData.forEach((entry) => {
           const nomEntry = entry as NominationEntry;
@@ -692,7 +699,7 @@ export function SpeakerDashboardClient({
             `"${nomEntry.notes ? nomEntry.notes.replace(/"/g, '""') : ""}"`,
             `"${new Date(nomEntry.submissionDate).toLocaleDateString()}"`,
           ].join(",");
-          csvContent += row + "\n";
+          csvContent += `${row}\n`;
         });
       }
     }
@@ -712,13 +719,13 @@ export function SpeakerDashboardClient({
 
   return (
     // The rest of your component's JSX remains the same...
-    <div className="container mx-auto py-24 max-w-7xl">
-      <div className="flex justify-between items-center mb-8">
+    <div className="container mx-auto max-w-7xl py-24">
+      <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="font-bold text-3xl tracking-tight">
             Speaker Dashboard
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             Manage speaker applications and nominations
           </p>
         </div>
@@ -727,8 +734,8 @@ export function SpeakerDashboardClient({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="outline"
                 className="flex items-center gap-2 border-dashed"
+                variant="outline"
               >
                 <Avatar className="h-7 w-7">
                   <AvatarFallback className="bg-primary/10 text-xs">
@@ -740,7 +747,7 @@ export function SpeakerDashboardClient({
                       : "U"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium hidden md:inline-block">
+                <span className="hidden font-medium text-sm md:inline-block">
                   {user.name || user.email}
                 </span>
                 <ChevronDown className="h-4 w-4 opacity-50" />
@@ -750,15 +757,15 @@ export function SpeakerDashboardClient({
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                disabled
                 className="flex justify-between text-muted-foreground"
+                disabled
               >
                 <span>Role</span>
                 <span className="font-medium">Admin</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                disabled
                 className="flex justify-between text-muted-foreground"
+                disabled
               >
                 <span>Email</span>
                 <span className="max-w-[180px] truncate font-medium">
@@ -767,7 +774,7 @@ export function SpeakerDashboardClient({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="text-red-600 focus:text-red-50 focus:bg-red-600"
+                className="text-red-600 focus:bg-red-600 focus:text-red-50"
                 onClick={async () => {
                   await signOut();
                   router.push("/sign-in");
@@ -786,57 +793,57 @@ export function SpeakerDashboardClient({
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="font-medium text-sm">
               Total Applications
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalApplications}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="font-bold text-2xl">{totalApplications}</div>
+            <p className="mt-1 text-muted-foreground text-xs">
               +{applicationsSinceLastWeek} since last week
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="font-medium text-sm">
               Total Nominations
             </CardTitle>
             <Star className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalNominations}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="font-bold text-2xl">{totalNominations}</div>
+            <p className="mt-1 text-muted-foreground text-xs">
               +{nominationsSinceLastWeek} since last week
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Shortlisted</CardTitle>
+            <CardTitle className="font-medium text-sm">Shortlisted</CardTitle>
             <Check className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalShortlisted}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="font-bold text-2xl">{totalShortlisted}</div>
+            <p className="mt-1 text-muted-foreground text-xs">
               {percentageShortlisted}% of total
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="font-medium text-sm">
               Invited to Speak
             </CardTitle>
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalInvited}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="font-bold text-2xl">{totalInvited}</div>
+            <p className="mt-1 text-muted-foreground text-xs">
               {totalInvited} out of {totalSlots} slots filled
             </p>
           </CardContent>
@@ -845,13 +852,13 @@ export function SpeakerDashboardClient({
 
       {/* Main Content */}
       <Tabs
-        defaultValue="all"
-        value={activeTab}
-        onValueChange={setActiveTab}
         className="space-y-4"
+        defaultValue="all"
+        onValueChange={setActiveTab}
+        value={activeTab}
       >
-        <div className="flex justify-between items-center">
-          <TabsList className="grid grid-cols-3 w-[400px]">
+        <div className="flex items-center justify-between">
+          <TabsList className="grid w-[400px] grid-cols-3">
             <TabsTrigger value="all">All Entries</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="nominations">Nominations</TabsTrigger>
@@ -860,23 +867,23 @@ export function SpeakerDashboardClient({
           <div className="flex items-center space-x-2">
             {/* Add Create Entry Button (moved beside Columns) */}
             <Button
-              variant="outline"
               onClick={() => {
                 setSelectedEntry(null);
                 setEditMode(true);
                 setEntryFormOpen(true);
               }}
+              variant="outline"
             >
-              <PlusCircle className="h-4 w-4 mr-2" />
+              <PlusCircle className="mr-2 h-4 w-4" />
               Create Entry
             </Button>
 
             {/* Add bulk action button */}
             {Object.keys(rowSelection).length > 0 && (
               <Button
-                variant="default"
-                onClick={() => setBulkActionOpen(true)}
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={() => setBulkActionOpen(true)}
+                variant="default"
               >
                 Bulk Update ({Object.keys(rowSelection).length})
               </Button>
@@ -885,10 +892,10 @@ export function SpeakerDashboardClient({
             {/* Column visibility dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9">
-                  <BarChart2 className="h-4 w-4 mr-2" />
+                <Button className="h-9" size="sm" variant="outline">
+                  <BarChart2 className="mr-2 h-4 w-4" />
                   Columns
-                  <ChevronDown className="h-4 w-4 ml-2" />
+                  <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
@@ -896,46 +903,44 @@ export function SpeakerDashboardClient({
                   .filter(
                     (column) => column.id !== "drag" && column.id !== "select"
                   )
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={
-                          column.id
-                            ? columnVisibility[column.id] !== false
-                            : false
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      checked={
+                        column.id
+                          ? columnVisibility[column.id] !== false
+                          : false
+                      }
+                      className="capitalize"
+                      key={column.id}
+                      onCheckedChange={(checked) => {
+                        if (column.id) {
+                          setColumnVisibility((prev) => ({
+                            ...prev,
+                            [column.id as string]: checked,
+                          }));
                         }
-                        onCheckedChange={(checked) => {
-                          if (column.id) {
-                            setColumnVisibility((prev) => ({
-                              ...prev,
-                              [column.id as string]: checked,
-                            }));
-                          }
-                        }}
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
+                      }}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                type="search"
-                placeholder="Search by name or topic..."
-                className="pl-8 w-[250px]"
-                value={searchQuery}
+                className="w-[250px] pl-8"
                 onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name or topic..."
+                type="search"
+                value={searchQuery}
               />
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex gap-1">
+                <Button className="flex gap-1" variant="outline">
                   <Filter className="h-4 w-4" />
                   Filters
                   <ChevronDown className="h-4 w-4" />
@@ -946,43 +951,38 @@ export function SpeakerDashboardClient({
                 <DropdownMenuSeparator />
 
                 <div className="p-2">
-                  <p className="text-sm font-medium mb-1">Status</p>
-                  <div className="flex flex-wrap gap-1 mt-1">
+                  <p className="mb-1 font-medium text-sm">Status</p>
+                  <div className="mt-1 flex flex-wrap gap-1">
                     {/* Add an "All" option */}
                     <Badge
-                      key="all"
-                      variant={
-                        statusFilter.includes("all") ? "default" : "outline"
-                      }
                       className={`cursor-pointer ${
                         statusFilter.includes("all")
                           ? "bg-primary/90 hover:bg-primary/70"
                           : "hover:bg-primary/10"
                       }`}
+                      key="all"
                       onClick={() => {
                         // If "all" is clicked, only select "all"
                         setStatusFilter(["all"]);
                       }}
+                      variant={
+                        statusFilter.includes("all") ? "default" : "outline"
+                      }
                     >
                       <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                        <div className="h-2 w-2 rounded-full bg-gray-400" />
                         All Statuses
                       </div>
                     </Badge>
 
                     {statusOptions.map((option) => (
                       <Badge
-                        key={option.value}
-                        variant={
-                          statusFilter.includes(option.value)
-                            ? "default"
-                            : "outline"
-                        }
                         className={`cursor-pointer ${
                           statusFilter.includes(option.value)
                             ? "bg-primary/90 hover:bg-primary/70"
                             : "hover:bg-primary/10"
                         }`}
+                        key={option.value}
                         onClick={() => {
                           if (statusFilter.includes(option.value)) {
                             // Remove this status if it's already selected
@@ -1002,10 +1002,15 @@ export function SpeakerDashboardClient({
                             setStatusFilter(newFilters);
                           }
                         }}
+                        variant={
+                          statusFilter.includes(option.value)
+                            ? "default"
+                            : "outline"
+                        }
                       >
                         <div className="flex items-center gap-1.5">
                           <div
-                            className={`w-2 h-2 rounded-full ${
+                            className={`h-2 w-2 rounded-full ${
                               option.value === "under_review"
                                 ? "bg-yellow-400"
                                 : option.value === "shortlisted"
@@ -1020,7 +1025,7 @@ export function SpeakerDashboardClient({
                                           ? "bg-orange-400"
                                           : "bg-gray-400"
                             }`}
-                          ></div>
+                          />
                           {option.label}
                         </div>
                       </Badge>
@@ -1031,9 +1036,9 @@ export function SpeakerDashboardClient({
                         statusFilter.length === 1 && statusFilter[0] === "all"
                       ) && (
                         <Badge
-                          variant="outline"
-                          className="cursor-pointer hover:bg-destructive/10 border-dashed"
+                          className="cursor-pointer border-dashed hover:bg-destructive/10"
                           onClick={() => setStatusFilter(["all"])}
+                          variant="outline"
                         >
                           Clear
                         </Badge>
@@ -1042,8 +1047,8 @@ export function SpeakerDashboardClient({
                 </div>
 
                 <div className="p-2">
-                  <p className="text-sm font-medium mb-1">Type</p>
-                  <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <p className="mb-1 font-medium text-sm">Type</p>
+                  <Select onValueChange={setTypeFilter} value={typeFilter}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Filter by type" />
                     </SelectTrigger>
@@ -1058,13 +1063,13 @@ export function SpeakerDashboardClient({
                 <DropdownMenuSeparator />
                 <div className="p-2">
                   <Button
-                    variant="outline"
                     className="w-full"
                     onClick={() => {
                       setStatusFilter(["all"]);
                       setTypeFilter("all");
                       setSearchQuery("");
                     }}
+                    variant="outline"
                   >
                     Reset Filters
                   </Button>
@@ -1074,25 +1079,25 @@ export function SpeakerDashboardClient({
           </div>
         </div>
 
-        <TabsContent value="all" className="space-y-4">
+        <TabsContent className="space-y-4" value="all">
           <Card>
             <CardContent className="p-0">
               <DataTable
                 columns={columns}
+                columnVisibility={columnVisibility}
                 data={filteredEntries}
                 onRowClick={openDetails}
-                updateStatus={updateStatus}
-                updateRating={updateRating}
-                columnVisibility={columnVisibility}
-                setColumnVisibility={setColumnVisibility}
-                rowSelection={rowSelection}
                 onRowSelectionChange={setRowSelection}
                 onTableChange={setAllEntriesTable}
+                rowSelection={rowSelection}
+                setColumnVisibility={setColumnVisibility}
+                updateRating={updateRating}
+                updateStatus={updateStatus}
               />
             </CardContent>
-            <div className="flex items-center justify-between px-4 py-3 border-t">
+            <div className="flex items-center justify-between border-t px-4 py-3">
               <div className="flex items-center space-x-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Showing{" "}
                   {allEntriesTable
                     ? `${allEntriesTable.getState().pagination.pageIndex * allEntriesTable.getState().pagination.pageSize + 1}-${Math.min((allEntriesTable.getState().pagination.pageIndex + 1) * allEntriesTable.getState().pagination.pageSize, filteredEntries.length)} of ${filteredEntries.length} entries`
@@ -1100,13 +1105,13 @@ export function SpeakerDashboardClient({
                 </p>
                 {allEntriesTable && (
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">Rows per page</span>
+                    <span className="font-medium text-sm">Rows per page</span>
                     <Select
-                      value={`${allEntriesTable.getState().pagination.pageSize}`}
                       onValueChange={(value) => {
                         allEntriesTable.setPageSize(Number(value));
                         triggerUpdate();
                       }}
+                      value={`${allEntriesTable.getState().pagination.pageSize}`}
                     >
                       <SelectTrigger className="h-8 w-[70px]">
                         <SelectValue />
@@ -1125,54 +1130,54 @@ export function SpeakerDashboardClient({
 
               {allEntriesTable && (
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">
+                  <span className="font-medium text-sm">
                     Page {allEntriesTable.getState().pagination.pageIndex + 1}{" "}
                     of {allEntriesTable.getPageCount()}
                   </span>
                   <div className="flex items-center space-x-1">
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!allEntriesTable.getCanPreviousPage()}
                       onClick={() => {
                         allEntriesTable.setPageIndex(0);
                         triggerUpdate();
                       }}
-                      disabled={!allEntriesTable.getCanPreviousPage()}
+                      variant="outline"
                     >
                       {"<<"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!allEntriesTable.getCanPreviousPage()}
                       onClick={() => {
                         allEntriesTable.previousPage();
                         triggerUpdate();
                       }}
-                      disabled={!allEntriesTable.getCanPreviousPage()}
+                      variant="outline"
                     >
                       {"<"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!allEntriesTable.getCanNextPage()}
                       onClick={() => {
                         allEntriesTable.nextPage();
                         triggerUpdate();
                       }}
-                      disabled={!allEntriesTable.getCanNextPage()}
+                      variant="outline"
                     >
                       {">"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!allEntriesTable.getCanNextPage()}
                       onClick={() => {
                         allEntriesTable.setPageIndex(
                           allEntriesTable.getPageCount() - 1
                         );
                         triggerUpdate();
                       }}
-                      disabled={!allEntriesTable.getCanNextPage()}
+                      variant="outline"
                     >
                       {">>"}
                     </Button>
@@ -1188,20 +1193,20 @@ export function SpeakerDashboardClient({
             <CardContent className="p-0">
               <DataTable
                 columns={columns}
+                columnVisibility={columnVisibility}
                 data={filteredEntries.filter((e) => e.type === "application")}
                 onRowClick={openDetails}
-                updateStatus={updateStatus}
-                updateRating={updateRating}
-                columnVisibility={columnVisibility}
-                setColumnVisibility={setColumnVisibility}
-                rowSelection={rowSelection}
                 onRowSelectionChange={setRowSelection}
                 onTableChange={setApplicationsTable}
+                rowSelection={rowSelection}
+                setColumnVisibility={setColumnVisibility}
+                updateRating={updateRating}
+                updateStatus={updateStatus}
               />
             </CardContent>
-            <div className="flex items-center justify-between px-4 py-3 border-t">
+            <div className="flex items-center justify-between border-t px-4 py-3">
               <div className="flex items-center space-x-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Showing{" "}
                   {applicationsTable
                     ? `${applicationsTable.getState().pagination.pageIndex * applicationsTable.getState().pagination.pageSize + 1}-${Math.min((applicationsTable.getState().pagination.pageIndex + 1) * applicationsTable.getState().pagination.pageSize, filteredEntries.filter((e) => e.type === "application").length)} of ${filteredEntries.filter((e) => e.type === "application").length} applications`
@@ -1209,13 +1214,13 @@ export function SpeakerDashboardClient({
                 </p>
                 {applicationsTable && (
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">Rows per page</span>
+                    <span className="font-medium text-sm">Rows per page</span>
                     <Select
-                      value={`${applicationsTable.getState().pagination.pageSize}`}
                       onValueChange={(value) => {
                         applicationsTable.setPageSize(Number(value));
                         triggerUpdate();
                       }}
+                      value={`${applicationsTable.getState().pagination.pageSize}`}
                     >
                       <SelectTrigger className="h-8 w-[70px]">
                         <SelectValue />
@@ -1234,54 +1239,54 @@ export function SpeakerDashboardClient({
 
               {applicationsTable && (
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">
+                  <span className="font-medium text-sm">
                     Page {applicationsTable.getState().pagination.pageIndex + 1}{" "}
                     of {applicationsTable.getPageCount()}
                   </span>
                   <div className="flex items-center space-x-1">
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!applicationsTable.getCanPreviousPage()}
                       onClick={() => {
                         applicationsTable.setPageIndex(0);
                         triggerUpdate();
                       }}
-                      disabled={!applicationsTable.getCanPreviousPage()}
+                      variant="outline"
                     >
                       {"<<"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!applicationsTable.getCanPreviousPage()}
                       onClick={() => {
                         applicationsTable.previousPage();
                         triggerUpdate();
                       }}
-                      disabled={!applicationsTable.getCanPreviousPage()}
+                      variant="outline"
                     >
                       {"<"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!applicationsTable.getCanNextPage()}
                       onClick={() => {
                         applicationsTable.nextPage();
                         triggerUpdate();
                       }}
-                      disabled={!applicationsTable.getCanNextPage()}
+                      variant="outline"
                     >
                       {">"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!applicationsTable.getCanNextPage()}
                       onClick={() => {
                         applicationsTable.setPageIndex(
                           applicationsTable.getPageCount() - 1
                         );
                         triggerUpdate();
                       }}
-                      disabled={!applicationsTable.getCanNextPage()}
+                      variant="outline"
                     >
                       {">>"}
                     </Button>
@@ -1297,20 +1302,20 @@ export function SpeakerDashboardClient({
             <CardContent className="p-0">
               <DataTable
                 columns={columns}
+                columnVisibility={columnVisibility}
                 data={filteredEntries.filter((e) => e.type === "nomination")}
                 onRowClick={openDetails}
-                updateStatus={updateStatus}
-                updateRating={updateRating}
-                columnVisibility={columnVisibility}
-                setColumnVisibility={setColumnVisibility}
-                rowSelection={rowSelection}
                 onRowSelectionChange={setRowSelection}
                 onTableChange={setNominationsTable}
+                rowSelection={rowSelection}
+                setColumnVisibility={setColumnVisibility}
+                updateRating={updateRating}
+                updateStatus={updateStatus}
               />
             </CardContent>
-            <div className="flex items-center justify-between px-4 py-3 border-t">
+            <div className="flex items-center justify-between border-t px-4 py-3">
               <div className="flex items-center space-x-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Showing{" "}
                   {nominationsTable
                     ? `${nominationsTable.getState().pagination.pageIndex * nominationsTable.getState().pagination.pageSize + 1}-${Math.min((nominationsTable.getState().pagination.pageIndex + 1) * nominationsTable.getState().pagination.pageSize, filteredEntries.filter((e) => e.type === "nomination").length)} of ${filteredEntries.filter((e) => e.type === "nomination").length} nominations`
@@ -1318,13 +1323,13 @@ export function SpeakerDashboardClient({
                 </p>
                 {nominationsTable && (
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">Rows per page</span>
+                    <span className="font-medium text-sm">Rows per page</span>
                     <Select
-                      value={`${nominationsTable.getState().pagination.pageSize}`}
                       onValueChange={(value) => {
                         nominationsTable.setPageSize(Number(value));
                         triggerUpdate();
                       }}
+                      value={`${nominationsTable.getState().pagination.pageSize}`}
                     >
                       <SelectTrigger className="h-8 w-[70px]">
                         <SelectValue />
@@ -1343,54 +1348,54 @@ export function SpeakerDashboardClient({
 
               {nominationsTable && (
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">
+                  <span className="font-medium text-sm">
                     Page {nominationsTable.getState().pagination.pageIndex + 1}{" "}
                     of {nominationsTable.getPageCount()}
                   </span>
                   <div className="flex items-center space-x-1">
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!nominationsTable.getCanPreviousPage()}
                       onClick={() => {
                         nominationsTable.setPageIndex(0);
                         triggerUpdate();
                       }}
-                      disabled={!nominationsTable.getCanPreviousPage()}
+                      variant="outline"
                     >
                       {"<<"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!nominationsTable.getCanPreviousPage()}
                       onClick={() => {
                         nominationsTable.previousPage();
                         triggerUpdate();
                       }}
-                      disabled={!nominationsTable.getCanPreviousPage()}
+                      variant="outline"
                     >
                       {"<"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!nominationsTable.getCanNextPage()}
                       onClick={() => {
                         nominationsTable.nextPage();
                         triggerUpdate();
                       }}
-                      disabled={!nominationsTable.getCanNextPage()}
+                      variant="outline"
                     >
                       {">"}
                     </Button>
                     <Button
-                      variant="outline"
                       className="h-8 w-8 p-0"
+                      disabled={!nominationsTable.getCanNextPage()}
                       onClick={() => {
                         nominationsTable.setPageIndex(
                           nominationsTable.getPageCount() - 1
                         );
                         triggerUpdate();
                       }}
-                      disabled={!nominationsTable.getCanNextPage()}
+                      variant="outline"
                     >
                       {">>"}
                     </Button>
@@ -1403,7 +1408,7 @@ export function SpeakerDashboardClient({
       </Tabs>
 
       {/* Activity Section */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Status Distribution Chart */}
         <Card>
           <CardHeader>
@@ -1416,10 +1421,12 @@ export function SpeakerDashboardClient({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="flex h-[300px] items-center justify-center">
+              <ResponsiveContainer height="100%" width="100%">
                 <PieChart>
                   <Pie
+                    cx="50%"
+                    cy="50%"
                     data={[
                       {
                         name: "Under Review",
@@ -1459,13 +1466,11 @@ export function SpeakerDashboardClient({
                         color: "#F97316",
                       },
                     ]}
-                    cx="50%"
-                    cy="50%"
+                    dataKey="value"
+                    fill="#8884d8"
                     innerRadius={80}
                     outerRadius={110}
-                    fill="#8884d8"
                     paddingAngle={3}
-                    dataKey="value"
                   >
                     {entries
                       .map((entry) => entry.status)
@@ -1474,7 +1479,6 @@ export function SpeakerDashboardClient({
                       )
                       .map((status, index) => (
                         <Cell
-                          key={`cell-${index}`}
                           fill={
                             status === "under_review"
                               ? "#EAB308"
@@ -1490,26 +1494,27 @@ export function SpeakerDashboardClient({
                                         ? "#F97316"
                                         : "#94A3B8"
                           }
+                          key={`cell-${index}`}
                         />
                       ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => [`${value} entries`, "Count"]}
                     contentStyle={{
                       backgroundColor: "var(--background)",
                       border: "1px solid var(--border)",
                       borderRadius: "0.5rem",
                     }}
+                    formatter={(value) => [`${value} entries`, "Count"]}
                   />
                   <Legend
-                    layout="vertical"
-                    verticalAlign="middle"
                     align="right"
-                    iconType="circle"
-                    iconSize={8}
                     formatter={(value) => (
                       <span className="text-xs">{value}</span>
                     )}
+                    iconSize={8}
+                    iconType="circle"
+                    layout="vertical"
+                    verticalAlign="middle"
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -1531,7 +1536,9 @@ export function SpeakerDashboardClient({
                 activities.map((activity) => {
                   // Find the corresponding entry
                   const entry = entries.find((e) => e.id === activity.entryId);
-                  if (!entry) return null;
+                  if (!entry) {
+                    return null;
+                  }
 
                   // Generate visual elements based on status
                   let icon;
@@ -1574,7 +1581,7 @@ export function SpeakerDashboardClient({
                   const now = new Date();
                   const timestamp = activity.timestamp;
                   const diffMs = now.getTime() - timestamp.getTime();
-                  const diffMins = Math.floor(diffMs / 60000);
+                  const diffMins = Math.floor(diffMs / 60_000);
                   const diffHours = Math.floor(diffMins / 60);
                   const diffDays = Math.floor(diffHours / 24);
 
@@ -1593,27 +1600,27 @@ export function SpeakerDashboardClient({
 
                   return (
                     <div
+                      className="group flex animate-fadeIn cursor-default items-start gap-4"
                       key={activity.id}
-                      className="flex items-start gap-4 group cursor-default animate-fadeIn"
                     >
                       <div
                         className={`rounded-full p-2 ${bgColor} transition-transform group-hover:scale-110`}
                       >
                         <div className={iconColor}>{icon}</div>
                       </div>
-                      <div className="space-y-1 flex-1">
-                        <p className="text-sm font-medium">{activity.text}</p>
+                      <div className="flex-1 space-y-1">
+                        <p className="font-medium text-sm">{activity.text}</p>
                         <div className="flex items-center gap-2">
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             {timeText}
                           </p>
                           <Badge
-                            variant="outline"
                             className={
                               activity.type === "application"
-                                ? "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-                                : "bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400 dark:border-purple-800"
+                                ? "border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
+                                : "border-purple-200 bg-purple-50 text-purple-600 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-400"
                             }
+                            variant="outline"
                           >
                             {activity.type === "application"
                               ? "Application"
@@ -1628,8 +1635,8 @@ export function SpeakerDashboardClient({
                 // Show initial activity data if there are no status change activities yet
                 activityData.map((activity) => (
                   <div
+                    className="group flex cursor-default items-start gap-4"
                     key={activity.id}
-                    className="flex items-start gap-4 group cursor-default"
                   >
                     <div
                       className={`rounded-full p-2 ${activity.bgColor} transition-transform group-hover:scale-110`}
@@ -1637,18 +1644,18 @@ export function SpeakerDashboardClient({
                       <div className={activity.iconColor}>{activity.icon}</div>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-medium">{activity.text}</p>
+                      <p className="font-medium text-sm">{activity.text}</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           {activity.timeText}
                         </p>
                         <Badge
-                          variant="outline"
                           className={
                             activity.type === "application"
-                              ? "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-                              : "bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400 dark:border-purple-800"
+                              ? "border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
+                              : "border-purple-200 bg-purple-50 text-purple-600 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-400"
                           }
+                          variant="outline"
                         >
                           {activity.type === "application"
                             ? "Application"
@@ -1659,7 +1666,7 @@ export function SpeakerDashboardClient({
                   </div>
                 ))
               ) : (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="py-8 text-center text-muted-foreground">
                   <p>No recent activity</p>
                 </div>
               )}
@@ -1669,8 +1676,8 @@ export function SpeakerDashboardClient({
       </div>
 
       {/* Details Modal */}
-      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <Dialog onOpenChange={setDetailsOpen} open={detailsOpen}>
+        <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           {selectedEntry && (
             <>
               <DialogHeader>
@@ -1696,26 +1703,26 @@ export function SpeakerDashboardClient({
                 </div>
               </DialogHeader>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+              <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <h3 className="font-medium text-lg mb-2">Entry Details</h3>
+                  <h3 className="mb-2 font-medium text-lg">Entry Details</h3>
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="font-medium text-muted-foreground text-sm">
                         Topic
                       </p>
                       <p>{selectedEntry.topic}</p>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="font-medium text-muted-foreground text-sm">
                         Prior TED/TEDx Experience
                       </p>
                       <p>{selectedEntry.priorTedTalk}</p>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="font-medium text-muted-foreground text-sm">
                         Submission Date
                       </p>
                       <p>
@@ -1728,7 +1735,7 @@ export function SpeakerDashboardClient({
                     {selectedEntry.type === "application" && (
                       <>
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">
+                          <p className="font-medium text-muted-foreground text-sm">
                             Contact Information
                           </p>
                           <p>
@@ -1745,7 +1752,7 @@ export function SpeakerDashboardClient({
                         </div>
 
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">
+                          <p className="font-medium text-muted-foreground text-sm">
                             Rehearsal Availability (Sep-Nov)
                           </p>
                           <p>
@@ -1759,14 +1766,12 @@ export function SpeakerDashboardClient({
                     )}
 
                     {selectedEntry.type === "nomination" && (
-                      <>
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">
-                            Contact Information
-                          </p>
-                          <p>{(selectedEntry as NominationEntry).contact}</p>
-                        </div>
-                      </>
+                      <div>
+                        <p className="font-medium text-muted-foreground text-sm">
+                          Contact Information
+                        </p>
+                        <p>{(selectedEntry as NominationEntry).contact}</p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1774,45 +1779,45 @@ export function SpeakerDashboardClient({
                 {/* Structured Idea Framework - Only for applications */}
                 {selectedEntry.type === "application" && (
                   <div className="col-span-1 md:col-span-2">
-                    <h3 className="font-medium text-lg mb-2">
+                    <h3 className="mb-2 font-medium text-lg">
                       Structured Idea Framework
                     </h3>
                     <div className="space-y-4">
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">
+                        <p className="mb-1 font-medium text-muted-foreground text-sm">
                           1. Common Belief/Behavior to Challenge
                         </p>
-                        <p className="text-sm bg-muted/50 p-3 rounded-md">
+                        <p className="rounded-md bg-muted/50 p-3 text-sm">
                           {(selectedEntry as ApplicationEntry).commonBelief ||
                             "Not provided"}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">
+                        <p className="mb-1 font-medium text-muted-foreground text-sm">
                           2. Core Idea
                         </p>
-                        <p className="text-sm bg-muted/50 p-3 rounded-md">
+                        <p className="rounded-md bg-muted/50 p-3 text-sm">
                           {(selectedEntry as ApplicationEntry).coreIdea ||
                             "Not provided"}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">
+                        <p className="mb-1 font-medium text-muted-foreground text-sm">
                           3. Personal Insight/Example
                         </p>
-                        <p className="text-sm bg-muted/50 p-3 rounded-md">
+                        <p className="rounded-md bg-muted/50 p-3 text-sm">
                           {(selectedEntry as ApplicationEntry)
                             .personalInsight || "Not provided"}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">
+                        <p className="mb-1 font-medium text-muted-foreground text-sm">
                           4. Potential Impact
                         </p>
-                        <p className="text-sm bg-muted/50 p-3 rounded-md">
+                        <p className="rounded-md bg-muted/50 p-3 text-sm">
                           {(selectedEntry as ApplicationEntry)
                             .potentialImpact || "Not provided"}
                         </p>
@@ -1822,20 +1827,20 @@ export function SpeakerDashboardClient({
                 )}
 
                 <div>
-                  <h3 className="font-medium text-lg mb-2">Review & Status</h3>
+                  <h3 className="mb-2 font-medium text-lg">Review & Status</h3>
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="font-medium text-muted-foreground text-sm">
                         Current Status
                       </p>
                       <Select
-                        value={selectedEntry.status}
+                        disabled={isUpdating}
                         onValueChange={(value) =>
                           updateStatus(selectedEntry.id, value)
                         }
-                        disabled={isUpdating}
+                        value={selectedEntry.status}
                       >
-                        <SelectTrigger className="w-full mt-1 h-10">
+                        <SelectTrigger className="mt-1 h-10 w-full">
                           <SelectValue>
                             <StatusBadge status={selectedEntry.status} />
                           </SelectValue>
@@ -1843,13 +1848,13 @@ export function SpeakerDashboardClient({
                         <SelectContent>
                           {statusOptions.map((option) => (
                             <SelectItem
+                              className="cursor-pointer"
                               key={option.value}
                               value={option.value}
-                              className="cursor-pointer"
                             >
                               <div className="flex items-center gap-2">
                                 <div
-                                  className={`w-2 h-2 rounded-full ${
+                                  className={`h-2 w-2 rounded-full ${
                                     option.value === "under_review"
                                       ? "bg-yellow-400"
                                       : option.value === "shortlisted"
@@ -1864,7 +1869,7 @@ export function SpeakerDashboardClient({
                                                 ? "bg-orange-400"
                                                 : "bg-gray-400"
                                   }`}
-                                ></div>
+                                />
                                 <span>{option.label}</span>
                               </div>
                             </SelectItem>
@@ -1874,28 +1879,27 @@ export function SpeakerDashboardClient({
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="font-medium text-muted-foreground text-sm">
                         Rating
                       </p>
                       <div className="mt-1">
                         <Rating
-                          rating={selectedEntry.rating}
+                          disabled={isUpdating}
                           onChange={(newRating) =>
                             updateRating(selectedEntry.id, newRating)
                           }
-                          disabled={isUpdating}
+                          rating={selectedEntry.rating}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">
+                      <p className="font-medium text-muted-foreground text-sm">
                         Notes
                       </p>
                       <Textarea
-                        className="mt-1 w-full min-h-[100px]"
-                        value={selectedEntry.notes || ""}
-                        onClick={(e) => e.stopPropagation()}
+                        className="mt-1 min-h-[100px] w-full"
+                        disabled={isUpdating}
                         onChange={(e) => {
                           // Update the notes in the selected entry state first for immediate feedback
                           setSelectedEntry({
@@ -1903,25 +1907,24 @@ export function SpeakerDashboardClient({
                             notes: e.target.value,
                           });
                         }}
+                        onClick={(e) => e.stopPropagation()}
                         placeholder="Add your notes about this speaker..."
-                        disabled={isUpdating}
+                        value={selectedEntry.notes || ""}
                       />
-                      <div className="flex justify-end gap-2 mt-2">
+                      <div className="mt-2 flex justify-end gap-2">
                         <Button
-                          size="sm"
+                          disabled={isUpdating}
                           onClick={() => {
                             updateNotes(
                               selectedEntry.id,
                               selectedEntry.notes || ""
                             );
                           }}
-                          disabled={isUpdating}
+                          size="sm"
                         >
                           Save Notes
                         </Button>
                         <Button
-                          size="sm"
-                          variant="default"
                           className="bg-green-600 hover:bg-green-700"
                           onClick={() => {
                             // Close details view
@@ -1929,8 +1932,10 @@ export function SpeakerDashboardClient({
                             // Open edit form
                             openEditForm(selectedEntry);
                           }}
+                          size="sm"
+                          variant="default"
                         >
-                          <Edit className="h-4 w-4 mr-2" />
+                          <Edit className="mr-2 h-4 w-4" />
                           Edit Entry
                         </Button>
                       </div>
@@ -1939,8 +1944,8 @@ export function SpeakerDashboardClient({
                 </div>
               </div>
 
-              <DialogFooter className="flex gap-2 md:gap-0 mt-6">
-                <Button variant="outline" onClick={() => setDetailsOpen(false)}>
+              <DialogFooter className="mt-6 flex gap-2 md:gap-0">
+                <Button onClick={() => setDetailsOpen(false)} variant="outline">
                   Close
                 </Button>
               </DialogFooter>
@@ -1950,7 +1955,7 @@ export function SpeakerDashboardClient({
       </Dialog>
 
       {/* Bulk Action Modal */}
-      <Dialog open={bulkActionOpen} onOpenChange={setBulkActionOpen}>
+      <Dialog onOpenChange={setBulkActionOpen} open={bulkActionOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Bulk Update Status</DialogTitle>
@@ -1964,8 +1969,8 @@ export function SpeakerDashboardClient({
             <div className="space-y-2">
               <Label htmlFor="bulk-status">New Status</Label>
               <Select
-                onValueChange={(value) => setNewBulkStatus(value)}
                 disabled={isUpdating}
+                onValueChange={(value) => setNewBulkStatus(value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a status" />
@@ -1975,7 +1980,7 @@ export function SpeakerDashboardClient({
                     <SelectItem key={option.value} value={option.value}>
                       <div className="flex items-center gap-2">
                         <div
-                          className={`w-2 h-2 rounded-full ${
+                          className={`h-2 w-2 rounded-full ${
                             option.value === "under_review"
                               ? "bg-yellow-400"
                               : option.value === "shortlisted"
@@ -1990,7 +1995,7 @@ export function SpeakerDashboardClient({
                                         ? "bg-orange-400"
                                         : "bg-gray-400"
                           }`}
-                        ></div>
+                        />
                         <span>{option.label}</span>
                       </div>
                     </SelectItem>
@@ -2002,19 +2007,18 @@ export function SpeakerDashboardClient({
 
           <DialogFooter className="gap-2 sm:gap-0">
             <Button
-              type="button"
-              variant="destructive"
+              disabled={isUpdating}
               onClick={() => {
                 setRowSelection({});
                 setBulkActionOpen(false);
               }}
-              disabled={isUpdating}
+              type="button"
+              variant="destructive"
             >
               Clear Selection
             </Button>
             <Button
-              type="button"
-              variant="default"
+              disabled={isUpdating}
               onClick={async () => {
                 if (!newBulkStatus) {
                   toast.error("Please select a status", {
@@ -2041,7 +2045,7 @@ export function SpeakerDashboardClient({
                   // Convert row indices to actual entry objects
                   const selectedEntryIds = Object.keys(rowSelection)
                     .map((index) => {
-                      const idx = parseInt(index);
+                      const idx = Number.parseInt(index, 10);
                       return idx >= 0 && idx < dataToUse.length
                         ? dataToUse[idx].id
                         : null;
@@ -2051,7 +2055,9 @@ export function SpeakerDashboardClient({
                   // For each selected entry
                   for (const id of selectedEntryIds) {
                     const entry = entries.find((e) => e.id === id);
-                    if (!entry) continue;
+                    if (!entry) {
+                      continue;
+                    }
 
                     // Update in database
                     const result =
@@ -2082,8 +2088,7 @@ export function SpeakerDashboardClient({
                   toast.success("Bulk update complete", {
                     description: `Updated ${selectedEntryIds.length} entries to ${newBulkStatus.replace("_", " ")}`,
                   });
-                } catch (error) {
-                  console.error("Error in bulk update:", error);
+                } catch (_error) {
                   toast.error("Bulk update failed", {
                     description:
                       "There was an error updating some entries. Please try again.",
@@ -2096,7 +2101,8 @@ export function SpeakerDashboardClient({
                   setIsUpdating(false);
                 }
               }}
-              disabled={isUpdating}
+              type="button"
+              variant="default"
             >
               {isUpdating ? "Updating..." : "Confirm Update"}
             </Button>
@@ -2105,8 +2111,8 @@ export function SpeakerDashboardClient({
       </Dialog>
 
       {/* Entry Form Modal - For Creating and Editing Entries */}
-      <Dialog open={entryFormOpen} onOpenChange={setEntryFormOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <Dialog onOpenChange={setEntryFormOpen} open={entryFormOpen}>
+        <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editMode
@@ -2127,31 +2133,31 @@ export function SpeakerDashboardClient({
           {/* Entry Type Selector - Only show when creating a new entry */}
           {editMode && !selectedEntry && (
             <div className="mb-6">
-              <Label className="block mb-2">Entry Type</Label>
+              <Label className="mb-2 block">Entry Type</Label>
               <div className="flex space-x-4">
                 <div
-                  className={`flex-1 p-4 border rounded-lg cursor-pointer transition ${
+                  className={`flex-1 cursor-pointer rounded-lg border p-4 transition ${
                     entryType === "application"
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/50"
                   }`}
                   onClick={() => setEntryType("application")}
                 >
-                  <div className="font-medium mb-1">Application</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="mb-1 font-medium">Application</div>
+                  <div className="text-muted-foreground text-sm">
                     Speaker applied directly through the website
                   </div>
                 </div>
                 <div
-                  className={`flex-1 p-4 border rounded-lg cursor-pointer transition ${
+                  className={`flex-1 cursor-pointer rounded-lg border p-4 transition ${
                     entryType === "nomination"
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/50"
                   }`}
                   onClick={() => setEntryType("nomination")}
                 >
-                  <div className="font-medium mb-1">Nomination</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="mb-1 font-medium">Nomination</div>
+                  <div className="text-muted-foreground text-sm">
                     Speaker nominated by someone else
                   </div>
                 </div>
@@ -2160,47 +2166,47 @@ export function SpeakerDashboardClient({
           )}
 
           {/* Form Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-4">
               <div>
                 <Label htmlFor="fullName">Full Name</Label>
                 <Input
+                  className="mt-1"
+                  disabled={!editMode || isUpdating}
                   id="fullName"
-                  placeholder="Full name of the speaker"
-                  value={formData.fullName}
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
-                  disabled={!editMode || isUpdating}
-                  className="mt-1"
+                  placeholder="Full name of the speaker"
+                  value={formData.fullName}
                 />
               </div>
 
               <div>
                 <Label htmlFor="topic">Talk Topic</Label>
                 <Input
+                  className="mt-1"
+                  disabled={!editMode || isUpdating}
                   id="topic"
-                  placeholder="Main topic or title of the talk"
-                  value={formData.topic}
                   onChange={(e) =>
                     setFormData({ ...formData, topic: e.target.value })
                   }
-                  disabled={!editMode || isUpdating}
-                  className="mt-1"
+                  placeholder="Main topic or title of the talk"
+                  value={formData.topic}
                 />
               </div>
 
               <div>
                 <Label htmlFor="priorTedTalk">Prior TED/TEDx Experience</Label>
                 <Input
+                  className="mt-1"
+                  disabled={!editMode || isUpdating}
                   id="priorTedTalk"
-                  placeholder="Any previous TED or TEDx talks"
-                  value={formData.priorTedTalk}
                   onChange={(e) =>
                     setFormData({ ...formData, priorTedTalk: e.target.value })
                   }
-                  disabled={!editMode || isUpdating}
-                  className="mt-1"
+                  placeholder="Any previous TED or TEDx talks"
+                  value={formData.priorTedTalk}
                 />
               </div>
 
@@ -2211,13 +2217,13 @@ export function SpeakerDashboardClient({
                   <div>
                     <Label htmlFor="gender">Gender</Label>
                     <Select
-                      value={formData.gender}
+                      disabled={!editMode || isUpdating}
                       onValueChange={(value) =>
                         setFormData({ ...formData, gender: value })
                       }
-                      disabled={!editMode || isUpdating}
+                      value={formData.gender}
                     >
-                      <SelectTrigger id="gender" className="mt-1">
+                      <SelectTrigger className="mt-1" id="gender">
                         <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
                       <SelectContent>
@@ -2234,14 +2240,14 @@ export function SpeakerDashboardClient({
                   <div>
                     <Label htmlFor="job">Job Title</Label>
                     <Input
+                      className="mt-1"
+                      disabled={!editMode || isUpdating}
                       id="job"
-                      placeholder="Current position or job title"
-                      value={formData.job}
                       onChange={(e) =>
                         setFormData({ ...formData, job: e.target.value })
                       }
-                      disabled={!editMode || isUpdating}
-                      className="mt-1"
+                      placeholder="Current position or job title"
+                      value={formData.job}
                     />
                   </div>
                 </>
@@ -2256,31 +2262,31 @@ export function SpeakerDashboardClient({
                   <div>
                     <Label htmlFor="mobilePhone">Mobile Phone</Label>
                     <Input
+                      className="mt-1"
+                      disabled={!editMode || isUpdating}
                       id="mobilePhone"
-                      placeholder="Mobile phone number"
-                      value={formData.mobilePhone}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
                           mobilePhone: e.target.value,
                         })
                       }
-                      disabled={!editMode || isUpdating}
-                      className="mt-1"
+                      placeholder="Mobile phone number"
+                      value={formData.mobilePhone}
                     />
                   </div>
 
                   <div>
                     <Label htmlFor="wechatId">WeChat ID</Label>
                     <Input
+                      className="mt-1"
+                      disabled={!editMode || isUpdating}
                       id="wechatId"
-                      placeholder="WeChat ID for contact"
-                      value={formData.wechatId}
                       onChange={(e) =>
                         setFormData({ ...formData, wechatId: e.target.value })
                       }
-                      disabled={!editMode || isUpdating}
-                      className="mt-1"
+                      placeholder="WeChat ID for contact"
+                      value={formData.wechatId}
                     />
                   </div>
                 </>
@@ -2293,31 +2299,31 @@ export function SpeakerDashboardClient({
                   <div>
                     <Label htmlFor="nominatedBy">Nominated By</Label>
                     <Input
+                      className="mt-1"
+                      disabled={!editMode || isUpdating}
                       id="nominatedBy"
-                      placeholder="Name of the person who nominated"
-                      value={formData.nominatedBy}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
                           nominatedBy: e.target.value,
                         })
                       }
-                      disabled={!editMode || isUpdating}
-                      className="mt-1"
+                      placeholder="Name of the person who nominated"
+                      value={formData.nominatedBy}
                     />
                   </div>
 
                   <div>
                     <Label htmlFor="contact">Contact Information</Label>
                     <Input
+                      className="mt-1"
+                      disabled={!editMode || isUpdating}
                       id="contact"
-                      placeholder="Contact information for the speaker"
-                      value={formData.contact}
                       onChange={(e) =>
                         setFormData({ ...formData, contact: e.target.value })
                       }
-                      disabled={!editMode || isUpdating}
-                      className="mt-1"
+                      placeholder="Contact information for the speaker"
+                      value={formData.contact}
                     />
                   </div>
                 </>
@@ -2327,13 +2333,13 @@ export function SpeakerDashboardClient({
               <div>
                 <Label htmlFor="status">Status</Label>
                 <Select
-                  value={formData.status}
+                  disabled={!editMode || isUpdating}
                   onValueChange={(value) =>
                     setFormData({ ...formData, status: value })
                   }
-                  disabled={!editMode || isUpdating}
+                  value={formData.status}
                 >
-                  <SelectTrigger id="status" className="mt-1">
+                  <SelectTrigger className="mt-1" id="status">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -2348,9 +2354,9 @@ export function SpeakerDashboardClient({
             </div>
           </div>
 
-          <DialogFooter className="flex justify-between mt-6">
+          <DialogFooter className="mt-6 flex justify-between">
             <Button
-              variant="outline"
+              disabled={isUpdating}
               onClick={() => {
                 setEntryFormOpen(false);
                 // Reset form data
@@ -2369,41 +2375,49 @@ export function SpeakerDashboardClient({
                   });
                 }
               }}
-              disabled={isUpdating}
+              variant="outline"
             >
               Cancel
             </Button>
 
             {editMode ? (
               <Button
+                disabled={isUpdating}
                 onClick={async () => {
                   setIsUpdating(true);
 
                   try {
                     // Validate form data
-                    if (!formData.fullName)
+                    if (!formData.fullName) {
                       throw new Error("Full name is required");
-                    if (!formData.topic) throw new Error("Topic is required");
+                    }
+                    if (!formData.topic) {
+                      throw new Error("Topic is required");
+                    }
 
                     // Special validation for specific types
                     if (
                       entryType === "application" ||
                       (selectedEntry && selectedEntry.type === "application")
                     ) {
-                      if (!formData.mobilePhone)
+                      if (!formData.mobilePhone) {
                         throw new Error("Mobile phone is required");
-                      if (!formData.job)
+                      }
+                      if (!formData.job) {
                         throw new Error("Job title is required");
+                      }
                     }
 
                     if (
                       entryType === "nomination" ||
                       (selectedEntry && selectedEntry.type === "nomination")
                     ) {
-                      if (!formData.nominatedBy)
+                      if (!formData.nominatedBy) {
                         throw new Error("Nominator name is required");
-                      if (!formData.contact)
+                      }
+                      if (!formData.contact) {
                         throw new Error("Contact information is required");
+                      }
                     }
 
                     let result;
@@ -2475,18 +2489,17 @@ export function SpeakerDashboardClient({
                                 status: formData.status,
                               };
                               return updatedEntry;
-                            } else {
-                              const updatedEntry = {
-                                ...entry,
-                                fullName: formData.fullName,
-                                topic: formData.topic,
-                                contact: formData.contact,
-                                nominatedBy: formData.nominatedBy,
-                                priorTedTalk: formData.priorTedTalk,
-                                status: formData.status,
-                              };
-                              return updatedEntry;
                             }
+                            const updatedEntry = {
+                              ...entry,
+                              fullName: formData.fullName,
+                              topic: formData.topic,
+                              contact: formData.contact,
+                              nominatedBy: formData.nominatedBy,
+                              priorTedTalk: formData.priorTedTalk,
+                              status: formData.status,
+                            };
+                            return updatedEntry;
                           }
                           return entry;
                         })
@@ -2570,7 +2583,6 @@ export function SpeakerDashboardClient({
                       nominatedBy: "",
                     });
                   } catch (error) {
-                    console.error("Error creating/updating entry:", error);
                     toast.error("Operation failed", {
                       description:
                         error instanceof Error
@@ -2581,7 +2593,6 @@ export function SpeakerDashboardClient({
                     setIsUpdating(false);
                   }
                 }}
-                disabled={isUpdating}
               >
                 {isUpdating
                   ? "Saving..."
@@ -2596,7 +2607,7 @@ export function SpeakerDashboardClient({
                   setEditMode(true);
                 }}
               >
-                <Edit className="h-4 w-4 mr-2" />
+                <Edit className="mr-2 h-4 w-4" />
                 Edit Entry
               </Button>
             )}

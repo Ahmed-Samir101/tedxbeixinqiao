@@ -1,27 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import {
+  ArrowRight,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Play,
+  Twitter,
+} from "lucide-react";
 import Image from "next/image";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Facebook,
-  Twitter,
-  Linkedin,
-  Instagram,
-  Play,
-  ArrowRight,
-} from "lucide-react";
-import Link from "next/link";
+import { type Speaker, speakers } from "@/data/speakers";
 import { cn } from "@/lib/utils";
-import { speakers, type Speaker } from "@/data/speakers";
 
 // Social icon mapping helper function
 const getSocialIcon = (platform: string) => {
@@ -40,7 +40,7 @@ const getSocialIcon = (platform: string) => {
 };
 
 export default function SpeakersSection() {
-  const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
+  const [_selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.1 });
@@ -68,26 +68,26 @@ export default function SpeakersSection() {
   const displayedSpeakers = speakers.slice(0, 4);
 
   return (
-    <section id="speakers" className="w-full py-24">
-      <div ref={containerRef} className="container mx-auto px-4">
+    <section className="w-full py-24" id="speakers">
+      <div className="container mx-auto px-4" ref={containerRef}>
         <motion.div
-          initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          variants={containerVariants}
           className="mx-auto max-w-6xl"
+          initial="hidden"
+          variants={containerVariants}
         >
           <motion.div
-            variants={itemVariants}
             className="mb-16 flex flex-col items-center text-center"
+            variants={itemVariants}
           >
-            <span className="mb-3 inline-block rounded-full bg-red-100 px-4 py-1.5 text-sm font-medium text-red-600 dark:bg-red-900/30 dark:text-red-400">
+            <span className="mb-3 inline-block rounded-full bg-red-100 px-4 py-1.5 font-medium text-red-600 text-sm dark:bg-red-900/30 dark:text-red-400">
               Ideas Worth Sharing
             </span>
-            <h2 className="mb-6 text-4xl font-bold leading-tight text-gray-900 dark:text-white md:text-5xl">
+            <h2 className="mb-6 font-bold text-4xl text-gray-900 leading-tight md:text-5xl dark:text-white">
               Visionary{" "}
               <span className="text-red-600 dark:text-red-500">Speakers</span>
             </h2>
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+            <p className="mx-auto max-w-3xl font-medium text-gray-800 text-lg leading-relaxed dark:text-gray-200">
               Our diverse speakers share ideas that spark conversations and
               change perspectives. Each talk brings a unique insight to the
               TEDxBeixinqiao stage.
@@ -95,34 +95,34 @@ export default function SpeakersSection() {
           </motion.div>
 
           <motion.div
-            variants={containerVariants}
             className="grid gap-8 sm:grid-cols-2 md:grid-cols-4"
+            variants={containerVariants}
           >
             {displayedSpeakers.map((speaker, index) => (
               <motion.div
                 key={speaker.name}
-                variants={itemVariants}
-                onHoverStart={() => setHoveredCard(index)}
                 onHoverEnd={() => setHoveredCard(null)}
+                onHoverStart={() => setHoveredCard(index)}
+                variants={itemVariants}
               >
                 <Card
                   className={cn(
-                    "group relative overflow-hidden border-0 bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-xl dark:bg-gray-900",
+                    "group hover:-translate-y-1 relative overflow-hidden border-0 bg-white transition-all duration-500 hover:shadow-xl dark:bg-gray-900",
                     hoveredCard === index ? "shadow-xl" : "shadow-md"
                   )}
                 >
                   <div className="relative aspect-[3/4] w-full overflow-hidden">
                     <Image
-                      src={
-                        speaker.imageSrc ||
-                        `/placeholder.svg?text=${encodeURIComponent(speaker.name)}`
-                      }
                       alt={speaker.name}
-                      fill
                       className={cn(
                         "object-cover transition-transform duration-700",
                         hoveredCard === index ? "scale-105" : "scale-100"
                       )}
+                      fill
+                      src={
+                        speaker.imageSrc ||
+                        `/placeholder.svg?text=${encodeURIComponent(speaker.name)}`
+                      }
                     />
                     <div
                       className={cn(
@@ -130,23 +130,23 @@ export default function SpeakersSection() {
                         hoveredCard === index ? "opacity-100" : "opacity-0"
                       )}
                     >
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <p className="text-sm font-medium uppercase tracking-wider opacity-80">
+                      <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
+                        <p className="font-medium text-sm uppercase tracking-wider opacity-80">
                           {speaker.title}
                         </p>
-                        <h3 className="mb-3 mt-1 text-2xl font-bold">
+                        <h3 className="mt-1 mb-3 font-bold text-2xl">
                           {speaker.name}
                         </h3>
                         <div className="mb-4 flex gap-2">
                           {speaker.socials.slice(0, 4).map((social, idx) => (
                             <motion.a
-                              key={idx}
-                              href={social.url}
                               className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/40"
+                              href={social.url}
+                              key={idx}
+                              rel="noopener noreferrer"
+                              target="_blank"
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.95 }}
-                              target="_blank"
-                              rel="noopener noreferrer"
                             >
                               {getSocialIcon(social.platform)}
                             </motion.a>
@@ -155,16 +155,16 @@ export default function SpeakersSection() {
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
-                              variant="outline"
                               className="w-full border-white bg-transparent text-white hover:bg-white hover:text-red-600"
                               onClick={() => setSelectedSpeaker(speaker)}
+                              variant="outline"
                             >
                               <Play className="mr-2 h-4 w-4" />
                               Watch Talk
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-[90vw] sm:max-w-[800px] p-0 border-none bg-transparent">
-                            <div className="relative flex flex-col rounded-2xl bg-white/95 dark:bg-gray-900/95 shadow-2xl backdrop-blur-xl overflow-hidden border border-gray-100 dark:border-gray-800">
+                          <DialogContent className="max-w-[90vw] border-none bg-transparent p-0 sm:max-w-[800px]">
+                            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95">
                               {/* Accessibility requirement - visually hidden title */}
                               <DialogTitle className="sr-only">
                                 {speaker.talkTitle}
@@ -172,34 +172,34 @@ export default function SpeakersSection() {
 
                               <div className="aspect-video w-full overflow-hidden">
                                 <iframe
-                                  width="100%"
-                                  height="100%"
-                                  src={`https://www.youtube.com/embed/${speaker.videoId}?autoplay=1&rel=0`}
-                                  title={`${speaker.name} - ${speaker.talkTitle}`}
-                                  frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                   allowFullScreen
-                                  style={{ aspectRatio: "16/9" }}
                                   className="h-full w-full"
-                                ></iframe>
+                                  frameBorder="0"
+                                  height="100%"
+                                  src={`https://www.youtube.com/embed/${speaker.videoId}?autoplay=1&rel=0`}
+                                  style={{ aspectRatio: "16/9" }}
+                                  title={`${speaker.name} - ${speaker.talkTitle}`}
+                                  width="100%"
+                                />
                               </div>
 
                               <div className="p-6">
-                                <div className="flex items-center gap-4 mb-4">
+                                <div className="mb-4 flex items-center gap-4">
                                   <div className="h-12 w-12 overflow-hidden rounded-full">
                                     <Image
+                                      alt={speaker.name}
+                                      className="h-full w-full object-cover"
+                                      height={48}
                                       src={
                                         speaker.imageSrc ||
                                         `/placeholder.svg?text=${encodeURIComponent(speaker.name.charAt(0))}`
                                       }
-                                      alt={speaker.name}
                                       width={48}
-                                      height={48}
-                                      className="h-full w-full object-cover"
                                     />
                                   </div>
                                   <div>
-                                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                    <h3 className="font-semibold text-gray-900 text-xl dark:text-white">
                                       {speaker.talkTitle}
                                     </h3>
                                     <div className="flex items-center gap-1.5 text-sm">
@@ -214,13 +214,13 @@ export default function SpeakersSection() {
                                 </div>
 
                                 <div className="mb-4 flex flex-wrap gap-3 text-xs">
-                                  <div className="flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-gray-700 dark:text-gray-200">
+                                  <div className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-gray-700 dark:bg-gray-800 dark:text-gray-200">
                                     {speaker.date}
                                   </div>
-                                  <div className="flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-gray-700 dark:text-gray-200">
+                                  <div className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-gray-700 dark:bg-gray-800 dark:text-gray-200">
                                     {speaker.duration}
                                   </div>
-                                  <div className="rounded-full bg-red-100 dark:bg-red-900/40 px-3 py-1 text-red-700 dark:text-red-300">
+                                  <div className="rounded-full bg-red-100 px-3 py-1 text-red-700 dark:bg-red-900/40 dark:text-red-300">
                                     {speaker.category}
                                   </div>
                                 </div>
@@ -236,20 +236,20 @@ export default function SpeakersSection() {
                     </div>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold text-black dark:text-white">
+                    <h3 className="font-semibold text-black text-lg dark:text-white">
                       {speaker.name}
                     </h3>
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mb-2 text-gray-500 text-sm dark:text-gray-400">
                       {speaker.title}
                     </p>
-                    <p className="mb-4 text-base font-medium text-red-600 dark:text-red-500 line-clamp-1">
+                    <p className="mb-4 line-clamp-1 font-medium text-base text-red-600 dark:text-red-500">
                       {speaker.talkTitle}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-gray-500 text-xs dark:text-gray-400">
                         {speaker.duration}
                       </span>
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700 text-xs dark:bg-gray-800 dark:text-gray-300">
                         {speaker.category}
                       </span>
                     </div>
@@ -260,12 +260,12 @@ export default function SpeakersSection() {
           </motion.div>
 
           <motion.div
-            variants={itemVariants}
             className="mt-16 flex justify-center"
+            variants={itemVariants}
           >
             <Link
-              href="/speakers"
               className="group inline-flex items-center gap-1.5 rounded-full bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              href="/speakers"
             >
               <span>View all speakers</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

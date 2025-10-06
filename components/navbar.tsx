@@ -41,7 +41,7 @@ export default function Navbar() {
   // Close mobile menu when path changes
   useEffect(() => {
     setIsOpen(false);
-  }, [pathname]);
+  }, []);
 
   return (
     <motion.header

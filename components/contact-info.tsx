@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { Mail, MessageSquare, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { Mail, MapPin, MessageSquare } from "lucide-react";
+import Image from "next/image";
 
 export default function ContactInfo() {
   const container = {
@@ -22,17 +22,17 @@ export default function ContactInfo() {
 
   return (
     <motion.div
-      variants={container}
-      initial="hidden"
       animate="show"
       className="flex flex-col gap-6"
+      initial="hidden"
+      variants={container}
     >
-      <motion.div variants={item} className="flex items-start gap-4">
+      <motion.div className="flex items-start gap-4" variants={item}>
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-500">
           <Mail className="h-6 w-6" />
         </div>
         <div>
-          <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">
+          <h3 className="mb-1 font-semibold text-black text-lg dark:text-white">
             Email
           </h3>
           <p className="text-gray-700 dark:text-gray-300">
@@ -41,38 +41,38 @@ export default function ContactInfo() {
         </div>
       </motion.div>
 
-      <motion.div variants={item} className="flex items-start gap-4">
+      <motion.div className="flex items-start gap-4" variants={item}>
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-500">
           <MessageSquare className="h-6 w-6" />
         </div>
         <div>
-          <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">
+          <h3 className="mb-1 font-semibold text-black text-lg dark:text-white">
             WeChat
           </h3>
           <p className="text-gray-700 dark:text-gray-300">TedxBeixinqiao2025</p>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-gray-600 text-sm dark:text-gray-400">
             Scan the QR-Code below to follow our official WeChat Page
           </p>
           <div className="mt-4 h-40 w-40 overflow-hidden rounded bg-white p-2 shadow-sm transition-transform duration-300 hover:scale-105 dark:bg-gray-800">
             <div className="relative h-full w-full">
               <Image
-                src="/qrcode.jpg"
                 alt="TEDxBeixinqiao WeChat QR Code"
-                width={144}
-                height={144}
                 className="h-full w-full object-contain"
+                height={144}
+                src="/qrcode.jpg"
+                width={144}
               />
             </div>
           </div>
         </div>
       </motion.div>
 
-      <motion.div variants={item} className="flex items-start gap-4">
+      <motion.div className="flex items-start gap-4" variants={item}>
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-500">
           <MapPin className="h-6 w-6" />
         </div>
         <div>
-          <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">
+          <h3 className="mb-1 font-semibold text-black text-lg dark:text-white">
             Address
           </h3>
           <p className="text-gray-700 dark:text-gray-300">

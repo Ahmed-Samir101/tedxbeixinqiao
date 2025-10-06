@@ -38,17 +38,17 @@ export default function FaqSection() {
     <section className="w-full bg-white py-20 dark:bg-black">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-black dark:text-white md:text-4xl">
+          <h2 className="mb-4 font-bold text-3xl text-black md:text-4xl dark:text-white">
             Frequently Asked{" "}
             <span className="text-red-600 dark:text-red-500">Questions</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-700 dark:text-gray-300">
+          <p className="mx-auto max-w-2xl text-gray-700 text-lg dark:text-gray-300">
             Find answers to common questions about TEDxBeixinqiao.
           </p>
         </div>
 
         <div className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion className="w-full" collapsible type="single">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="text-left font-medium">

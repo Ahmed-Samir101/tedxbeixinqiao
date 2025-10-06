@@ -1,39 +1,39 @@
 "use client";
 
-import React, { useEffect } from "react";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  Row,
-  SortingState,
-  VisibilityState,
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  type UniqueIdentifier,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type Row,
+  type SortingState,
   useReactTable,
+  type VisibilityState,
 } from "@tanstack/react-table";
-import {
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -54,9 +54,9 @@ export function DragHandle({ id }: { id: string }) {
     <Button
       {...attributes}
       {...listeners}
-      variant="ghost"
+      className="h-7 w-7 cursor-grab text-muted-foreground hover:bg-transparent active:cursor-grabbing"
       size="icon"
-      className="h-7 w-7 text-muted-foreground hover:bg-transparent cursor-grab active:cursor-grabbing"
+      variant="ghost"
     >
       <GripVertical className="h-4 w-4 text-muted-foreground" />
       <span className="sr-only">Drag to reorder</span>
@@ -83,17 +83,17 @@ function DraggableRow<TData>({
 
   return (
     <TableRow
-      ref={setNodeRef}
-      data-state={row.getIsSelected() && "selected"}
-      data-dragging={isDragging}
       className={`relative z-0 cursor-pointer ${isDragging ? "z-10 opacity-80" : ""} ${
         row.getIsSelected() ? "bg-primary/5 dark:bg-primary/10" : ""
       }`}
+      data-dragging={isDragging}
+      data-state={row.getIsSelected() && "selected"}
+      onClick={handleRowClick}
+      ref={setNodeRef}
       style={{
         transform: CSS.Transform.toString(transform),
-        transition: transition,
+        transition,
       }}
-      onClick={handleRowClick}
     >
       {row.getVisibleCells().map((cell) => (
         <TableCell key={cell.id}>
@@ -104,7 +104,7 @@ function DraggableRow<TData>({
   );
 }
 
-interface DataTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onRowClick?: (row: Row<TData>) => void;
@@ -115,7 +115,7 @@ interface DataTableProps<TData, TValue> {
   rowSelection?: Record<string, boolean>;
   onRowSelectionChange?: (selection: Record<string, boolean>) => void;
   onTableChange?: (table: any) => void;
-}
+};
 
 export function DataTable<TData, TValue>({
   columns,
@@ -193,14 +193,14 @@ export function DataTable<TData, TValue>({
     if (table.getState().rowSelection !== rowSelection) {
       setRowSelection(table.getState().rowSelection);
     }
-  }, [table.getState().rowSelection]);
+  }, [rowSelection, table.getState]);
 
   // Share rowSelection state with parent component if provided
   useEffect(() => {
     if (parentRowSelection !== undefined && onRowSelectionChange) {
       setRowSelection(parentRowSelection);
     }
-  }, [parentRowSelection]);
+  }, [parentRowSelection, onRowSelectionChange]);
 
   // Notify parent component of row selection changes
   useEffect(() => {
@@ -231,27 +231,25 @@ export function DataTable<TData, TValue>({
     <div>
       <DndContext
         collisionDetection={closestCenter}
+        id={sortableId}
         modifiers={[restrictToVerticalAxis]}
         onDragEnd={handleDragEnd}
         sensors={sensors}
-        id={sortableId}
       >
         <Table>
           <TableHeader className="bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead colSpan={header.colSpan} key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -264,16 +262,16 @@ export function DataTable<TData, TValue>({
                 {table.getRowModel().rows.map((row) => (
                   <DraggableRow
                     key={row.id}
-                    row={row}
                     onRowClick={onRowClick}
+                    row={row}
                   />
                 ))}
               </SortableContext>
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
                   className="h-24 text-center"
+                  colSpan={columns.length}
                 >
                   No results.
                 </TableCell>

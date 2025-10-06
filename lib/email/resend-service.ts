@@ -63,7 +63,6 @@ export async function sendSpeakerApplicationEmail(
 
     return { success: true, data: response };
   } catch (error) {
-    console.error("Failed to send application email:", error);
     return { success: false, error };
   }
 }
@@ -93,7 +92,6 @@ export async function sendSpeakerNominationEmail(nominationData: any) {
 
     return { success: true, data: response };
   } catch (error) {
-    console.error("Failed to send nomination email:", error);
     return { success: false, error };
   }
 }

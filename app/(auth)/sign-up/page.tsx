@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
 
 export default function SignUp() {
   return (
@@ -24,23 +24,23 @@ export default function SignUp() {
       </CardHeader>
       <CardContent className="pb-2">
         <div className="space-y-4">
-          <div className="text-center p-4">
+          <div className="p-4 text-center">
             <p className="mb-6 text-muted-foreground">
               Please contact us for registration options and information on how
               to participate in TEDxBeixinqiao.
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               If you already have an account, you can sign in below.
             </p>
           </div>
-          <Button className="w-full" asChild>
+          <Button asChild className="w-full">
             <Link href="/sign-in">Go to Sign In</Link>
           </Button>
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-center w-full border-t pt-4">
-          <p className="text-center text-xs text-neutral-500">
+        <div className="flex w-full justify-center border-t pt-4">
+          <p className="text-center text-neutral-500 text-xs">
             For registration inquiries, please contact the administrators
           </p>
         </div>

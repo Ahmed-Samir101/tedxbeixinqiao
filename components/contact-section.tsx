@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { Mail, MapPin, MessageSquare } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, MessageSquare } from "lucide-react";
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import Image from "next/image";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -35,32 +33,30 @@ export default function ContactSection() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
-  interface FormData {
+  type FormData = {
     name: string;
     email: string;
     message: string;
-  }
+  };
 
-  interface ChangeEvent {
+  type ChangeEvent = {
     target: {
       name: string;
       value: string;
     };
-  }
+  };
 
   const handleChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
     setFormData((prev: FormData) => ({ ...prev, [name]: value }));
   };
 
-  interface SubmitEvent {
+  type SubmitEvent = {
     preventDefault: () => void;
-  }
+  };
 
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
-    // Form submission logic would go here
-    console.log("Form submitted:", formData);
     // Reset form
     setFormData({ name: "", email: "", message: "" });
     // Show success message
@@ -68,21 +64,21 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="w-full bg-white py-20 dark:bg-black">
+    <section className="w-full bg-white py-20 dark:bg-black" id="contact">
       <motion.div
-        ref={ref}
-        variants={containerVariants}
-        initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         className="container mx-auto px-4"
+        initial="hidden"
+        ref={ref}
+        variants={containerVariants}
       >
         <div className="mx-auto max-w-6xl">
-          <motion.div variants={itemVariants} className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-black dark:text-white md:text-4xl">
+          <motion.div className="mb-12 text-center" variants={itemVariants}>
+            <h2 className="mb-4 font-bold text-3xl text-black md:text-4xl dark:text-white">
               Get in{" "}
               <span className="text-red-600 dark:text-red-500">Touch</span>
             </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-700 dark:text-gray-300">
+            <p className="mx-auto max-w-3xl text-gray-700 text-lg dark:text-gray-300">
               Have questions about our upcoming events or interested in
               partnership opportunities? Reach out to our team, and we'll be
               happy to assist you.
@@ -90,8 +86,8 @@ export default function ContactSection() {
           </motion.div>
 
           <motion.div
-            variants={itemVariants}
             className="mx-auto grid gap-8 md:grid-cols-2"
+            variants={itemVariants}
           >
             <div className="flex flex-col gap-6">
               <div className="flex items-start gap-4">
@@ -99,7 +95,7 @@ export default function ContactSection() {
                   <Mail className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">
+                  <h3 className="mb-1 font-semibold text-black text-lg dark:text-white">
                     Email
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
@@ -113,23 +109,23 @@ export default function ContactSection() {
                   <MessageSquare className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">
+                  <h3 className="mb-1 font-semibold text-black text-lg dark:text-white">
                     WeChat
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
                     TedxBeixinqiao2025
                   </p>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  <p className="mt-2 text-gray-600 text-sm dark:text-gray-400">
                     Scan the QR-Code below to follow our official WeChat Page
                   </p>
                   <div className="mt-4 h-40 w-40 overflow-hidden rounded bg-white p-2 shadow-sm dark:bg-gray-800">
                     <div className="relative h-full w-full">
                       <Image
-                        src="/qrcode.jpg"
                         alt="TEDxBeixinqiao WeChat QR Code"
-                        width={144}
-                        height={144}
                         className="h-full w-full object-contain"
+                        height={144}
+                        src="/qrcode.jpg"
+                        width={144}
                       />
                     </div>
                   </div>
@@ -141,7 +137,7 @@ export default function ContactSection() {
                   <MapPin className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="mb-1 text-lg font-semibold text-black dark:text-white">
+                  <h3 className="mb-1 font-semibold text-black text-lg dark:text-white">
                     Address
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
@@ -152,48 +148,48 @@ export default function ContactSection() {
             </div>
 
             <motion.div
-              variants={itemVariants}
               className="rounded-lg bg-gray-50 p-6 shadow-sm dark:bg-gray-900"
+              variants={itemVariants}
             >
-              <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
+              <h3 className="mb-4 font-semibold text-black text-xl dark:text-white">
                 Send us a message
               </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <Input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
                     className="border-gray-300 dark:border-gray-700"
+                    name="name"
+                    onChange={handleChange}
+                    placeholder="Your Name"
+                    required
+                    type="text"
+                    value={formData.name}
                   />
                 </div>
                 <div>
                   <Input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
                     className="border-gray-300 dark:border-gray-700"
+                    name="email"
+                    onChange={handleChange}
+                    placeholder="Your Email"
+                    required
+                    type="email"
+                    value={formData.email}
                   />
                 </div>
                 <div>
                   <Textarea
-                    name="message"
-                    placeholder="Your Message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
                     className="min-h-[120px] border-gray-300 dark:border-gray-700"
+                    name="message"
+                    onChange={handleChange}
+                    placeholder="Your Message"
+                    required
+                    value={formData.message}
                   />
                 </div>
                 <Button
-                  type="submit"
                   className="w-full bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                  type="submit"
                 >
                   Send Message
                 </Button>

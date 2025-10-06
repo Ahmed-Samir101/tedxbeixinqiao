@@ -1,7 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Facebook, Instagram, Linkedin, Play, Twitter } from "lucide-react";
 import Image from "next/image";
+import { useRef } from "react";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Dialog,
@@ -10,18 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Facebook,
-  Twitter,
-  Linkedin,
-  Instagram,
-  Play,
-  ExternalLink,
-  X,
-} from "lucide-react";
-import { motion, useInView } from "framer-motion";
-import { speakers, type Speaker, type Social } from "@/data/speakers";
+import { speakers } from "@/data/speakers";
 
 // Removed duplicate speakers array as it's now imported from data/speakers.ts
 
@@ -63,43 +55,43 @@ export default function SpeakersGrid() {
 
   return (
     <motion.div
-      ref={gridRef}
-      variants={container}
-      initial="hidden"
       animate={isInView ? "show" : "hidden"}
       className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+      initial="hidden"
+      ref={gridRef}
+      variants={container}
     >
       {speakers.map((speaker, index) => (
-        <motion.div key={index} variants={item} className="flex flex-col">
+        <motion.div className="flex flex-col" key={index} variants={item}>
           <Dialog>
             <DialogTrigger asChild>
               <Card className="group relative h-full cursor-pointer overflow-hidden rounded-xl border-0 bg-transparent p-0 shadow-none transition-all duration-500">
                 {/* Decorative elements */}
-                <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-red-600/10 blur-3xl dark:bg-red-600/20"></div>
-                <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-red-600/10 blur-3xl dark:bg-red-600/20"></div>
+                <div className="-left-20 -top-20 absolute h-40 w-40 rounded-full bg-red-600/10 blur-3xl dark:bg-red-600/20" />
+                <div className="-bottom-20 -right-20 absolute h-40 w-40 rounded-full bg-red-600/10 blur-3xl dark:bg-red-600/20" />
 
                 {/* Speaker Image */}
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-500 group-hover:shadow-xl group-hover:shadow-red-600/10 dark:bg-gray-900 dark:group-hover:shadow-red-600/20">
+                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-500 group-hover:shadow-red-600/10 group-hover:shadow-xl dark:bg-gray-900 dark:group-hover:shadow-red-600/20">
                   <Image
+                    alt={speaker.name}
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
                     src={
                       speaker.imageSrc ||
                       `/placeholder.svg?height=600&width=450&text=${encodeURIComponent(speaker.name)}`
                     }
-                    alt={speaker.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
 
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 transition-opacity duration-300" />
 
                   {/* Speaker Info */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="mb-1 text-2xl font-bold">{speaker.name}</h3>
-                    <p className="mb-2 text-sm font-medium text-gray-300">
+                  <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
+                    <h3 className="mb-1 font-bold text-2xl">{speaker.name}</h3>
+                    <p className="mb-2 font-medium text-gray-300 text-sm">
                       {speaker.title}
                     </p>
-                    <p className="mb-4 text-base font-medium text-red-400">
+                    <p className="mb-4 font-medium text-base text-red-400">
                       {speaker.talkTitle}
                     </p>
 
@@ -113,13 +105,13 @@ export default function SpeakersGrid() {
                   </div>
 
                   {/* Social Media Icons */}
-                  <div className="absolute right-4 top-4 flex gap-2">
+                  <div className="absolute top-4 right-4 flex gap-2">
                     {speaker.socials.map((social, idx) => (
                       <Button
-                        key={idx}
-                        variant="ghost"
-                        size="icon"
                         className="h-8 w-8 rounded-full bg-white/10 backdrop-blur-md transition-transform duration-300 hover:scale-110 hover:bg-white/20"
+                        key={idx}
+                        size="icon"
+                        variant="ghost"
                       >
                         {renderSocialIcon(social.platform)}
                       </Button>
@@ -130,16 +122,16 @@ export default function SpeakersGrid() {
             </DialogTrigger>
 
             {/* Enhanced Speaker Modal with Video - Width increased */}
-            <DialogContent className="max-w-[95vw] overflow-hidden border-0 p-0 sm:max-w-[1000px] md:max-w-[1200px] bg-transparent">
-              <div className="bg-white/95 backdrop-blur-xl dark:bg-black/95 rounded-xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
+            <DialogContent className="max-w-[95vw] overflow-hidden border-0 bg-transparent p-0 sm:max-w-[1000px] md:max-w-[1200px]">
+              <div className="overflow-hidden rounded-xl border border-gray-200 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-gray-800 dark:bg-black/95">
                 {/* Background decorative elements */}
-                <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
-                <div className="absolute -right-20 -bottom-20 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15 z-0"></div>
+                <div className="-left-20 -top-20 absolute z-0 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15" />
+                <div className="-right-20 -bottom-20 absolute z-0 h-60 w-60 rounded-full bg-red-600/10 blur-[80px] dark:bg-red-600/15" />
 
                 <div className="relative z-10 p-6 md:p-8">
                   <DialogHeader className="mb-6">
                     <div className="flex items-center justify-between">
-                      <DialogTitle className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                      <DialogTitle className="font-bold text-2xl text-gray-900 md:text-3xl dark:text-white">
                         {speaker.talkTitle}
                       </DialogTitle>
                     </div>
@@ -147,50 +139,50 @@ export default function SpeakersGrid() {
 
                   <div className="grid gap-8 md:grid-cols-7">
                     {/* Video Section - Takes 4/7 of the width on medium+ screens */}
-                    <div className="md:col-span-4 w-full h-full">
-                      <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-lg border border-gray-200 dark:border-gray-800">
+                    <div className="h-full w-full md:col-span-4">
+                      <div className="aspect-video w-full overflow-hidden rounded-xl border border-gray-200 bg-black shadow-lg dark:border-gray-800">
                         {/* Fixed YouTube embed by ensuring it has proper dimensions and removed relative URL formatting */}
                         <iframe
-                          width="100%"
-                          height="100%"
-                          src={`https://www.youtube.com/embed/${speaker.videoId}`}
-                          title={`${speaker.name} - ${speaker.talkTitle}`}
-                          frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                           className="h-full w-full"
+                          frameBorder="0"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${speaker.videoId}`}
                           style={{ aspectRatio: "16/9" }}
-                        ></iframe>
+                          title={`${speaker.name} - ${speaker.talkTitle}`}
+                          width="100%"
+                        />
                       </div>
                     </div>
 
                     {/* Speaker Info - Takes 3/7 of the width on medium+ screens */}
-                    <div className="md:col-span-3 flex flex-col">
-                      <div className="flex items-center gap-4 mb-4">
+                    <div className="flex flex-col md:col-span-3">
+                      <div className="mb-4 flex items-center gap-4">
                         <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-red-500 shadow-lg">
                           <Image
+                            alt={speaker.name}
+                            className="h-full w-full object-cover"
+                            height={64}
                             src={
                               speaker.imageSrc ||
                               `/placeholder.svg?height=100&width=100&text=${encodeURIComponent(speaker.name.charAt(0))}`
                             }
-                            alt={speaker.name}
                             width={64}
-                            height={64}
-                            className="h-full w-full object-cover"
                           />
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                          <h3 className="font-bold text-gray-900 text-xl dark:text-white">
                             {speaker.name}
                           </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="text-gray-600 text-sm dark:text-gray-400">
                             {speaker.title}
                           </p>
                         </div>
                       </div>
 
-                      <div className="bg-gray-50 dark:bg-gray-900/70 rounded-xl p-4 mb-6">
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                      <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70">
+                        <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
                           About the Talk
                         </h4>
                         <p className="text-gray-700 dark:text-gray-300">
@@ -200,30 +192,30 @@ export default function SpeakersGrid() {
 
                       <div className="space-y-4">
                         <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                          <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
                             Talk Summary
                           </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="text-gray-600 text-sm dark:text-gray-400">
                             {speaker.talkSummary}
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                          <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
                             Connect
                           </h4>
                           <div className="flex gap-3">
                             {speaker.socials.map((social, idx) => (
                               <Button
+                                className="h-9 w-9 rounded-full border border-gray-200 bg-white transition-all duration-300 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-red-900/30 dark:hover:text-red-500"
                                 key={idx}
-                                variant="outline"
                                 size="icon"
-                                className="h-9 w-9 rounded-full transition-all duration-300 bg-white dark:bg-gray-800 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-500 border border-gray-200 dark:border-gray-700"
+                                variant="outline"
                               >
                                 <a
                                   href={social.url}
-                                  target="_blank"
                                   rel="noopener noreferrer"
+                                  target="_blank"
                                 >
                                   {renderSocialIcon(social.platform)}
                                 </a>

@@ -1,12 +1,11 @@
 "use server";
 
-import { v4 as uuidv4 } from "uuid";
+import { eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { speakerApplication, speakerNomination } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 // Speaker Application Types
-interface SpeakerApplicationData {
+type SpeakerApplicationData = {
   fullName: string;
   email: string;
   rehearsalAvailability: string;
@@ -21,22 +20,22 @@ interface SpeakerApplicationData {
   personalInsight: string;
   potentialImpact: string;
   websiteUrl?: string;
-}
+};
 
-interface SpeakerNominationData {
+type SpeakerNominationData = {
   fullName: string;
   contact: string;
   priorTedTalk: string;
   remarks: string;
   websiteUrl?: string;
-}
+};
 
 export async function createSpeakerApplication(data: SpeakerApplicationData) {
   try {
     const now = new Date();
     const id = `APP${now.getTime().toString().slice(-6)}`;
 
-    const result = await db.insert(speakerApplication).values({
+    const _result = await db.insert(speakerApplication).values({
       id,
       fullName: data.fullName,
       email: data.email,
@@ -65,14 +64,13 @@ export async function createSpeakerApplication(data: SpeakerApplicationData) {
 
     return { success: true, data: { id } };
   } catch (error) {
-    console.error("Failed to create speaker application:", error);
     return { success: false, error };
   }
 }
 
 export async function createSpeakerNomination(
   data: SpeakerNominationData,
-  submitterName: string = "Website User"
+  submitterName = "Website User"
 ) {
   try {
     const now = new Date();
@@ -81,7 +79,7 @@ export async function createSpeakerNomination(
     // Generate a topic from the remarks - taking the first sentence or first few words
     const topic = data.remarks.split(".")[0].trim();
 
-    const result = await db.insert(speakerNomination).values({
+    const _result = await db.insert(speakerNomination).values({
       id,
       fullName: data.fullName,
       submissionDate: now,
@@ -90,7 +88,7 @@ export async function createSpeakerNomination(
       priorTedTalk: data.priorTedTalk,
       remarks: data.remarks,
       websiteUrl: data.websiteUrl || null,
-      topic: topic.length > 10 ? topic : data.remarks.substring(0, 30) + "...",
+      topic: topic.length > 10 ? topic : `${data.remarks.substring(0, 30)}...`,
       status: "under_review",
       flagged: false,
       notes: "",
@@ -101,7 +99,6 @@ export async function createSpeakerNomination(
 
     return { success: true, data: { id } };
   } catch (error) {
-    console.error("Failed to create speaker nomination:", error);
     return { success: false, error };
   }
 }
@@ -111,7 +108,6 @@ export async function getAllSpeakerApplications() {
     const applications = await db.select().from(speakerApplication);
     return { success: true, data: applications };
   } catch (error) {
-    console.error("Failed to fetch speaker applications:", error);
     return { success: false, error };
   }
 }
@@ -121,7 +117,6 @@ export async function getAllSpeakerNominations() {
     const nominations = await db.select().from(speakerNomination);
     return { success: true, data: nominations };
   } catch (error) {
-    console.error("Failed to fetch speaker nominations:", error);
     return { success: false, error };
   }
 }
@@ -138,7 +133,6 @@ export async function updateApplicationStatus(id: string, status: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update application status:", error);
     return { success: false, error };
   }
 }
@@ -155,7 +149,6 @@ export async function updateNominationStatus(id: string, status: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update nomination status:", error);
     return { success: false, error };
   }
 }
@@ -172,7 +165,6 @@ export async function updateApplicationRating(id: string, rating: number) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update application rating:", error);
     return { success: false, error };
   }
 }
@@ -189,7 +181,6 @@ export async function updateNominationRating(id: string, rating: number) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update nomination rating:", error);
     return { success: false, error };
   }
 }
@@ -206,7 +197,6 @@ export async function updateApplicationNotes(id: string, notes: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update application notes:", error);
     return { success: false, error };
   }
 }
@@ -223,7 +213,6 @@ export async function updateNominationNotes(id: string, notes: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update nomination notes:", error);
     return { success: false, error };
   }
 }
@@ -253,7 +242,6 @@ export async function toggleApplicationFlag(id: string) {
 
     return { success: true, flagged: !application.flagged };
   } catch (error) {
-    console.error("Failed to toggle application flag:", error);
     return { success: false, error };
   }
 }
@@ -283,7 +271,6 @@ export async function toggleNominationFlag(id: string) {
 
     return { success: true, flagged: !nomination.flagged };
   } catch (error) {
-    console.error("Failed to toggle nomination flag:", error);
     return { success: false, error };
   }
 }
@@ -306,7 +293,7 @@ export async function createDashboardApplication(data: {
     const now = new Date();
     const id = `APP${now.getTime().toString().slice(-6)}`;
 
-    const result = await db.insert(speakerApplication).values({
+    const _result = await db.insert(speakerApplication).values({
       id,
       fullName: data.fullName,
       submissionDate: now,
@@ -320,7 +307,7 @@ export async function createDashboardApplication(data: {
       remarks: null,
       websiteUrl: null,
       status: data.status || "under_review",
-      flagged: data.flagged || false,
+      flagged: data.flagged,
       notes: data.notes || "",
       rating: data.rating || 0,
       createdAt: now,
@@ -340,13 +327,12 @@ export async function createDashboardApplication(data: {
         job: data.job,
         priorTedTalk: data.priorTedTalk,
         status: data.status || "under_review",
-        flagged: data.flagged || false,
+        flagged: data.flagged,
         notes: data.notes || "",
         rating: data.rating || 0,
       },
     };
   } catch (error) {
-    console.error("Failed to create application from dashboard:", error);
     return { success: false, error };
   }
 }
@@ -367,7 +353,7 @@ export async function createDashboardNomination(data: {
     const now = new Date();
     const id = `NOM${now.getTime().toString().slice(-6)}`;
 
-    const result = await db.insert(speakerNomination).values({
+    const _result = await db.insert(speakerNomination).values({
       id,
       fullName: data.fullName,
       submissionDate: now,
@@ -378,7 +364,7 @@ export async function createDashboardNomination(data: {
       remarks: "",
       websiteUrl: null,
       status: data.status || "under_review",
-      flagged: data.flagged || false,
+      flagged: data.flagged,
       notes: data.notes || "",
       rating: data.rating || 0,
       createdAt: now,
@@ -396,13 +382,12 @@ export async function createDashboardNomination(data: {
         nominatedBy: data.nominatedBy,
         priorTedTalk: data.priorTedTalk,
         status: data.status || "under_review",
-        flagged: data.flagged || false,
+        flagged: data.flagged,
         notes: data.notes || "",
         rating: data.rating || 0,
       },
     };
   } catch (error) {
-    console.error("Failed to create nomination from dashboard:", error);
     return { success: false, error };
   }
 }
@@ -437,7 +422,6 @@ export async function updateApplicationDetails(
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update application details:", error);
     return { success: false, error };
   }
 }
@@ -468,7 +452,6 @@ export async function updateNominationDetails(
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update nomination details:", error);
     return { success: false, error };
   }
 }

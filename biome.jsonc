@@ -1,4 +1,17 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
-  "extends": ["ultracite"]
+  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
+  "extends": ["ultracite"],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noUnknownAtRules": "off"
+      },
+      "correctness": {
+        "noUnknownProperty": "off"
+      },
+      "style": {
+        "useFilenamingConvention": "off"
+      }
+    }
+  }
 }

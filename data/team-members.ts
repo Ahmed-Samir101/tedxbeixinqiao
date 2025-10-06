@@ -1,10 +1,10 @@
 // Define types for team member data
-export interface Social {
+export type Social = {
   platform: string;
   url: string;
-}
+};
 
-export interface TeamMember {
+export type TeamMember = {
   name: string;
   firstName: string;
   title: string;
@@ -14,13 +14,13 @@ export interface TeamMember {
   fullBio: string;
   image: string;
   socials: Social[];
-}
+};
 
 // Define role categories for filtering
-export interface RoleCategory {
+export type RoleCategory = {
   id: string;
   label: string;
-}
+};
 
 export const roleCategories: RoleCategory[] = [
   { id: "all", label: "All Team" },
@@ -273,21 +273,25 @@ export const teamMembers: TeamMember[] = [
 ];
 
 // Helper function to sort team members (leadership first, then alphabetically)
-export const getSortedTeam = () => {
-  return [...teamMembers].sort((a, b) => {
-    if (a.role === "leadership" && b.role !== "leadership") return -1;
-    if (a.role !== "leadership" && b.role === "leadership") return 1;
+export const getSortedTeam = () =>
+  [...teamMembers].sort((a, b) => {
+    if (a.role === "leadership" && b.role !== "leadership") {
+      return -1;
+    }
+    if (a.role !== "leadership" && b.role === "leadership") {
+      return 1;
+    }
     return a.name.localeCompare(b.name);
   });
-};
 
 // Get team members filtered by role
 export const getTeamByRole = (role: string) => {
-  if (role === "all") return getSortedTeam();
+  if (role === "all") {
+    return getSortedTeam();
+  }
   return teamMembers.filter((member) => member.role === role);
 };
 
 // Get a specific team member by name
-export const getTeamMemberByName = (name: string) => {
-  return teamMembers.find((member) => member.name === name);
-};
+export const getTeamMemberByName = (name: string) =>
+  teamMembers.find((member) => member.name === name);

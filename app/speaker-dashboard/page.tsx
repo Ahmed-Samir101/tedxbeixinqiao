@@ -1,16 +1,16 @@
-import { SpeakerDashboardClient } from "./SpeakerDashboardClient";
-import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import {
-  getAllSpeakerApplications,
-  getAllSpeakerNominations,
-} from "@/lib/speakers-db-service";
-import {
+import type {
   ApplicationEntry,
   NominationEntry,
   SpeakerEntry,
 } from "@/components/dashboard/types";
+import { auth } from "@/lib/auth";
+import {
+  getAllSpeakerApplications,
+  getAllSpeakerNominations,
+} from "@/lib/speakers-db-service";
+import { SpeakerDashboardClient } from "./SpeakerDashboardClient";
 
 // This server component checks for authentication before rendering
 export default async function SpeakerDashboardPage() {
@@ -76,5 +76,5 @@ export default async function SpeakerDashboardPage() {
   // Combine applications and nominations
   const allEntries: SpeakerEntry[] = [...applications, ...nominations];
 
-  return <SpeakerDashboardClient user={user} initialEntries={allEntries} />;
+  return <SpeakerDashboardClient initialEntries={allEntries} user={user} />;
 }
