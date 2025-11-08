@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
+  // Force webpack usage for better-auth compatibility
+  webpack: (config) => {
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "TURBOPACK=0 next build",
+    "build": "next build",
+    "build:webpack": "next build",
     "build:turbopack": "next build --turbopack",
     "start": "next start",
     "lint": "biome check .",
