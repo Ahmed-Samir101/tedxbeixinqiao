@@ -18,127 +18,204 @@ export type Speaker = {
   category: string;
 };
 
-// Centralized speakers data
-export const speakers: Speaker[] = [
+// Import previous speakers
+export { previousSpeakers } from "./previous_speakers";
+
+export const currentSpeakers: Speaker[] = [
   {
-    name: "Cheryl Yang",
-    title: "Blockchain Expert",
-    talkTitle: "The Future of Data Privacy",
-    description:
-      "The Transformative Impact of Blockchain Technology in the Next Decade",
+    name: "Abraham Weng",
+    title: "Entrepreneur & Tech Innovator",
+    talkTitle: "Building Bridges: Technology as a Force for Connection",
+    description: "How technology can bring people together across cultures and borders",
     talkSummary:
-      "In this thought-provoking talk, Cheryl Yang explores how blockchain technology is fundamentally changing our approach to data privacy. She discusses the implications for individuals, businesses, and governments as we move toward a more decentralized digital ecosystem.",
+      "Abraham Weng explores the transformative power of technology in creating meaningful connections across geographical and cultural boundaries. Drawing from his entrepreneurial experience, he shares insights on leveraging innovation to build bridges between diverse communities.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" },
     ],
-    videoId: "jImojqkaTHo",
-    imageSrc: "/speakers/cheryl.jpg",
-    duration: "7:53",
-    date: "April 20, 2024",
+    videoId: "",
+    imageSrc: "/speakers/Abraham.png",
+    duration: "",
+    date: "2025",
     category: "Technology",
   },
   {
-    name: "Joseph C. Stewart",
-    title: "International School Art Teacher",
-    talkTitle: "How to Become Reptile-Skinned",
-    description:
-      "Challenges and Opportunities for Parents of Children with Developmental Disorders",
+    name: "Dillen Phelps",
+    title: "Leadership Coach & Author",
+    talkTitle: "The Courage to Lead: Embracing Vulnerability in Leadership",
+    description: "Redefining strength in leadership through authenticity and vulnerability",
     talkSummary:
-      "Joseph Stewart shares personal insights and professional expertise on developing resilience in the face of challenges. Drawing from his experiences as an educator, he offers practical strategies for fostering emotional strength in ourselves and our children.",
+      "Dillen Phelps challenges traditional notions of leadership by exploring how vulnerability and authenticity create stronger, more resilient teams. Through personal stories and practical insights, Dillen demonstrates that true leadership requires the courage to be human.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" },
     ],
-    videoId: "DSu2O5twi5A",
-    imageSrc: "/speakers/joseph.jpg",
-    duration: "15:42",
-    date: "April 20, 2024",
+    videoId: "",
+    imageSrc: "/speakers/Dillen.png",
+    duration: "",
+    date: "2025",
+    category: "Leadership",
+  },
+  {
+    name: "Jialan Wang",
+    title: "Environmental Scientist & Sustainability Advocate",
+    talkTitle: "Small Actions, Big Impact: Reimagining Our Environmental Future",
+    description: "Empowering individuals to create meaningful environmental change",
+    talkSummary:
+      "Jialan Wang reveals how individual actions, when multiplied across communities, can create transformative environmental impact. Through compelling research and real-world examples, Jialan demonstrates that sustainability isn't just about grand gestures—it's about the daily choices we all make.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/Jialan.png",
+    duration: "",
+    date: "2025",
+    category: "Environment",
+  },
+  {
+    name: "Luigi Chen",
+    title: "Chef & Culinary Artist",
+    talkTitle: "The Art of Fusion: Where Culture Meets Cuisine",
+    description: "Celebrating cultural identity through the universal language of food",
+    talkSummary:
+      "Luigi Chen takes us on a culinary journey that transcends borders and traditions. As a master of fusion cuisine, Luigi shares how food serves as a powerful medium for cultural exchange, storytelling, and building understanding between different communities.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/Luigi.jpg",
+    duration: "",
+    date: "2025",
+    category: "Culture",
+  },
+  {
+    name: "Madelyn Foster",
+    title: "Social Entrepreneur & Community Builder",
+    talkTitle: "From I to We: Rebuilding Community in the Digital Age",
+    description: "Creating meaningful connections in an increasingly disconnected world",
+    talkSummary:
+      "Madelyn Foster addresses the paradox of modern connectivity—we're more digitally connected yet feel more isolated than ever. Through innovative community-building initiatives, Madelyn shows how we can harness technology to foster genuine human connection and rebuild the sense of belonging that our societies desperately need.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/Madelyn.png",
+    duration: "",
+    date: "2025",
+    category: "Community",
+  },
+  {
+    name: "Nathan Lee",
+    title: "AI Researcher & Ethics Advocate",
+    talkTitle: "Human + Machine: Designing AI with Heart",
+    description: "Ensuring artificial intelligence serves humanity's best interests",
+    talkSummary:
+      "Nathan Lee takes us into the fascinating world of artificial intelligence, exploring not just what AI can do, but what it should do. As an ethics advocate, Nathan argues for a human-centered approach to AI development that prioritizes empathy, fairness, and the preservation of human dignity in an automated world.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/NATHAN.png",
+    duration: "",
+    date: "2025",
+    category: "Technology",
+  },
+  {
+    name: "Sherwin Martinez",
+    title: "Mental Health Advocate & Psychologist",
+    talkTitle: "Breaking the Silence: Mental Health in Modern Society",
+    description: "Destigmatizing mental health and fostering open conversations",
+    talkSummary:
+      "Sherwin Martinez courageously addresses the mental health crisis affecting communities worldwide. Through personal experience and professional expertise, Sherwin challenges the stigma surrounding mental health, advocating for open dialogue, compassion, and accessible support systems that can save lives.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/Sherwin.png",
+    duration: "",
+    date: "2025",
+    category: "Health",
+  },
+  {
+    name: "Urquhart Thompson",
+    title: "Urban Planner & Design Thinker",
+    talkTitle: "Cities for People: Reimagining Urban Spaces",
+    description: "Designing cities that prioritize human wellbeing and connection",
+    talkSummary:
+      "Urquhart Thompson envisions a radical reimagining of urban spaces, placing human needs and community wellbeing at the center of city design. Drawing on innovative urban planning principles from around the world, Urquhart presents a compelling vision for cities that are not just efficient, but truly livable.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/Urquhart.png",
+    duration: "",
+    date: "2025",
+    category: "Urban Design",
+  },
+  {
+    name: "Youmin Zhang",
+    title: "Education Innovator & Learning Designer",
+    talkTitle: "Learning Unleashed: Education Beyond the Classroom",
+    description: "Transforming education for the 21st century learner",
+    talkSummary:
+      "Youmin Zhang challenges traditional educational paradigms by demonstrating how learning happens everywhere—not just in classrooms. Through innovative teaching methodologies and real-world examples, Youmin shows how we can create educational experiences that are engaging, relevant, and truly transformative for students of all ages.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/Youmin.png",
+    duration: "",
+    date: "2025",
     category: "Education",
   },
   {
-    name: "Merna Al Nasser",
-    title: "CGTN Editor/Moderator",
-    talkTitle: "We are all Storytellers",
-    description: "Transforming Media Narratives For Global Understandings",
+    name: "Zoie Park",
+    title: "Artist & Creative Therapist",
+    talkTitle: "The Healing Power of Creativity",
+    description: "How artistic expression can transform trauma into triumph",
     talkSummary:
-      "Merna Al Nasser delves into the power of storytelling as a universal human trait and its critical role in shaping our perception of reality. Drawing from her extensive experience in international media, she demonstrates how thoughtful narrative construction can bridge cultural divides and foster global understanding.",
+      "Zoie Park reveals the profound therapeutic potential of creative expression. Through powerful stories and artistic demonstrations, Zoie shows how painting, music, writing, and other creative outlets can help individuals process trauma, discover their voice, and reclaim their narrative in ways traditional therapy cannot always reach.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "instagram", url: "https://instagram.com/" },
     ],
-    videoId: "acSQUrNqNAo",
-    imageSrc: "/speakers/merna.jpg",
-    duration: "14:19",
-    date: "April 20, 2024",
-    category: "Storytelling",
-  },
-  {
-    name: "Niamh Cunningham",
-    title: "Visual Artist",
-    talkTitle: "Rekindling our Bond with Nature",
-    description: "Nourishing Growth and Understanding through Tree Stories",
-    talkSummary:
-      "In this visually stunning presentation, Niamh Cunningham explores how our disconnection from nature impacts our wellbeing and creativity. Through her artwork and research on trees, she offers a compelling vision for rekindling our relationship with the natural world and finding inspiration in its patterns and processes.",
-    socials: [
-      { platform: "facebook", url: "https://facebook.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" },
-    ],
-    videoId: "pHwQZ35obSM",
-    imageSrc: "/speakers/niamh.jpg",
-    duration: "10:11",
-    date: "April 20, 2024",
-    category: "Nature",
-  },
-  {
-    name: "Saverio Quaia",
-    title: "Interior Designer",
-    talkTitle: "What the Office of Tomorrow Looks Like",
-    description:
-      "Workplace Transformation and Future Trends in the Post-Epidemic Era",
-    talkSummary:
-      "Interior design visionary Saverio Quaia presents his research-backed predictions for workplace evolution in the post-pandemic world. His talk combines insights from psychology, architecture, and organizational behavior to envision spaces that enhance productivity, wellbeing, and connection in our changing work culture.",
-    socials: [
-      { platform: "facebook", url: "https://facebook.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" },
-    ],
-    videoId: "CPlLRSXy7Hw",
-    imageSrc: "/speakers/saverio.jpg",
-    duration: "12:13",
-    date: "April 20, 2024",
-    category: "Design",
-  },
-  {
-    name: "Stephanie Sam",
-    title: "International Communications Specialist",
-    talkTitle: "Rethinking the Way We Communicate",
-    description:
-      "Rethinking the Way We Communicate in the Age of Globalization",
-    talkSummary:
-      "Stephanie Sam challenges conventional communication paradigms in this engaging talk about cross-cultural dialogue. Drawing from her experiences across continents, she proposes innovative frameworks for meaningful exchange in our interconnected world, emphasizing empathy and context as essential elements of effective communication.",
-    socials: [
-      { platform: "facebook", url: "https://facebook.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" },
-    ],
-    videoId: "RjoRzRzsfmA",
-    imageSrc: "/speakers/stephanie.jpg",
-    duration: "15:42",
-    date: "April 20, 2024",
-    category: "Ideas",
+    videoId: "",
+    imageSrc: "/speakers/Zoie.png",
+    duration: "",
+    date: "2025",
+    category: "Art & Healing",
   },
 ];
+
+// Current speakers
+export const speakers: Speaker[] = currentSpeakers;
 
 // Helper functions
 export const getAllSpeakers = () => speakers;

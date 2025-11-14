@@ -13,11 +13,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { speakers } from "@/data/speakers";
+import type { Speaker } from "@/data/speakers";
 
-// Removed duplicate speakers array as it's now imported from data/speakers.ts
+interface SpeakersGridProps {
+  speakers: Speaker[];
+}
 
-export default function SpeakersGrid() {
+export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
   const gridRef = useRef(null);
   const isInView = useInView(gridRef, { once: true, amount: 0.1 });
 

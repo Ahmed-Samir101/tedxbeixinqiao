@@ -46,7 +46,7 @@ export function IdeasInMotionPopup() {
               className="object-contain"
               fill
               priority
-              src="./Nov17_event.png"
+              src="./Nov17_event_last_chance.png"
             />
           </a>
         </div>
