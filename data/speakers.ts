@@ -23,12 +23,12 @@ export { previousSpeakers } from "./previous_speakers";
 
 export const currentSpeakers: Speaker[] = [
   {
-    name: "Abraham KC Ho",
-    title: "Entrepreneur & Tech Innovator",
-    talkTitle: "Building Bridges: Technology as a Force for Connection",
-    description: "How technology can bring people together across cultures and borders",
+    name: "Dr. Abraham KC Ho",
+    title: "Chief Health Officer, Bycare Health",
+    talkTitle: "Breakthroughs in Longevity Science — How to Enhance Healthspan Past 100 and Beyond",
+    description: "Extending healthspan with emerging longevity science and practical prevention.",
     talkSummary:
-      "Abraham KC Ho explores the transformative power of technology in creating meaningful connections across geographical and cultural boundaries. Drawing from his entrepreneurial experience, he shares insights on leveraging innovation to build bridges between diverse communities.",
+      "With 20 years in medicine, Dr. Abraham Ho shifted from surgery to preventive health and longevity. He demystifies the latest breakthroughs in medical, biotech, and AI innovation that are making it possible to slow aging and enhance healthspan beyond 100—revealing pragmatic steps individuals can take now to redefine their aging journey.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -39,15 +39,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Abraham.png",
     duration: "",
     date: "2025",
-    category: "Technology",
+    category: "Health & Longevity",
   },
   {
     name: "Tom Van Dillen",
-    title: "Leadership Coach & Author",
-    talkTitle: "The Courage to Lead: Embracing Vulnerability in Leadership",
-    description: "Redefining strength in leadership through authenticity and vulnerability",
+    title: "Managing Partner, Greenkern",
+    talkTitle: "The Magic Loop: How Sci-Fi Helps Us Read the Future Hiding in Plain Sight",
+    description: "Using science fiction as a strategic dataset for future insight.",
     talkSummary:
-      "Tom Van Dillen challenges traditional notions of leadership by exploring how vulnerability and authenticity create stronger, more resilient teams. Through personal stories and practical insights, Tom Van Dillen demonstrates that true leadership requires the courage to be human.",
+      "Tom Van Dillen shows how science fiction is more than entertainment—it is a powerful lens for decoding emerging signals. Drawing on 25 years advising global brands in China, he explains the 'magic loop' between imagined worlds and real-world breakthroughs, offering a method anyone can use to stress-test choices and stop being surprised by the future.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -58,15 +58,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Dillen.png",
     duration: "",
     date: "2025",
-    category: "Leadership",
+    category: "Innovation & Foresight",
   },
   {
-    name: "Jialan",
-    title: "Environmental Scientist & Sustainability Advocate",
-    talkTitle: "Small Actions, Big Impact: Reimagining Our Environmental Future",
-    description: "Empowering individuals to create meaningful environmental change",
+    name: "Jialan Yu",
+    title: "CEO, Upsnail Public Speaking Academy",
+    talkTitle: "Everyday Ideas",
+    description: "Democratizing 'ideas worth spreading' through a practical speaking model.",
     talkSummary:
-      "Jialan Wang reveals how individual actions, when multiplied across communities, can create transformative environmental impact. Through compelling research and real-world examples, Jialan demonstrates that sustainability isn't just about grand gestures—it's about the daily choices we all make.",
+      "Founder and former journalist Jialan Yu introduces the Recognize–Reflect–Refine model for generating Everyday Ideas and making them work. She empowers audiences with courage and technique to rethink public speaking and redefine personal identity through iterative idea refinement.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -77,15 +77,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Jialan.png",
     duration: "",
     date: "2025",
-    category: "Environment",
+    category: "Communication",
   },
   {
-    name: "Gian Luigi",
-    title: "Chef & Culinary Artist",
-    talkTitle: "The Art of Fusion: Where Culture Meets Cuisine",
-    description: "Celebrating cultural identity through the universal language of food",
+    name: "GianLuigi Perrone",
+    title: "Movie Director",
+    talkTitle: "How I Explained Life and Death to My Daughter with Artificial Intelligence",
+    description: "A grieving parent uses AI storytelling to explain loss to a child.",
     talkSummary:
-      "Gian Luigi takes us on a culinary journey that transcends borders and traditions. As a master of fusion cuisine, Gian Luigi shares how food serves as a powerful medium for cultural exchange, storytelling, and building understanding between different communities.",
+      "Film director GianLuigi Perrone faces a family loss and must explain death to his 6-year-old daughter for the first time. His solution: craft a cartoon using progressive AI tools. He shares how creative technology can mediate difficult conversations about life, death, and emotional resilience.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -96,15 +96,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Luigi.jpg",
     duration: "",
     date: "2025",
-    category: "Culture",
+    category: "Storytelling & AI",
   },
   {
     name: "Madelyn Li",
-    title: "Social Entrepreneur & Community Builder",
-    talkTitle: "From I to We: Rebuilding Community in the Digital Age",
-    description: "Creating meaningful connections in an increasingly disconnected world",
+    title: "11th Grade Student & Debater",
+    talkTitle: "Westerners Don't Protect Teenhood",
+    description: "Examining tech, media, and the erosion of healthy adolescence.",
     talkSummary:
-      "Madelyn Li addresses the paradox of modern connectivity—we're more digitally connected yet feel more isolated than ever. Through innovative community-building initiatives, Madelyn shows how we can harness technology to foster genuine human connection and rebuild the sense of belonging that our societies desperately need.",
+      "Madelyn Li explores how extreme social media and technology use contribute to a loneliness epidemic and new waves of Gen Z challenges. She analyzes causes, effects, and offers actionable solutions to better protect the developmental space of modern teenagers.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -115,15 +115,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Madelyn.png",
     duration: "",
     date: "2025",
-    category: "Community",
+    category: "Youth & Mental Health",
   },
   {
     name: "Nathan Midler",
-    title: "AI Researcher & Ethics Advocate",
-    talkTitle: "Human + Machine: Designing AI with Heart",
-    description: "Ensuring artificial intelligence serves humanity's best interests",
+    title: "Executive & Entrepreneur",
+    talkTitle: "How to Lead Through Exponential Change",
+    description: "Adopting the Navigator Mindset to orient, explore, and discover.",
     talkSummary:
-      "Nathan Midler takes us into the fascinating world of artificial intelligence, exploring not just what AI can do, but what it should do. As an ethics advocate, Nathan argues for a human-centered approach to AI development that prioritizes empathy, fairness, and the preservation of human dignity in an automated world.",
+      "Nathan Midler introduces the Navigator Mindset—three core practices: orienting, exploring, and discovering—to reframe how leaders confront accelerating complexity and disruption. He provides practical ways to not just keep pace with exponential change, but actively lead through it.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -134,15 +134,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/NATHAN.png",
     duration: "",
     date: "2025",
-    category: "Technology",
+    category: "Leadership & Change",
   },
   {
-    name: "Dr.Sherwin Molayem",
-    title: "Mental Health Advocate & Psychologist",
-    talkTitle: "Breaking the Silence: Mental Health in Modern Society",
-    description: "Destigmatizing mental health and fostering open conversations",
+    name: "Dr. Shervin Molayem",
+    title: "Periodontist & Dental AI Researcher",
+    talkTitle: "The Forgotten Organ: Building Trust Between the Mouth, the Body, and AI",
+    description: "Reuniting oral health with systemic care through data and AI.",
     talkSummary:
-      "Dr.Sherwin Molayem courageously addresses the mental health crisis affecting communities worldwide. Through personal experience and professional expertise, Sherwin challenges the stigma surrounding mental health, advocating for open dialogue, compassion, and accessible support systems that can save lives.",
+      "Dr. Shervin Molayem shares how chronic gum disease drives systemic inflammation linked to heart disease, diabetes, and neurodegeneration. He demonstrates how dental-medical data integration and transparent AI platforms can rebuild patient-provider trust and reposition oral health at the center of preventive medicine.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -153,15 +153,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Sherwin.png",
     duration: "",
     date: "2025",
-    category: "Health",
+    category: "Health & AI",
   },
   {
     name: "Dr. Erica Urquhart",
-    title: "Urban Planner & Design Thinker",
-    talkTitle: "Cities for People: Reimagining Urban Spaces",
-    description: "Designing cities that prioritize human wellbeing and connection",
+    title: "Orthopedic Surgeon (MD, PhD, MBA)",
+    talkTitle: "Halting Health + Care: How the Cost of Care in Western Medicine Is Silencing the Pause that Saves Lives",
+    description: "Exposing financial and administrative pressures degrading patient care.",
     talkSummary:
-      "Urquhart Thompson envisions a radical reimagining of urban spaces, placing human needs and community wellbeing at the center of city design. Drawing on innovative urban planning principles from around the world, Urquhart presents a compelling vision for cities that are not just efficient, but truly livable.",
+      "Dr. Erica Rowe Urquhart highlights how for-profit structures and administrative burdens in Western medicine erode access, fuel provider burnout, worsen inequities, and compromise outcomes. She calls for reclaiming protected pauses in care delivery to restore clinical judgment and humanity.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -172,15 +172,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Urquhart.png",
     duration: "",
     date: "2025",
-    category: "Urban Design",
+    category: "Healthcare Systems",
   },
   {
-    name: "Dr.Youmin Zhong",
-    title: "Education Innovator & Learning Designer",
-    talkTitle: "Learning Unleashed: Education Beyond the Classroom",
-    description: "Transforming education for the 21st century learner",
+    name: "Dr. Youmin Zhong",
+    title: "Consultant Cardiologist, Beijing United Family Hospital",
+    talkTitle: "Building Bridge Between Medicine and Sports",
+    description: "Cardiorespiratory fitness as a shared metric uniting movement and care.",
     talkSummary:
-      "Dr.Youmin Zhong challenges traditional educational paradigms by demonstrating how learning happens everywhere—not just in classrooms. Through innovative teaching methodologies and real-world examples, Youmin shows how we can create educational experiences that are engaging, relevant, and truly transformative for students of all ages.",
+      "Dr. Youmin Zhong reveals how one measurable metric—cardiorespiratory fitness—can unite medicine and sports. Drawing on decades in cardiology and lifelong running, he shows how a simple test transforms vague advice into precise prescriptions, preventing disease and enhancing lasting vitality.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -191,15 +191,15 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Youmin.png",
     duration: "",
     date: "2025",
-    category: "Education",
+    category: "Health & Performance",
   },
   {
-    name: "Zoie",
-    title: "Artist & Creative Therapist",
-    talkTitle: "The Healing Power of Creativity",
-    description: "How artistic expression can transform trauma into triumph",
+    name: "Zoie Zhao",
+    title: "Age 8, Student",
+    talkTitle: "The Power of a Cardboard Tube",
+    description: "Protecting blank space in childhood for imagination and joy.",
     talkSummary:
-      "Zoie reveals the profound therapeutic potential of creative expression. Through powerful stories and artistic demonstrations, Zoie shows how painting, music, writing, and other creative outlets can help individuals process trauma, discover their voice, and reclaim their narrative in ways traditional therapy cannot always reach.",
+      "Eight-year-old Zoie shares how her favorite 'toy'—a simple cardboard tube—and a story about her hamster taught a lesson about overcrowded schedules. She reminds parents that empty time is not wasted; it is the space where creativity thrives, inviting a rethink of how we nurture play.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -210,8 +210,46 @@ export const currentSpeakers: Speaker[] = [
     imageSrc: "/speakers/Zoie.png",
     duration: "",
     date: "2025",
-    category: "Art & Healing",
+    category: "Childhood & Creativity",
   },
+  // {
+  //   name: "Misha Tadd PhD",
+  //   title: "Associate Professor, Nankai University",
+  //   talkTitle: "The Laozi as a Bridge for Transcending Differences",
+  //   description: "Global transmission of Laozi as a tool for shared humanity.",
+  //   talkSummary:
+  //     "Prof. Misha Tadd recounts his journey with the Laozi (Daodejing), unveiling discoveries about its massive translation corpus across 97 languages and radically diverse contexts. He reflects on why the text resonates widely and how it can inspire remembrance of our shared humanity.",
+  //   socials: [
+  //     { platform: "facebook", url: "https://facebook.com/" },
+  //     { platform: "twitter", url: "https://twitter.com/" },
+  //     { platform: "linkedin", url: "https://linkedin.com/" },
+  //     { platform: "instagram", url: "https://instagram.com/" },
+  //   ],
+  //   videoId: "",
+  //   imageSrc: "/speakers/MishaTadd.png",
+  //   duration: "",
+  //   date: "2025",
+  //   category: "Philosophy",
+  // },
+  // {
+  //   name: "Caroline Pires Ting PhD",
+  //   title: "Postdoctoral Research Fellow & Visual Artist",
+  //   talkTitle: "Bridges, Not Barriers: The Hidden Power of Untranslatables",
+  //   description: "Untranslatable words as vessels of cultural memory and empathy.",
+  //   talkSummary:
+  //     "Dr. Caroline Pires Ting explores how untranslatable concepts hold emotional truths that resist simplification. These words act as bridges—carrying memory, worldview, and nuance. In a time of division and algorithmic flattening, lingering with what cannot be neatly translated may be a powerful tool for empathy.",
+  //   socials: [
+  //     { platform: "facebook", url: "https://facebook.com/" },
+  //     { platform: "twitter", url: "https://twitter.com/" },
+  //     { platform: "linkedin", url: "https://linkedin.com/" },
+  //     { platform: "instagram", url: "https://instagram.com/" },
+  //   ],
+  //   videoId: "",
+  //   imageSrc: "/speakers/CarolinePiresTing.png",
+  //   duration: "",
+  //   date: "2025",
+  //   category: "Language & Culture",
+  // },
 ];
 
 // Current speakers
