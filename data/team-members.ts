@@ -270,6 +270,20 @@ export const teamMembers: TeamMember[] = [
       { platform: "website", url: "https://example.com/" },
     ],
   },
+    {
+    name: "Ahmed Samir",
+    firstName: "Ahmed",
+    title: "Digital Experience & Technical",
+    role: "communications",
+      bio: "Ahmed is a full‑stack developer supporting TEDxBeixinqiao’s digital experience — building fast, accessible features and tooling alongside the technical lead.",
+      fullBio:
+        "Ahmed is a full‑stack developer focused on delivering a reliable, accessible, and high‑performance digital experience for TEDxBeixinqiao. He collaborates closely with the technical lead to design, build, and maintain our web platform, working across the stack with Next.js, TypeScript, and modern tooling. Ahmed cares deeply about performance, accessibility, and developer experience — optimizing UI flows, hardening APIs, and improving release reliability with testing and CI/CD. He also contributes to data and content workflows (e.g., Drizzle ORM and deployment pipelines), automation, and observability to ensure the site runs smoothly before, during, and after events.",
+    image: "/team/ahmed.png",
+    socials: [
+      { platform: "linkedin", url: "https://www.linkedin.com/in/ahmed-khamis101" },
+      { platform: "website", url: "https://example.com/" },
+    ],
+  },
 ];
 
 // Helper function to sort team members (leadership first, then alphabetically)
