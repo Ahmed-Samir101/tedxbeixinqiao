@@ -342,7 +342,7 @@ export default function Hero() {
       </motion.button>
 
       {/* Auto-popup for Ideas in Motion event */}
-      <IdeasInMotionPopup />
+      {/* <IdeasInMotionPopup /> */}
     </section>
   );
 }
