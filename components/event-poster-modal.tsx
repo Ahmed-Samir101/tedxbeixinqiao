@@ -31,6 +31,7 @@ export function Dec6EventModal({ className }: Dec6EventModalProps) {
           className={cn(
             "group relative flex flex-col items-center justify-center overflow-hidden bg-red-700 px-8 py-6 text-center font-bold text-white shadow-xl transition-colors duration-300 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700",
             "min-h-[120px]",
+            "cursor-pointer",
             className
           )}
           type="button"
@@ -91,16 +92,7 @@ export function Dec6EventModal({ className }: Dec6EventModalProps) {
             </a>
           )}
         </div>
-        <div className="mt-6 flex justify-center">
-          <Button
-            className="px-8"
-            onClick={() => setOpen(false)}
-            type="button"
-            variant="secondary"
-          >
-            Close
-          </Button>
-        </div>
+        {/* Close button removed from content — use dialog's top-right close control */}
       </DialogContent>
     </Dialog>
   );
