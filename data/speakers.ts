@@ -41,6 +41,25 @@ export const currentSpeakers: Speaker[] = [
     date: "2025",
     category: "Health & Longevity",
   },
+    {
+    name: "Caroline Pires Ting",
+    title: "Postdoctoral Research Fellow & Visual Artist",
+    talkTitle: "Bridges, Not Barriers: The Hidden Power of Untranslatables",
+    description: "Untranslatable words as vessels of cultural memory and empathy.",
+    talkSummary:
+      "Dr. Caroline Pires Ting explores how untranslatable concepts hold emotional truths that resist simplification. These words act as bridges—carrying memory, worldview, and nuance. In a time of division and algorithmic flattening, lingering with what cannot be neatly translated may be a powerful tool for empathy.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/caroline.png",
+    duration: "",
+    date: "2025",
+    category: "Language & Culture",
+  },
   {
     name: "Tom Van Dillen",
     title: "Managing Partner, Greenkern",
@@ -81,7 +100,7 @@ export const currentSpeakers: Speaker[] = [
   },
   {
     name: "GianLuigi Perrone",
-    title: "Movie Director",
+    title: "Ai & Parenting",
     talkTitle: "How I Explained Life and Death to My Daughter with Artificial Intelligence",
     description: "A grieving parent uses AI storytelling to explain loss to a child.",
     talkSummary:
@@ -104,7 +123,7 @@ export const currentSpeakers: Speaker[] = [
     talkTitle: "Westerners Don't Protect Teenhood",
     description: "Examining tech, media, and the erosion of healthy adolescence.",
     talkSummary:
-      "Madelyn Li explores how extreme social media and technology use contribute to a loneliness epidemic and new waves of Gen Z challenges. She analyzes causes, effects, and offers actionable solutions to better protect the developmental space of modern teenagers.",
+      "Most talks about Gen Z come from adults looking in, but this one comes from the inside. I’m a teenager living this reality. I offer a firsthand look at what digital life, loneliness, “world saving” pressures actually feel like, and I highlight something most talks miss: the crisis isn’t just mental health, it’s the loss of teenhood itself. In this talk, I want to show adults what that loss looks like up close, and how you can help us reclaim the spaces, connection, and safety we need to actually grow up. We must protect teenhood now, and I promise: we’ll take it from here.",
     socials: [
       { platform: "facebook", url: "https://facebook.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
@@ -116,6 +135,25 @@ export const currentSpeakers: Speaker[] = [
     duration: "",
     date: "2025",
     category: "Youth & Mental Health",
+  },
+    {
+    name: "Misha Tadd",
+    title: "Associate Professor, Nankai University",
+    talkTitle: "The Laozi as a Bridge for Transcending Differences",
+    description: "Global transmission of Laozi as a tool for shared humanity.",
+    talkSummary:
+      "Prof. Misha Tadd recounts his journey with the Laozi (Daodejing), unveiling discoveries about its massive translation corpus across 97 languages and radically diverse contexts. He reflects on why the text resonates widely and how it can inspire remembrance of our shared humanity.",
+    socials: [
+      { platform: "facebook", url: "https://facebook.com/" },
+      { platform: "twitter", url: "https://twitter.com/" },
+      { platform: "linkedin", url: "https://linkedin.com/" },
+      { platform: "instagram", url: "https://instagram.com/" },
+    ],
+    videoId: "",
+    imageSrc: "/speakers/misha.png",
+    duration: "",
+    date: "2025",
+    category: "Philosophy",
   },
   {
     name: "Nathan Midler",
@@ -156,25 +194,6 @@ export const currentSpeakers: Speaker[] = [
     category: "Health & AI",
   },
   {
-    name: "Dr. Erica Urquhart",
-    title: "Orthopedic Surgeon (MD, PhD, MBA)",
-    talkTitle: "Halting Health + Care: How the Cost of Care in Western Medicine Is Silencing the Pause that Saves Lives",
-    description: "Exposing financial and administrative pressures degrading patient care.",
-    talkSummary:
-      "Dr. Erica Rowe Urquhart highlights how for-profit structures and administrative burdens in Western medicine erode access, fuel provider burnout, worsen inequities, and compromise outcomes. She calls for reclaiming protected pauses in care delivery to restore clinical judgment and humanity.",
-    socials: [
-      { platform: "facebook", url: "https://facebook.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" },
-    ],
-    videoId: "",
-    imageSrc: "/speakers/Urquhart.png",
-    duration: "",
-    date: "2025",
-    category: "Healthcare Systems",
-  },
-  {
     name: "Dr. Youmin Zhong",
     title: "Consultant Cardiologist, Beijing United Family Hospital",
     talkTitle: "Building Bridge Between Medicine and Sports",
@@ -212,13 +231,13 @@ export const currentSpeakers: Speaker[] = [
     date: "2025",
     category: "Childhood & Creativity",
   },
-  // {
-  //   name: "Misha Tadd PhD",
-  //   title: "Associate Professor, Nankai University",
-  //   talkTitle: "The Laozi as a Bridge for Transcending Differences",
-  //   description: "Global transmission of Laozi as a tool for shared humanity.",
+    // {
+  //   name: "Dr. Erica Urquhart",
+  //   title: "Orthopedic Surgeon (MD, PhD, MBA)",
+  //   talkTitle: "Halting Health + Care: How the Cost of Care in Western Medicine Is Silencing the Pause that Saves Lives",
+  //   description: "Exposing financial and administrative pressures degrading patient care.",
   //   talkSummary:
-  //     "Prof. Misha Tadd recounts his journey with the Laozi (Daodejing), unveiling discoveries about its massive translation corpus across 97 languages and radically diverse contexts. He reflects on why the text resonates widely and how it can inspire remembrance of our shared humanity.",
+  //     "Dr. Erica Rowe Urquhart highlights how for-profit structures and administrative burdens in Western medicine erode access, fuel provider burnout, worsen inequities, and compromise outcomes. She calls for reclaiming protected pauses in care delivery to restore clinical judgment and humanity.",
   //   socials: [
   //     { platform: "facebook", url: "https://facebook.com/" },
   //     { platform: "twitter", url: "https://twitter.com/" },
@@ -226,29 +245,10 @@ export const currentSpeakers: Speaker[] = [
   //     { platform: "instagram", url: "https://instagram.com/" },
   //   ],
   //   videoId: "",
-  //   imageSrc: "/speakers/MishaTadd.png",
+  //   imageSrc: "/speakers/Urquhart.png",
   //   duration: "",
   //   date: "2025",
-  //   category: "Philosophy",
-  // },
-  // {
-  //   name: "Caroline Pires Ting PhD",
-  //   title: "Postdoctoral Research Fellow & Visual Artist",
-  //   talkTitle: "Bridges, Not Barriers: The Hidden Power of Untranslatables",
-  //   description: "Untranslatable words as vessels of cultural memory and empathy.",
-  //   talkSummary:
-  //     "Dr. Caroline Pires Ting explores how untranslatable concepts hold emotional truths that resist simplification. These words act as bridges—carrying memory, worldview, and nuance. In a time of division and algorithmic flattening, lingering with what cannot be neatly translated may be a powerful tool for empathy.",
-  //   socials: [
-  //     { platform: "facebook", url: "https://facebook.com/" },
-  //     { platform: "twitter", url: "https://twitter.com/" },
-  //     { platform: "linkedin", url: "https://linkedin.com/" },
-  //     { platform: "instagram", url: "https://instagram.com/" },
-  //   ],
-  //   videoId: "",
-  //   imageSrc: "/speakers/CarolinePiresTing.png",
-  //   duration: "",
-  //   date: "2025",
-  //   category: "Language & Culture",
+  //   category: "Healthcare Systems",
   // },
 ];
 

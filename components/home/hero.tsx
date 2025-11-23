@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IdeasInMotionPopup } from "@/components/home/ideas-in-motion-popup";
 import { SpeakerApplicationMessageModal } from "@/components/speaker-application-message-modal";
+import { Dec6EventModal, Dec6SpeakersButton } from "@/components/event-poster-modal";
 import { cn } from "@/lib/utils";
 
 // Lint constants
@@ -197,94 +198,94 @@ export default function Hero() {
               delay: MOTION_CTA_DELAY,
             }}
           >
-            <motion.div
-              animate={{
-                y: MOTION_ARROW_Y_ANIMATION,
-                transition: {
-                  y: {
-                    duration: MOTION_ARROW_DURATION,
-                    repeat: MOTION_ARROW_REPEAT,
-                    ease: MOTION_ARROW_EASE,
+            <div className="flex flex-col items-center gap-6 md:flex-row">
+              <motion.div
+                animate={{
+                  y: MOTION_ARROW_Y_ANIMATION,
+                  transition: {
+                    y: {
+                      duration: MOTION_ARROW_DURATION,
+                      repeat: MOTION_ARROW_REPEAT,
+                      ease: MOTION_ARROW_EASE,
+                    },
                   },
-                },
-              }}
-              className="glow-button"
-              id="speaker-application"
-              whileHover={{
-                scale: 1.05,
-                rotate: MOTION_ROTATE_ANIMATION,
-                transition: {
-                  scale: { duration: 0.2 },
-                  rotate: {
-                    duration: 0.5,
-                    repeat: MOTION_ARROW_REPEAT,
-                    ease: MOTION_ARROW_EASE,
+                }}
+                className="glow-button"
+                id="speaker-application"
+                whileHover={{
+                  scale: 1.05,
+                  rotate: MOTION_ROTATE_ANIMATION,
+                  transition: {
+                    scale: { duration: 0.2 },
+                    rotate: {
+                      duration: 0.5,
+                      repeat: MOTION_ARROW_REPEAT,
+                      ease: MOTION_ARROW_EASE,
+                    },
                   },
-                },
-              }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <SpeakerApplicationMessageModal className="relative overflow-hidden rounded-lg border-2 border-red-400/80 bg-gradient-to-r from-red-600 to-red-700 px-10 py-6 font-bold text-white text-xl shadow-xl hover:from-red-700 hover:to-red-800 dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800" />
-              <style jsx>{`
-                .glow-button {
-                  position: relative;
-                  z-index: 10;
-                  isolation: isolate;
-                  cursor: pointer;
-                  box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), inset 0 0 10px rgba(239, 68, 68, 0.4);
-                  border-radius: 12px;
-                }
-                .glow-button::before {
-                  content: '';
-                  position: absolute;
-                  inset: -5px;
-                  z-index: -1;
-                  background: linear-gradient(45deg, #ef4444, #fb7185, #ef4444);
-                  border-radius: 16px;
-                  filter: blur(12px);
+                }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <SpeakerApplicationMessageModal className="relative overflow-hidden rounded-lg border-2 border-red-400/80 bg-gradient-to-r from-red-600 to-red-700 px-10 py-6 font-bold text-white text-xl shadow-xl hover:from-red-700 hover:to-red-800 dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800" />
+              </motion.div>
+              <Dec6EventModal className="rounded-lg" />
+              <Dec6SpeakersButton className="rounded-lg" />
+            </div>
+            <style jsx>{`
+              .glow-button {
+                position: relative;
+                z-index: 10;
+                isolation: isolate;
+                cursor: pointer;
+                box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), inset 0 0 10px rgba(239, 68, 68, 0.4);
+                border-radius: 12px;
+              }
+              .glow-button::before {
+                content: '';
+                position: absolute;
+                inset: -5px;
+                z-index: -1;
+                background: linear-gradient(45deg, #ef4444, #fb7185, #ef4444);
+                border-radius: 16px;
+                filter: blur(12px);
+                opacity: 0.7;
+                transition: all 0.3s ease;
+                animation: borderPulse 3s infinite;
+              }
+              .glow-button::after {
+                content: '';
+                position: absolute;
+                inset: -3px;
+                z-index: -2;
+                background: linear-gradient(45deg, #dc2626, #ef4444, #f87171);
+                border-radius: 16px;
+                filter: blur(8px);
+                opacity: 0.6;
+                animation: rotate 4s linear infinite;
+              }
+              .glow-button:hover::before {
+                opacity: 0.9;
+                filter: blur(15px);
+              }
+              .glow-button:hover::after {
+                opacity: 0.8;
+                filter: blur(10px);
+              }
+              @keyframes borderPulse {
+                0%, 100% {
                   opacity: 0.7;
-                  transition: all 0.3s ease;
-                  animation: borderPulse 3s infinite;
+                  transform: scale(1);
                 }
-                .glow-button::after {
-                  content: '';
-                  position: absolute;
-                  inset: -3px;
-                  z-index: -2;
-                  background: linear-gradient(45deg, #dc2626, #ef4444, #f87171);
-                  border-radius: 16px;
-                  filter: blur(8px);
-                  opacity: 0.6;
-                  animation: rotate 4s linear infinite;
-                }
-                .glow-button:hover::before {
+                50% {
                   opacity: 0.9;
-                  filter: blur(15px);
+                  transform: scale(1.05);
                 }
-                .glow-button:hover::after {
-                  opacity: 0.8;
-                  filter: blur(10px);
-                }
-                @keyframes borderPulse {
-                  0%, 100% {
-                    opacity: 0.7;
-                    transform: scale(1);
-                  }
-                  50% {
-                    opacity: 0.9;
-                    transform: scale(1.05);
-                  }
-                }
-                @keyframes rotate {
-                  0% {
-                    transform: rotate(0deg);
-                  }
-                  100% {
-                    transform: rotate(360deg);
-                  }
-                }
-              `}</style>
-            </motion.div>
+              }
+              @keyframes rotate {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            `}</style>
           </motion.div>
 
           {/* Tagline */}
