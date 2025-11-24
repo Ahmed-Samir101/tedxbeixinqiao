@@ -187,10 +187,15 @@ export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
                         </div>
                       </div>
 
-                      <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70 max-h-56 overflow-y-auto md:max-h-none" aria-label="Speaker biography scroll area">
-                        <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">Speaker Bio</h4>
-                        <p className="text-gray-700 text-sm whitespace-pre-line dark:text-gray-300">{speaker.bio}</p>
-                      </div>
+                      {speaker.bio?.trim() ? (
+                        <div
+                          className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70 max-h-56 overflow-y-auto md:max-h-none"
+                          aria-label="Speaker biography scroll area"
+                        >
+                          <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">Speaker Bio</h4>
+                          <p className="text-gray-700 text-sm whitespace-pre-line dark:text-gray-300">{speaker.bio}</p>
+                        </div>
+                      ) : null}
 
                       <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70">
                         <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">

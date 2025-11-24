@@ -21,10 +21,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { type Speaker, speakers } from "@/data/speakers";
+import { type Speaker, previousSpeakers } from "@/data/speakers";
 
-// Create video data from speakers info - No need for separate mapping now
-const videos = speakers;
+// Use previous event speakers (those with published talks)
+const videos = previousSpeakers;
 
 export default function VideoShowcase() {
   const [activeVideo, setActiveVideo] = useState<Speaker>(videos[0]);
