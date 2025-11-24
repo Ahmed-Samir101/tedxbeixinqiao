@@ -141,7 +141,7 @@ export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
                     </div>
                   </DialogHeader>
 
-                  <div className="grid gap-8 md:grid-cols-7">
+                  <div className="grid gap-8 md:grid-cols-7 max-h-[65vh] overflow-y-auto pr-2 -mr-2 md:max-h-none">
                     {/* Video Section - Takes 4/7 of the width on medium+ screens */}
                     {speaker.videoId ? (
                       <div className="h-full w-full md:col-span-4">
@@ -187,7 +187,7 @@ export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
                         </div>
                       </div>
 
-                      <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70">
+                      <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70 max-h-56 overflow-y-auto md:max-h-none" aria-label="Speaker biography scroll area">
                         <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">Speaker Bio</h4>
                         <p className="text-gray-700 text-sm whitespace-pre-line dark:text-gray-300">{speaker.bio}</p>
                       </div>
