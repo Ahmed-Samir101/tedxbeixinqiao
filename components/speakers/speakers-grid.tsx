@@ -98,12 +98,14 @@ export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
                     </p>
 
                     {/* Watch Talk Button */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white transition-transform duration-300 group-hover:scale-110">
-                        <Play className="h-5 w-5" />
+                    {speaker.videoId ? (
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white transition-transform duration-300 group-hover:scale-110">
+                          <Play className="h-5 w-5" />
+                        </div>
+                        <span className="font-medium">Watch Talk</span>
                       </div>
-                      <span className="font-medium">Watch Talk</span>
-                    </div>
+                    ) : null}
                   </div>
 
                   {/* Social Media Icons */}
@@ -141,25 +143,27 @@ export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
 
                   <div className="grid gap-8 md:grid-cols-7">
                     {/* Video Section - Takes 4/7 of the width on medium+ screens */}
-                    <div className="h-full w-full md:col-span-4">
-                      <div className="aspect-video w-full overflow-hidden rounded-xl border border-gray-200 bg-black shadow-lg dark:border-gray-800">
-                        {/* Fixed YouTube embed by ensuring it has proper dimensions and removed relative URL formatting */}
-                        <iframe
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          className="h-full w-full"
-                          frameBorder="0"
-                          height="100%"
-                          src={`https://www.youtube.com/embed/${speaker.videoId}`}
-                          style={{ aspectRatio: "16/9" }}
-                          title={`${speaker.name} - ${speaker.talkTitle}`}
-                          width="100%"
-                        />
+                    {speaker.videoId ? (
+                      <div className="h-full w-full md:col-span-4">
+                        <div className="aspect-video w-full overflow-hidden rounded-xl border border-gray-200 bg-black shadow-lg dark:border-gray-800">
+                          {/* Fixed YouTube embed by ensuring it has proper dimensions and removed relative URL formatting */}
+                          <iframe
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="h-full w-full"
+                            frameBorder="0"
+                            height="100%"
+                            src={`https://www.youtube.com/embed/${speaker.videoId}`}
+                            style={{ aspectRatio: "16/9" }}
+                            title={`${speaker.name} - ${speaker.talkTitle}`}
+                            width="100%"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : null}
 
-                    {/* Speaker Info - Takes 3/7 of the width on medium+ screens */}
-                    <div className="flex flex-col md:col-span-3">
+                    {/* Speaker Info - Takes 3/7 of the width on medium+ screens, or full width if no video */}
+                    <div className={`flex flex-col ${speaker.videoId ? 'md:col-span-3' : 'md:col-span-7'}`}>
                       <div className="mb-4 flex items-center gap-4">
                         <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-red-500 shadow-lg">
                           <Image
@@ -181,6 +185,11 @@ export default function SpeakersGrid({ speakers }: SpeakersGridProps) {
                             {speaker.title}
                           </p>
                         </div>
+                      </div>
+
+                      <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70">
+                        <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">Speaker Bio</h4>
+                        <p className="text-gray-700 text-sm whitespace-pre-line dark:text-gray-300">{speaker.bio}</p>
                       </div>
 
                       <div className="mb-6 rounded-xl bg-gray-50 p-4 dark:bg-gray-900/70">
