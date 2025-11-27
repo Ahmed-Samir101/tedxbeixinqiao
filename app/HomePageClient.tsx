@@ -13,10 +13,10 @@ export default function HomePageClient() {
     <div className="flex flex-col items-center">
       <Hero />
       <AboutSection />
-      <VideoShowcase />
+      <SpeakersSection />
       <EventHighlights />
       <TeanSection />
-      <SpeakersSection />
+      <VideoShowcase />
       <ContactSection />
     </div>
   );
