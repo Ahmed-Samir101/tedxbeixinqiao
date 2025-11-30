@@ -26,6 +26,7 @@ export default function Navbar() {
   const navigation = [
     { name: "Speakers", path: "/speakers" },
     { name: "Team", path: "/team" },
+    { name: "Sponsors", path: "/sponsors" },
     { 
       name: "Speaker Application", 
       path: "/speaker-application",

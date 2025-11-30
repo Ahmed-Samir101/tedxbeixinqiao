@@ -49,24 +49,31 @@ export default function ContactForm() {
     message: string;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setFormData({ name: "", email: "", message: "" });
-      setIsSubmitting(false);
-      setSubmitStatus({
-        success: true,
-        message: "Your message has been sent! We'll get back to you soon.",
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus({ success: false, message: "" });
-      }, 5000);
-    }, 1500);
+      const json = await res.json();
+      if (!res.ok || !json.ok) {
+        throw new Error(json.error || "Failed to send message");
+      }
+
+      setFormData({ name: "", email: "", message: "" });
+      setSubmitStatus({ success: true, message: "Your message has been sent! We'll get back to you soon." });
+    } catch (error) {
+      setSubmitStatus({ success: false, message: "There was an issue sending your message. Please try again later." });
+    } finally {
+      setIsSubmitting(false);
+      // Auto-clear status after a delay
+      setTimeout(() => setSubmitStatus({ success: false, message: "" }), 5000);
+    }
   };
 
   const containerVariants = {

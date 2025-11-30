@@ -99,7 +99,7 @@ export default function ContactSection() {
                     Email
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Info@tedxbeixinqiao.com
+                    info@tedxbeixinqiao.com
                   </p>
                 </div>
               </div>
