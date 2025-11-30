@@ -13,7 +13,7 @@ type Sponsor = {
 };
 
 const sponsors: Sponsor[] = [
-  { name: "BRIGHT", tier: "founding", logoSrc: "/sponsors/bright.png"},
+  { name: "BRIGHT", tier: "founding", logoSrc: "/sponsors/bright.png", website: "https://www.brightfoundation.org"},
   { name: "RASBJ", tier: "founding", logoSrc: "/sponsors/rasbj.jpg", website: "https://rasbj.org" },
   { name: "United Family Healthcare", tier: "founding", logoSrc: "/sponsors/ufh.png", website: "https://www.ufh.com.cn/en" },
   { name: "Modernista", tier: "partner", logoSrc: "/sponsors/modernista.png"},
