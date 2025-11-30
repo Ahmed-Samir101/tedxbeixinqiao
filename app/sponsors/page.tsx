@@ -22,7 +22,7 @@ const sponsors: Sponsor[] = [
   { name: "ARRI", tier: "partner", logoSrc: "/sponsors/arri.png", website: "https://www.arri.com" },
   { name: "Black Peak", tier: "partner", logoSrc: "/sponsors/black-peak.png" },
   { name: "Casa Flamenco", tier: "partner", logoSrc: "/sponsors/casa.png" },
-  { name: "meitihuiclub", tier: "partner", logoSrc: "/sponsors/club.png" },
+  { name: "meitihuiclub", tier: "partner", logoSrc: "/sponsors/club.png", website: "https://www.meitihuiclub.com/" },
   { name: "Gravity Art Museum", tier: "partner", logoSrc: "/sponsors/gravity-art.png" },
 ];
 
