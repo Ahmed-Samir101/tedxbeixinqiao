@@ -83,28 +83,28 @@ export const currentSpeakers: Speaker[] = [
     date: "2025",
     category: "Innovation & Foresight",
   },
-  {
-    name: "Jialan Yu",
-    title: "CEO, Upsnail Public Speaking Academy",
-    talkTitle: "Everyday Ideas",
-    description: "Democratizing 'ideas worth spreading' through a practical speaking model.",
-    talkSummary:
-      "Founder and former journalist Jialan Yu introduces the Recognize–Reflect–Refine model for generating Everyday Ideas and making them work. She empowers audiences with courage and technique to rethink public speaking and redefine personal identity through iterative idea refinement.",
-    bio: `Miss Jialan Yu, founder of Upsnail Public Speaking Academy, a former reporter of Global Times, anchor of weekly show Top Five in China. Winner of China News Award. She had also worked in the leading French Bank Societe Generale for over five years, focusing on Environmental, Social and Governance. ( “ ESG”)
-As a mother , Jialan usually spends most of her leisure time with her two kids, a 6 year old girl who plays Baduanjin and violin and 3 year old boy, bicycling and roaming in Beijing and also exploring cultural differences together worldwide.
-She holds a MBA degree from Guanghua Managment School of Peking University and a post graduate degree from University of Science and Technology of China. `,
-    socials: [
-      { platform: "facebook", url: "https://facebook.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "instagram", url: "https://instagram.com/" },
-    ],
-    videoId: "",
-    imageSrc: "/speakers/Jialan.png",
-    duration: "",
-    date: "2025",
-    category: "Communication",
-  },
+//   {
+//     name: "Jialan Yu",
+//     title: "CEO, Upsnail Public Speaking Academy",
+//     talkTitle: "Everyday Ideas",
+//     description: "Democratizing 'ideas worth spreading' through a practical speaking model.",
+//     talkSummary:
+//       "Founder and former journalist Jialan Yu introduces the Recognize–Reflect–Refine model for generating Everyday Ideas and making them work. She empowers audiences with courage and technique to rethink public speaking and redefine personal identity through iterative idea refinement.",
+//     bio: `Miss Jialan Yu, founder of Upsnail Public Speaking Academy, a former reporter of Global Times, anchor of weekly show Top Five in China. Winner of China News Award. She had also worked in the leading French Bank Societe Generale for over five years, focusing on Environmental, Social and Governance. ( “ ESG”)
+// As a mother , Jialan usually spends most of her leisure time with her two kids, a 6 year old girl who plays Baduanjin and violin and 3 year old boy, bicycling and roaming in Beijing and also exploring cultural differences together worldwide.
+// She holds a MBA degree from Guanghua Managment School of Peking University and a post graduate degree from University of Science and Technology of China. `,
+//     socials: [
+//       { platform: "facebook", url: "https://facebook.com/" },
+//       { platform: "twitter", url: "https://twitter.com/" },
+//       { platform: "linkedin", url: "https://linkedin.com/" },
+//       { platform: "instagram", url: "https://instagram.com/" },
+//     ],
+//     videoId: "",
+//     imageSrc: "/speakers/Jialan.png",
+//     duration: "",
+//     date: "2025",
+//     category: "Communication",
+//   },
   {
     name: "GianLuigi Perrone",
     title: "Ai & Parenting",
