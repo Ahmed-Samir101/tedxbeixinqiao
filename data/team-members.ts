@@ -139,12 +139,12 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Frank Liang",
     firstName: "Frank",
-    title: "Speaker Logistics & Coordination Lead",
+    title: "Speaker Manager",
     role: "speakers",
     bio: "Frank orchestrates all aspects of speaker logistics, ensuring presenters have everything they need to deliver powerful talks through meticulous coordination and personalized support.",
     fullBio:
       "Frank orchestrates all aspects of speaker logistics, ensuring presenters have everything they need to deliver powerful talks at TEDxBeixinqiao. His organizational skills and attention to detail create a supportive environment where speakers can focus entirely on their presentations. Frank manages the complex coordination of schedules, technical requirements, and speaker preparation, maintaining clear communication throughout the process. He works closely with the Speaker Development team to ensure a seamless journey for all presenters, from initial selection through post-event follow-up. His dedication to supporting speakers creates the foundation for memorable, impactful TEDx talks.",
-    image: "/team/frank.jpg",
+    image: "/team/frank2.jpg",
     socials: [
       { platform: "linkedin", url: "https://linkedin.com/" },
       { platform: "twitter", url: "https://twitter.com/" },
