@@ -75,8 +75,7 @@ export const teamMembers: TeamMember[] = [
       "Frank orchestrates all aspects of speaker logistics, ensuring presenters have everything they need to deliver powerful talks at TEDxBeixinqiao. His organizational skills and attention to detail create a supportive environment where speakers can focus entirely on their presentations. Frank manages the complex coordination of schedules, technical requirements, and speaker preparation, maintaining clear communication throughout the process. He works closely with the Speaker Development team to ensure a seamless journey for all presenters, from initial selection through post-event follow-up. His dedication to supporting speakers creates the foundation for memorable, impactful TEDx talks.",
     image: "/team/frank2.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
+      
     ],
   },
   {
@@ -104,8 +103,7 @@ export const teamMembers: TeamMember[] = [
       "Ben leads TEDxBeixinqiao's digital presence and technical execution, bringing creativity and strategic thinking to our online platforms and event technology. With extensive experience in web development, UX design, and digital strategy, he ensures that our online presence reflects our commitment to innovation and accessibility. Ben's technical expertise enables the seamless integration of digital elements into our physical events, creating immersive experiences that extend beyond the venue. His approach combines creative vision with practical implementation, resulting in digital touchpoints that enhance audience engagement and amplify our speakers' ideas across multiple platforms.",
     image: "/team/ben.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "website", url: "https://example.com/" },
+      
     ],
   },
     {
@@ -124,7 +122,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     name: "Kimo",
-    firstName: "Ahmed",
+    firstName: "Kareem",
     title: "Digital Experience & Technical",
     role: "Operations",
       bio: "An international student that has been living in China for 10 years. Before coming to China I lived in Egypt, Syria, UAE and Yemen. I look forward to traveling more to meet people from different walks of life.",
@@ -133,6 +131,19 @@ export const teamMembers: TeamMember[] = [
     image: "/team/kimo.jpg",
     socials: [
       { platform: "website", url: "https://www.ted.com/profiles/50660020" }
+    ],
+  },
+  {
+    name: "Robin",
+    firstName: "Robin",
+    title: "Communications Member",
+    role: "Communications",
+      bio: "Robin is an aerospace researcher and engineer driven by a lifelong curiosity about how ideas take flight—both in the skies and in the minds of people.",
+      fullBio:
+        "Robin is an aerospace researcher and engineer driven by a lifelong curiosity about how ideas take flight—both in the skies and in the minds of people. Trained in engineering research, he approaches complex systems with analytical rigor, creative problem-solving, and a deep appreciation for interdisciplinary thinking. His academic work reflects a commitment to innovation, while his broader interests extend beyond equations and models to the stories behind scientific progress. Alongside his research, Robin has developed a strong passion for science communication, believing that even the most advanced technical ideas only reach their full potential when they are clearly understood and shared. At TEDxBeixinqiao, he is a member of the Communication and Media Publicity Department, where he contributes to content creation and media outreach that help transform speakers’ insights into compelling narratives. By bridging aerospace engineering and storytelling, Robin works to make complex ideas more accessible, engaging, and inspiring—ensuring they resonate long after the event ends",
+    image: "/team/robin.jpg",
+    socials: [
+      { platform: "linkedin", url: "https://www.linkedin.com/in/md-abir-hassan-robin-ab7a3937a/" }
     ],
   },
   {
@@ -145,8 +156,7 @@ export const teamMembers: TeamMember[] = [
       "As Lead of Business & Brand Development, Yossy brings strategic vision and creativity to TEDxBeixinqiao. With her extensive background in brand strategy and business development, she expertly navigates partnerships and growth opportunities that align with TEDx values. Yossy's passion for connecting innovative ideas with the right audiences helps establish TEDxBeixinqiao as a premier platform for thought leadership in Beijing. Her collaborative approach to brand building ensures that each event reflects both global TEDx standards and local cultural significance.",
     image: "/team/adam.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
+      
     ],
   },
   {
@@ -154,13 +164,12 @@ export const teamMembers: TeamMember[] = [
     firstName: "Wantine",
     title: "Events Talent",
     role: "Events Talent",
-    bio: "Elena leads TEDxBeixinqiao's communications strategy, crafting compelling narratives that represent our vision and connect with diverse audiences across multiple platforms.",
+    bio: "Wantine works at an international organization, focusing on creative and sustainable development. A TEDx speaker and speech coach—who also holds ICF accreditation as a life coach—she’s passionate about helping people refine their voices, turn passions into action, and share ideas that matter.",
     fullBio:
-      "Elena leads TEDxBeixinqiao's communications strategy, crafting compelling narratives that represent our vision and connect with diverse audiences. Her expertise in strategic communications ensures that TEDx ideas reach beyond the event itself, creating lasting impact through thoughtful messaging and storytelling. Elena oversees all external communications, from press relations to social media presence, maintaining a consistent voice that embodies the essence of TEDxBeixinqiao. Her background in journalism and content strategy brings valuable perspective to how we share ideas worth spreading with the world.",
+      "Wantine works at an international organization, focusing on creative and sustainable development. A TEDx speaker and speech coach—who also holds ICF accreditation as a life coach—she’s passionate about helping people refine their voices, turn passions into action, and share ideas that matter. Fluent in Chinese, English, and French, she thrives on challenges, loves traveling (to soak up diverse cultures), reading (to fuel fresh perspectives), and above all, supporting others to grow. For Wantine, public speaking is more than a skill—it’s a bridge to connect hearts and minds. At TEDxBeixinqiao, she’s eager to amplify diverse stories, celebrate curiosity, and inspire more people through ideas worth spreading.",
     image: "/team/wantine.jpg",
     socials: [
-      { platform: "linkedin", url: "https://linkedin.com/" },
-      { platform: "twitter", url: "https://twitter.com/" },
+     
     ],
   },
   {
@@ -179,11 +188,11 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Michael Serio",
     firstName: "Michael",
-    title: "Chinese Language & Cultural Content Specialist",
-    role: "communications",
-    bio: "Michael ensures that TEDxBeixinqiao's communications resonate authentically with Chinese audiences, providing cultural context and nuanced translations that preserve the essence of each idea.",
+    title: "Audio & Speaker Technical Support",
+    role: "operations",
+    bio: "Michael ensures every speaker's voice is heard clearly and professionally, managing audio systems and microphone operations to deliver flawless sound quality throughout TEDxBeixinqiao events.",
     fullBio:
-      "Michael ensures that TEDxBeixinqiao's communications resonate authentically with Chinese audiences, providing cultural context and nuanced translations that preserve the essence of each idea. His deep understanding of Chinese language and culture allows him to bridge international concepts with local perspectives, creating content that feels native rather than translated. Michael works across all platforms to maintain consistent messaging that honors both global TEDx standards and Chinese communication styles. His expertise ensures that complex ideas remain accessible and engaging when presented in Chinese, maintaining the impact of each speaker's original message while adapting to cultural nuances.",
+      "Michael is responsible for the critical audio and technical support that enables speakers to deliver their talks with confidence and clarity. His expertise in audio systems and microphone management ensures that every word resonates perfectly with the audience, both in-person and through recordings. Michael handles everything from wireless microphone setup and sound checks to real-time audio monitoring during presentations, creating a seamless acoustic experience. His attention to detail and quick problem-solving skills guarantee that technical issues never interrupt the flow of ideas. Working closely with the production team, Michael ensures that each speaker has the technical support they need to focus entirely on their message, knowing their voice will be heard exactly as intended.",
     image: "/team/michael.jpg",
     socials: [
     ],
@@ -193,15 +202,12 @@ export const teamMembers: TeamMember[] = [
     firstName: "Ryma",
     title: "Operation Member",
     role: "Operations",
-    bio: "Xiaodan coordinates the implementation of sponsorship agreements, ensuring that partner activations are executed flawlessly while maintaining the integrity of the TEDxBeixinqiao experience.",
+    bio: "Ryma is dedicated to engineering AI with an ethical compass, building technology that honors the humanity behind every algorithm.",
     fullBio:
       "I’m Rim Cherkti. My work operates on a core principle: any engineer can make an AI that thinks, but it takes a completely different discipline to make one that understands. My journey has been dedicated to mastering that discipline. I began with a bachelor’s in International Business Management to decode the complex systems that run our world. Now, as I pursue my master’s in Computer Science, I am learning to write the code for the systems that will run our future. This isn’t two separate careers; it is a single, focused mission to see the human at the end of every algorithm. I saw the importance of this mission firsthand while helping to stage a TEDx event, where it was undeniable that the most brilliant code or concept is powerless until it connects with a person. My role was to be the guardian of that human connection. That is still my role today. My purpose is to engineer AI with an ethical compass, to build technology that doesn’t just answer our questions, but honors the humanity that inspires them.",
     image: "/team/ryma.jpg",
     socials: [
-      {
-        platform: "linkedin",
-        url: "http://linkedin.com/in/rim-cherkti-4940591aa",
-      },
+      { platform: "linkedin", url: "http://linkedin.com/in/rim-cherkti-4940591aa"},
     ],
   },
   {
@@ -214,16 +220,14 @@ export const teamMembers: TeamMember[] = [
       "Josh serves as the bridge between the in-person experience and the online audience, capturing the authentic essence of TEDxBeixinqiao through thoughtful, story-driven videography. Whether filming behind-the-scenes moments, interviewing speakers about their journeys, or inviting audience members to reflect on their shift in perspective, Josh brings a journalist’s instinct for emotion and a filmmaker’s eye for narrative. His work ensures that the ideas shared on stage continue to resonate far beyond the venue.",
     image: "/team/josh.jpg",
     socials: [
-      {
-        platform: "linkedin",
-        url: "http://linkedin.com/in/joshua-wang-566759360",
-      },
+      { platform: "linkedin", url: "http://linkedin.com/in/joshua-wang-566759360"},
       { platform: "instagram", url: "https://www.instagram.com/josh_waang?igsh=ZWtzNWhjYWU3NTd6&utm_source=qr" },
       { platform: "youtube", url: "https://youtube.com/@josh_waang?si=2_SsZyOveI0MIS12" },
     ],
   },
 ];
 
+/*
 // Helper function to sort team members (leadership first, then alphabetically)
 export const getSortedTeam = () =>
   [...teamMembers].sort((a, b) => {
@@ -235,6 +239,10 @@ export const getSortedTeam = () =>
     }
     return a.name.localeCompare(b.name);
   });
+*/
+
+// Helper function to return team members in their original array order
+export const getSortedTeam = () => [...teamMembers];
 
 // Get team members filtered by role
 export const getTeamByRole = (role: string) => {
