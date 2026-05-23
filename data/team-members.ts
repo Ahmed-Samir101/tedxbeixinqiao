@@ -113,7 +113,7 @@ export const teamMembers: TeamMember[] = [
     role: "communications",
       bio: "Ahmed is a full‑stack developer supporting TEDxBeixinqiao’s digital experience — building fast, accessible features and tooling alongside the technical lead.",
       fullBio:
-        "Ahmed is a full‑stack developer focused on delivering a reliable, accessible, and high‑performance digital experience for TEDxBeixinqiao. He collaborates closely with the technical lead to design, build, and maintain our web platform, working across the stack with Next.js, TypeScript, and modern tooling. Ahmed cares deeply about performance, accessibility, and developer experience — optimizing UI flows, hardening APIs, and improving release reliability with testing and CI/CD. He also contributes to data and content workflows (e.g., Drizzle ORM and deployment pipelines), automation, and observability to ensure the site runs smoothly before, during, and after events.",
+        "Ahmed is a full‑stack developer focused on delivering a reliable, accessible, and high‑performance digital experience for TEDxBeixinqiao. He collaborates closely with the technical lead to design, build, and maintain our web platform, working across the stack with Next.js, TypeScript, and modern tooling. Ahmed cares deeply about performance, accessibility, and developer experience, optimizing UI flows, hardening APIs, and improving release reliability with testing and CI/CD. He also contributes to data and content workflows (e.g., Drizzle ORM and deployment pipelines), automation, and observability to ensure the site runs smoothly before, during, and after events.",
     image: "/team/ahmed.png",
     socials: [
       { platform: "linkedin", url: "https://www.linkedin.com/in/ahmed-khamis101" },
@@ -123,7 +123,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Kimo",
     firstName: "Kareem",
-    title: "Digital Experience & Technical",
+    title: "Operations Manager",
     role: "Operations",
       bio: "An international student that has been living in China for 10 years. Before coming to China I lived in Egypt, Syria, UAE and Yemen. I look forward to traveling more to meet people from different walks of life.",
       fullBio:
